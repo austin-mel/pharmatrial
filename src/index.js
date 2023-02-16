@@ -11,7 +11,13 @@ import {
 import JHHome from './components/janehopkins/JHHome';
 import FDAHome from './components/fda/FDAHome';
 
+
+
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App/>
+  },
   {
     path: "bavariahome",
     element: <BavariaHome/>,

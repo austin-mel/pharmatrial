@@ -1,7 +1,7 @@
 import useJaneHopkins from "./hooks/useJaneHopkins";
 //import useBavaria from "./hooks/useBavaria";
 //import useFDA from "./hooks/useFDA";
-import BavariaHome from './components/bavaria/BavariaHome';
+//import BavariaHome from './components/bavaria/BavariaHome';
 import Profile from './components/Profile';
 
 function App() {
@@ -21,7 +21,6 @@ return (
     <div className="App">
       <Profile/>
       <div className="content">
-
         <button onClick={() => {addPatient();}}> Add patient</button>
       </div>
     </div>
