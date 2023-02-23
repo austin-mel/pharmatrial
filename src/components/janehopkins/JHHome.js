@@ -1,11 +1,16 @@
 import React from 'react'
-import Profile from '../Profile'
+import App from '../../App'
 
 function JHHome() {
     return (
-        <div className="content">
-            <Profile></Profile>
-            <h2>Jane Hopkins Homepage</h2>
+        <div className="app">
+        <App/>
+            <div className="content">
+                <div className="logo">
+                    <img src="..\src\components\bavaria\bavarialogo.jpg"></img>
+            </div>
+                <h2>Jane Hopkins Homepage</h2>
+            </div>
         </div>
     )
 }

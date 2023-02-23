@@ -1,10 +1,15 @@
 import useJaneHopkins from "./hooks/useJaneHopkins";
-//import useBavaria from "./hooks/useBavaria";
-//import useFDA from "./hooks/useFDA";
+import useBavaria from "./hooks/useBavaria";
+import useFDA from "./hooks/useFDA";
 import BavariaHome from './components/bavaria/BavariaHome';
-import Profile from './components/Profile';
+import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from 'react-pro-sidebar';
+import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { Link } from 'react-router-dom';
 
 function App() {
+
+const { collapseSidebar } = useProSidebar();
 
 const { entities } = useJaneHopkins();
 
@@ -17,15 +22,27 @@ const addPatient = async () => {
   console.log(addPaitentResponse)
 };
 
-return (
-    <div className="App">
-      <Profile/>
-      <div className="content">
+const Sidemenu = <Sidebar style={{height: "100vh"}}>
+  <Menu>
+    <MenuItem icon={<MenuOutlinedIcon />}
+       onClick={() => {collapseSidebar();}}
+       style={{ textAlign: "center" }}>
+       <h2>Home</h2>
+    </MenuItem>
+      <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/Bavaria" />}>Bavaria</MenuItem>
+      <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/FDA" />}>FDA</MenuItem>
+      <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/JH" />}>Jane Hopkins</MenuItem>
+  </Menu>
+</Sidebar>;
 
+return (
+    <div className="app">
+      {Sidemenu}
+      <div className="content">
         <button onClick={() => {addPatient();}}> Add patient</button>
       </div>
     </div>
   );
 }
 
-export default App
+export default App;

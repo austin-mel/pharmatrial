@@ -1,11 +1,14 @@
 import React from 'react'
-import Profile from '../Profile'
+import App from '../../App'
 
 function BavariaHome() {
     return (
-        <div className="content">
-            <Profile></Profile>
-            <h2>Bavaria Homepage</h2>
+        <div className="app">
+            <App/>
+            <div className="content">
+                <img src="\src\components\bavaria\bavarialogo.jpg"></img>
+                <h2>Bavaria Homepage</h2>
+            </div>
         </div>
     )
 }
