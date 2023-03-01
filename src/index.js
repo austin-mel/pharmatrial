@@ -16,7 +16,7 @@ import FDAHome from './components/fda/FDAHome';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <JHHome/>,
   },
   {
     path: "Bavaria",
@@ -25,10 +25,6 @@ const router = createBrowserRouter([
   {
     path: "FDA",
     element: <FDAHome/>,
-  },
-  {
-    path: "JH",
-    element: <JHHome/>,
   }
 ]);
 

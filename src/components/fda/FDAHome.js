@@ -1,15 +1,23 @@
 import React from 'react'
 import App from '../../App'
+import MenuBar from '../MenuBar'
+import AddPatient from '../AddPatient'
 
 function FDAHome() {
     return (
-        <div className="app">
-        <App/>
-            <div className="content">
-                <div className="logo">
-                    <img src="..\src\components\bavaria\bavarialogo.jpg"></img>
+        <div className="fdahome">
+            <div className="fdaheader">
+                <img src="https://www.fda.gov/media/99788/download"></img>
             </div>
-                <h2>FDA Homepage</h2>
+
+            <div className="row">
+                <div className="menucolumn"><MenuBar/></div>
+                <div className="column"><h2>Test</h2></div>
+                <div className="column"><h2>Test</h2><AddPatient/><h2>Test</h2></div>
+            </div>
+
+            <div className="footer">
+                <p>Footer</p>
             </div>
         </div>
     )

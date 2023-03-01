@@ -14,6 +14,7 @@ function Routes() {
             </Switch>
         </BrowserRouter>
     )
+
 }
 
 export default Routes;
