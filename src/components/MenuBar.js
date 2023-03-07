@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 function MenuBar() {
     const { collapseSidebar } = useProSidebar();
 
-    const Sidemenu = <Sidebar style={{height: "100vh"}}>
+    const Sidemenu = <Sidebar>
   <Menu>
     <MenuItem icon={<MenuOutlinedIcon />}
        onClick={() => {collapseSidebar();}}
        style={{ textAlign: "center" }}>
-       <h2>Home</h2>
+       <h3>Profiles</h3>
     </MenuItem>
       <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/Bavaria" />}>Bavaria</MenuItem>
       <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/FDA" />}>FDA</MenuItem>

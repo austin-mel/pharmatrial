@@ -2,23 +2,23 @@ import React from 'react'
 import App from '../../App'
 import MenuBar from '../MenuBar'
 import AddPatient from '../AddPatient'
+import { Container, Row, Col } from 'react-bootstrap'
 
 function FDAHome() {
     return (
         <div className="fdahome">
-            <div className="fdaheader">
-                <img src="https://www.fda.gov/media/99788/download"></img>
-            </div>
-
-            <div className="row">
-                <div className="menucolumn"><MenuBar/></div>
-                <div className="column"><h2>Test</h2></div>
-                <div className="column"><h2>Test</h2><AddPatient/><h2>Test</h2></div>
-            </div>
-
-            <div className="footer">
-                <p>Footer</p>
-            </div>
+            <Container fluid>
+                <Row className="header">
+                <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
+                <Col className="justify-content-md-center" style={{display:'flex'}}><img src="https://www.fda.gov/media/99788/download"></img></Col>
+                <Col sm={2}></Col>
+                </Row>
+                <Row className="content">
+                    <Col sm={2}></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}></Col>
+                    <Col sm={2}></Col>
+                </Row>
+            </Container>
         </div>
     )
 }

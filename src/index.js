@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import JHHome from './components/janehopkins/JHHome';
 import FDAHome from './components/fda/FDAHome';
+import JHTable from './components/janehopkins/JHTable';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "FDA",
     element: <FDAHome/>,
+  },
+  {
+    path: "JHTable",
+    element: <JHTable/>
   }
 ]);
 
