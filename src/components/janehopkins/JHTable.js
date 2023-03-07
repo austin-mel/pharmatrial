@@ -26,4 +26,4 @@ function JHTable() {
     )
 }
 
-export default JHTable
+export default JHTable;
