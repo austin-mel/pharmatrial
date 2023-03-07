@@ -3,39 +3,39 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import BavariaHome from './components/bavaria/BavariaHome';
+import { ProSidebarProvider } from 'react-pro-sidebar';
 
 import {
   createBrowserRouter,
   RouterProvider,
+  BrowserRouter
 } from "react-router-dom";
 import JHHome from './components/janehopkins/JHHome';
 import FDAHome from './components/fda/FDAHome';
 
-
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>
+    element: <JHHome/>,
   },
   {
-    path: "bavariahome",
+    path: "Bavaria",
     element: <BavariaHome/>,
   },
   {
-    path: "fdahome",
+    path: "FDA",
     element: <FDAHome/>,
   },
   {
-    path: "jhhome",
-    element: <JHHome/>,
+    path: "JHTable",
+    element: <JHTable/>
   }
 ]);
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <RouterProvider router={router} />
-);
-
-
+root.render(<React.StrictMode>
+  <ProSidebarProvider>
+    <RouterProvider router={router} />
+  </ProSidebarProvider>
+</React.StrictMode>);
