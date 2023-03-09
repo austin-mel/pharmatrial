@@ -14,9 +14,9 @@ function MenuBar() {
        style={{ textAlign: "center" }}>
        <h3>Profiles</h3>
     </MenuItem>
+      <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/" />}>Jane Hopkins</MenuItem>
       <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/Bavaria" />}>Bavaria</MenuItem>
       <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/FDA" />}>FDA</MenuItem>
-      <MenuItem icon={<PeopleOutlinedIcon />} component={<Link to ="/" />}>Jane Hopkins</MenuItem>
   </Menu>
 </Sidebar>;
 
