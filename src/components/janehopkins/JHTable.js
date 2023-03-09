@@ -4,9 +4,11 @@ import AddPatient from '../AddPatient'
 import MenuBar from '../MenuBar'
 import PatientTable from '../PatientTable'
 import { Container, Row, Col } from 'react-bootstrap'
-
+import { useEffect } from 'react'
 
 function JHTable() {
+
+
 
     return (
         <div className="jhtable">
@@ -19,6 +21,11 @@ function JHTable() {
                 <Row className="content">
                     <Col sm={1}></Col>
                     <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
+                    <Col sm={1}></Col>
+                </Row>
+                <Row className="content">
+                    <Col sm={1}></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}></Col>
                     <Col sm={1}></Col>
                 </Row>
             </Container>

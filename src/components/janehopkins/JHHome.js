@@ -22,6 +22,11 @@ function JHHome() {
                     <Col className="justify-content-md-center" style={{display:'flex'}}><Login/></Col>
                     <Col sm={2}></Col>
                 </Row>
+                <Row className="content">
+                    <Col sm={2}></Col>
+                    <Col><Button className="justify-content-md-center" style={{display:'flex'}} variant="success" as={Link} to={'/JHTable'}>Temp Button</Button></Col>
+                    <Col sm={2}></Col>
+                </Row>
             </Container>
         </div>
     )

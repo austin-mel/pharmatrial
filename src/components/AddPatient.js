@@ -5,6 +5,7 @@ import useJaneHopkins from "../hooks/useJaneHopkins";
 function AddPatient() {
     const { entities } = useJaneHopkins();
 
+    //add patient
     const handleAdd = async () => {
       const addResponse = await entities.patient.add(
         {
@@ -28,6 +29,16 @@ function AddPatient() {
       );
       console.log(addResponse)
     };
+
+    //list patients
+    const listPatients = async () => {
+        let patientList = await entities.patient.list()
+        console.log(patientList.items);
+    };
+
+    useEffect(() =>{
+      listPatients();
+    }, []);
 
     return (
         <div className="button">

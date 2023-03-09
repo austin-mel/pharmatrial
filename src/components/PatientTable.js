@@ -1,38 +1,51 @@
 import { async } from "@firebase/util";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Row, Col, Card } from "react-bootstrap";
 
 function PatientTable() {
     const { entities } = useJaneHopkins();
+    const [patients, setPatients] = useState();
+
+    const listPatients = async () => {
+      let patientList = await entities.patient.list()
+      console.log(patientList.items);
+      setPatients(patientList.items);
+    };
+
+    useEffect(() => {
+      listPatients();
+    }, []);
+
 
     return (
         <div className="table">
             <Table striped bordered hover size="sm">
+              
                 <thead>
                 <tr>
                 <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Weight</th>
+                <th>Full Name</th>
                 <th>DOB</th>
+                <th>Weight</th>
+                <th>Insureance Number</th>
+                <th>Height (cm)</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-        <td><Button variant="primary">View Patient</Button></td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>250</td>
-          <td>Test</td>
+        {patients?.map((patient, key) => {
+        return(
+          <tr key={key}>
+          <td><Button variant="primary">View Patient</Button></td>
+          <td>{patient.name}</td>
+          <td>{patient.dob}</td>
+          <td>{patient.weight}</td>
+          <td>{patient.insuranceNumber}</td>
+          <td>{patient.height}</td>
         </tr>
-        <tr>
-        <td><Button variant="primary">View Patient</Button></td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>190</td>
-          <td>Test</td>
-        </tr>
+        )
+      })}
+
       </tbody>
     </Table>
         </div>
