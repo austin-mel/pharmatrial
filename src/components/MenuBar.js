@@ -1,7 +1,7 @@
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from 'react-pro-sidebar';
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Link } from 'react-router-dom';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
 
 function MenuBar() {
@@ -9,7 +9,7 @@ function MenuBar() {
 
     const Sidemenu = <Sidebar>
   <Menu>
-    <MenuItem icon={<MenuOutlinedIcon />}
+    <MenuItem icon={<MenuRoundedIcon/>}
        onClick={() => {collapseSidebar();}}
        style={{ textAlign: "center" }}>
        <h3>Profiles</h3>

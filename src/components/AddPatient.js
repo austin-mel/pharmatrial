@@ -1,6 +1,7 @@
 import { async } from "@firebase/util";
 import { useEffect } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
+import { Button, Form } from "react-bootstrap";
 
 function AddPatient() {
     const { entities } = useJaneHopkins();
@@ -8,9 +9,9 @@ function AddPatient() {
     const handleAdd = async () => {
       const addResponse = await entities.patient.add(
         {
-          name:"Billy",
-          dob:"January 17, 2003",
-          insuranceNumber: "1231254248",
+          name: document.getElementById("addName").value,
+          dob: document.getElementById("addDOB").value,
+          insuranceNumber: document.getElementById("insuranceNum").value,
         },
         {
           aclInput:{
@@ -30,8 +31,24 @@ function AddPatient() {
     };
 
     return (
-        <div className="button">
-            <button onClick={() => {handleAdd();}}> Add patient</button>
+        <div className="addpatient">
+            <Form>
+                        <Form.Group className="mb-3" controlId="addName">
+                        <Form.Label>Full Name</Form.Label>
+                        <Form.Control type="name"/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="addDOB">
+                        <Form.Label>DOB</Form.Label>
+                        <Form.Control type="dob"/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="insuranceNum">
+                        <Form.Label>Insurance Number</Form.Label>
+                        <Form.Control type="insuranceNum"/>
+                        </Form.Group>
+                        <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                        <Button variant="outline-success" onClick={() => {handleAdd();}}>Add Patient to Database</Button>
+                        </Form.Group>
+                    </Form>
         </div>
       );
 }

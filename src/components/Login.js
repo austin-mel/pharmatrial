@@ -3,7 +3,6 @@ import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useState } from "react";
 import { async } from "@firebase/util";
 
-
 function Login(){
     const [format, setFormat] = useState("login");
 
@@ -21,15 +20,15 @@ function Login(){
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Group className="mb-3" controlId="createEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group className="mb-3" controlId="createPass">
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group className="mb-3" controlId="createConfirmPass">
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm Password" />
                         </Form.Group>
@@ -49,12 +48,12 @@ function Login(){
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Login</Card.Title>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Group className="mb-3" controlId="loginEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" />
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group className="mb-3" controlId="loginPass">
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" />
                         </Form.Group>
