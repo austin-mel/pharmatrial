@@ -10,6 +10,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import AddHomeRoundedIcon from '@mui/icons-material/AddHomeRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
+import { isRouteErrorResponse } from "react-router-dom";
 
 function PatientTable() {
     const { entities } = useJaneHopkins();
@@ -25,6 +26,8 @@ function PatientTable() {
     const [filterYear, setFilterYear] = useState();
     const [filterMonth, setFilterMonth] = useState();
     const [filterStatus, setFilterStatus] = useState();
+
+    const [patientID, setPatientID] = useState();
     
   const [loading, setLoading] = useState(false);
 
@@ -53,8 +56,137 @@ function PatientTable() {
     };
 
     const editPatient = async () => {
-      console.log("test!");
+      
+      var historyBool = "No";
+      var employmentBool = "No";
+      var insuredBool = "No";
 
+      if(document.getElementById("familyHistory").value === "on"){
+        historyBool = "Yes";
+      }
+      if(document.getElementById("employment").value === "on"){
+        employmentBool = "Yes";
+      }
+      if(document.getElementById("insuranceStatus").value === "on"){
+        insuredBool = "Yes";
+      }
+
+
+      const name = document.getElementById("patientFirstName").value
+      const lastName = document.getElementById("patientLastName").value
+      const dob = document.getElementById("patientDOB").value
+      const address = document.getElementById("patientAddress").value
+      const insuranceNumber = document.getElementById("patientInsuranceNum").value
+      const height = document.getElementById("patientHeight").value
+      const weight = document.getElementById("patientWeight").value
+      const bloodPressure = document.getElementById("bloodPressure").value
+      const bloodType = document.getElementById("bloodType").value
+      const temperature = document.getElementById("temp").value
+      const oxygenSaturation = document.getElementById("OSat").value
+      const newMedication = {medication: document.getElementById("currentMeds")};
+      const newICDHealthCodes = {code: document.getElementById("ICD10")};
+      const newAllergies = {allergy: document.getElementById("allergies")};
+
+      const userResponse = await entities.patient.get(patientID);
+      console.log(userResponse._id);
+      console.log(patientID);
+
+      const editResponse = await entities.patient.update(
+        {
+          _id: patientID,
+          name,
+          lastName,
+          dob,
+          address,
+          insuranceNumber,
+          height,
+          weight,
+          bloodPressure,
+          bloodType,
+          temperature,
+          oxygenSaturation,
+          familyHistory: historyBool,
+          currentlyEmployed: employmentBool,
+          currentlyInsured: insuredBool
+        },
+        {
+          aclInput:{
+            acl:[
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "dob",
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "height"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "weight"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodPressure"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodType"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "temperature"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "oxygenSaturation"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "familyHistory"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyEmployed"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyInsured"
+              },
+            ],
+          },
+        } 
+      );
+      console.log(editResponse)
     };
 
     const editVisits = async () => {
@@ -140,7 +272,7 @@ function PatientTable() {
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear)){
                       return(
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid.toString()}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -165,7 +297,7 @@ function PatientTable() {
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
                       return(
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -220,7 +352,7 @@ function PatientTable() {
                 {patients?.map((patient, key) => {
                   return(
                     <tr key={key}>
-                      <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                      <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
                       <td>{patient.uuid}</td>
                       <td>{patient.name}</td>
                       <td>{patient.lastName}</td>
@@ -255,8 +387,8 @@ function PatientTable() {
     {patients?.map((patient, key) => {
       if(content === patient.uuid){
         return(
-            <div>
-            <Modal.Header key={key} closeButton>
+            <div key={key}> 
+            <Modal.Header closeButton>
             <Modal.Title id={patient.uuid}>{patient.name} {patient.lastName}</Modal.Title>
             </Modal.Header>
             <Row>
@@ -334,169 +466,141 @@ function PatientTable() {
     {patients?.map((patient, key) => {
       if(content === patient.uuid){
         return(
-          <div>
-            <Modal.Header key={key} closeButton>
-            <Modal.Title id={patient.uuid}>
-                <Form.Group className="mb-3" controlId="patientFirstName">
-                  <Row>
-                    <Col>
-                    <Form.Label>First Name:</Form.Label>
-                    <Form.Control type="firstName" placeholder={patient.name}/>
-                    </Col>
-                    <Col>
-                    <Form.Label>Last Name:</Form.Label>
-                    <Form.Control type="lastName" placeholder={patient.lastName}/>
-                    </Col>
-                  </Row>
-              </Form.Group>
-            </Modal.Title>
-            </Modal.Header>
+          <Container key={key}>
+          <Modal.Header closeButton>
+          <Modal.Title id={patient.uuid}>
+                <Row>
+                  <Col>
+                  <Form.Group className="mb-3" controlId="patientFirstName">
+                  <Form.Label>First Name:</Form.Label>
+                  <Form.Control type="patientFirstName" defaultValue={patient.name}/>
+                  </Form.Group>
+                  </Col>
+                  <Col>
+                  <Form.Group className="mb-3" controlId="patientLastName">
+                  <Form.Label>Last Name:</Form.Label>
+                  <Form.Control type="patientLastName" defaultValue={patient.lastName}/>
+                  </Form.Group>
+                  </Col>
+                </Row>
+          </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientDOB">
-                    <Form.Label>DOB:</Form.Label>
-                    <Form.Control type="dob" placeholder={patient.dob}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientDOB">
+                  <Form.Label>DOB</Form.Label>
+                  <Form.Control type="patientDOB" defaultValue={patient.dob}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientWeight">
-                    <Form.Label>Address:</Form.Label>
-                    <Form.Control type="weight" placeholder={patient.weight}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientInsuranceNum">
-                    <Form.Label>Insurance #:</Form.Label>
-                    <Form.Control type="insuranceNum" placeholder={patient.insuranceNumber}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientAddress">
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control type="patientAddress" defaultValue={patient.address}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientHeight">
-                    <Form.Label>Height:</Form.Label>
-                    <Form.Control type="height" placeholder={patient.height}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientWeight">
-                    <Form.Label>Weight:</Form.Label>
-                    <Form.Control type="weight" placeholder={patient.weight}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="bloodPressure">
-                    <Form.Label>Blood Pressure:</Form.Label>
-                    <Form.Control type="bloodPressure" placeholder={patient.bloodPressure}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientInsuranceNum">
+                  <Form.Label>Insurance Number</Form.Label>
+                  <Form.Control type="patientInsuranceNum" defaultValue={patient.insuranceNumber}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="bloodType">
-                    <Form.Label>Blood Type:</Form.Label>
-                    <Form.Control type="bloodType" placeholder={patient.bloodType}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientHeight">
+                  <Form.Label>Height</Form.Label>
+                  <Form.Control type="patientHeight" defaultValue={patient.height}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="temperature">
-                    <Form.Label>Temperature:</Form.Label>
-                    <Form.Control type="temperature" placeholder={patient.temperature}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientWeight">
+                  <Form.Label>Weight</Form.Label>
+                  <Form.Control type="patientWeight" defaultValue={patient.height}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="oxygenSaturation">
-                    <Form.Label>O Saturation:</Form.Label>
-                    <Form.Control type="oxygenSaturation" placeholder={patient.oxygenSaturation}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="bloodPressure">
+                  <Form.Label>Blood Pressure</Form.Label>
+                  <Form.Control type="bloodPressure" defaultValue={patient.bloodPressure}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="allergies">
-                    <Form.Label>Allergies:</Form.Label>
-                    <Form.Control type="allergies" placeholder={patient.allergies}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentMeds">
-                    <Form.Label>Current Meds:</Form.Label>
-                    <Form.Control type="currentMeds" placeholder={patient.currentMedications}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="familyHistory">
-                    <Form.Label>Family History:</Form.Label>
-                    <Form.Control type="familyHistory" placeholder={patient.familyHistory}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Select aria-label="Blood Type" id="bloodType">
+                  <option>Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </Form.Select>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentlyEmployed">
-                    <Form.Label>Employed:</Form.Label>
-                    <Form.Control type="currentlyEmployed" placeholder={patient.currentlyEmployed}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="temp">
+                  <Form.Label>Temperature</Form.Label>
+                  <Form.Control type="temp" defaultValue={patient.temperature}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentlyInsured">
-                    <Form.Label>Insured:</Form.Label>
-                    <Form.Control type="currentlyInsured" placeholder={patient.currentlyInsured}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="icdHealthCodes">
-                    <Form.Label>ICD-10 Codes:</Form.Label>
-                    <Form.Control type="icdHealthCodes" placeholder={patient.icdHealthCodes}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="d-grid gap-2" style={{display:'flex'}}>
-                  <Button variant="primary" size="lg" onClick={() => {editVisits();}}><AddHomeRoundedIcon/>Add a Visit</Button>
+                <Form.Group className="mb-3" controlId="OSat">
+                  <Form.Label>Ox Saturation</Form.Label>
+                  <Form.Control type="OSat" defaultValue={patient.oxygenSaturation}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-              
-                <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+                <Form.Check type="switch" id="familyHistory" label="Family History?" isValid="true"/>
+              </Col>
+              <Col>
+                <Form.Check type="switch" id="employment" label="Employed?" isValid="true"/>
+              </Col>
+              <Col>
+                <Form.Check type="switch" id="insuranceStatus" label="Insurance?" isValid="true"/>
               </Col>
             </Row>
-            <Modal.Footer>
-            <Button variant="success" onClick={() => {editPatient(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
-            <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
-            </Modal.Footer>
-            </div>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="allergies">
+                  <Form.Label>Allergies</Form.Label>
+                  <Form.Control type="allergies"/>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="currentMeds">
+                  <Form.Label>Current Medications</Form.Label>
+                  <Form.Control type="currentMeds"/>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="ICD10">
+                  <Form.Label>ICD-10 Health Codes</Form.Label>
+                  <Form.Control type="ICD10"/>
+                </Form.Group>
+              </Col>
+            </Row>
+          <Row>
+            <Col>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+            </Col>
+          </Row>
+          </Modal.Body>
+          <Modal.Footer>
+          <Button variant="success" onClick={() => {editPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
+          <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
+          </Modal.Footer>
+        </Container>
         )}
       })}
     </Modal>

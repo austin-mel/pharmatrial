@@ -1,19 +1,94 @@
 import React from "react";
-import { Form, Button, Card, Alert, Container } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container, Col, Row, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './FirebaseHook'
+import { getAuth, updateProfile } from "firebase/auth";
+import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
+import Fab from '@mui/material/Fab';
+import PatientTable from "../components/PatientTable";
+import PatientAppointment from "../components/PatientAppointment";
+import AddPatient from "../components/AddPatient";
 
 function FBaseLoggedIn() {
+    const [popup, setPopup] = useState("patient");
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+
     const logout = async () => {
       try { await signOut(auth); }
         catch (e) { console.error(e); }
       }
+
+      const auth = getAuth();
+
+      updateProfile(auth.currentUser, {
+        displayName: "Doctor"
+      })
+      
+      const user = auth.currentUser;
+      if (user !== null) {
+        // The user object has basic properties such as display name, email, etc.
+        const displayName = user.displayName;
+        const email = user.email;
+      
+        console.log(displayName);
+        console.log(email);
+      }
+      
     return(
       <Container>
         <p>Logged In</p>
-        <Button varient="primary" onClick={logout}>Log Out</Button>
-    </Container>
+        <Row>
+          <Col className="justify-content-md-end" style={{display:'flex'}}>
+            <div><h5>Welcome, {user.displayName}!</h5></div>
+          </Col>
+          <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
+            <Button varient="danger" onClick={logout}>Log Out</Button>
+          </Col>
+        </Row>
+        <Container fluid>
+                    <Row className="content">
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
+                                <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Patient
+                            </Fab>
+                        </Col>
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {setPopup("appt"); setShow(true);}} >
+                                <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Appointment
+                            </Fab>
+                        </Col>
+                    </Row>
+                    <Row className="content">
+                        <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
+                    </Row>
+                    <Modal show={show} onHide={handleClose}>
+                        {popup === "patient" ? (
+                            <Container>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add a Patient</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body><AddPatient/></Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                            </Container>
+                        ) : ( 
+                            <Container>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add an Appointment</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body><PatientAppointment/></Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                            </Container>
+                        )}
+                    </Modal>
+                </Container>
+      </Container>
     );
 
     
@@ -24,7 +99,6 @@ function FBaseSignup(){
     const [email, emailSet] = useState('');
     const [pw, pwSet] = useState('');
     const [pwConfirm, pwConfirmSet] = useState('');
-    const [error, errorSet] = useState(null);
 
     const createAccount = async () => {
         emailSet(document.getElementById("createEmail").value);
@@ -36,7 +110,7 @@ function FBaseSignup(){
               await createUserWithEmailAndPassword(auth, email, pw); 
             }
             else{
-              errorSet("Passwords do not match.");
+              console.log("Passwords don't match")
             }
               
           } catch (e) { console.log("ERROR")}
@@ -52,13 +126,10 @@ function FBaseSignup(){
         }
         catch (error) {
         if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password') {
-            errorSet('Your email or password was incorrect');
             console.log("Email/Password error");
         } else if (error.code === 'auth/email-already-in-use') {
-            errorSet('An account with this email already exists');
             console.log("Email in use");
         } else {
-            errorSet('There was a problem with your request');
             console.log("Other error");
         }
         }
@@ -67,7 +138,7 @@ function FBaseSignup(){
     return(
         <div className="login">
             {format === "create" ? (
-                <Card style={{ width: '28rem'}}>
+                <Card className="justify-content-md-center" style={{display:'flex'}}>
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
                     <Form>
@@ -95,7 +166,7 @@ function FBaseSignup(){
                 </Card.Body>
             </Card>
             ) : (
-            <Card style={{ width: '28rem'}}>
+            <Card>
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Login</Card.Title>
                     <Form>
@@ -146,6 +217,6 @@ export default function Login() {
     return (
       <Container>
         {screenGet()}
-    </Container>
+      </Container>
     );
   }

@@ -1,12 +1,36 @@
 import { async } from "@firebase/util";
 import { useEffect } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import { Button, Form, Row, Col } from "react-bootstrap";
 
 function AddPatient() {
     const { entities } = useJaneHopkins();
 
     const handleAddPatient = async () => {
+      var historyBool = "No";
+      var employmentBool = "No";
+      var insuredBool = "No";
+
+      if(document.getElementById("familyHistory").value === "on"){
+        historyBool = "Yes";
+      }
+      if(document.getElementById("employment").value === "on"){
+        employmentBool = "Yes";
+      }
+      if(document.getElementById("insuranceStatus").value === "on"){
+        insuredBool = "Yes";
+      }
+
+      const currentPatientMeds = null;
+      const currentICDHealthCodes = null;
+      const currentAllergies = null;
+      const newMedication = {medication: document.getElementById("currentMeds")};
+      const medications = [...currentPatientMeds,newMedication];
+      const newICDHealthCodes = {code: document.getElementById("ICD10")};
+      const icdHealthCodes = [...currentICDHealthCodes,newICDHealthCodes];
+      const newAllergies = {allergy: document.getElementById("allergies")};
+      const allergies = [...currentAllergies,newAllergies];
+
       const addResponse = await entities.patient.add(
         {
           name: document.getElementById("firstName").value,
@@ -18,11 +42,14 @@ function AddPatient() {
           weight: document.getElementById("weight").value,
           bloodPressure: document.getElementById("bloodPressure").value,
           bloodType: document.getElementById("bloodType").value,
-          tempterature: document.getElementById("temp").value,
+          temperature: document.getElementById("temp").value,
           oxygenSaturation: document.getElementById("OSat").value,
-          familyHistory: document.getElementById("familyHistory").value,
-          currentlyEmployed: document.getElementById("employment").value,
-          currentlyInsured: document.getElementById("insuranceStatus").value
+          familyHistory: historyBool,
+          currentlyEmployed: employmentBool,
+          currentlyInsured: insuredBool,
+          currentMedications: medications,
+          icdHealthCodes: icdHealthCodes,
+          allergies: allergies
         },
         {
           aclInput:{
@@ -32,7 +59,70 @@ function AddPatient() {
                   nodes: ["Bavaria","FDA"]
                 },
                 operations: ["READ"],
-                path: "name",
+                path: "dob",
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "height"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "weight"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodPressure"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodType"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "temperature"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "oxygenSaturation"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "familyHistory"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyEmployed"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyInsured"
               },
             ],
           },
