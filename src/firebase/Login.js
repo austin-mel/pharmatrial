@@ -1,13 +1,39 @@
 import React from "react";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { useState } from "react";
-import { async } from "@firebase/util";
+import { onAuthStateChanged, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './FirebaseHook'
 
-function Login(){
+function FBaseLoggedIn() {
+    const logout = async () => {
+      try { await signOut(auth); }
+        catch (e) { console.error(e); }
+      }
+    return(
+      <Container>
+        <t>Logged In</t>
+        <Button title="Log out" onPress={logout} />
+    </Container>
+    );
+  }
+
+function FBaseSignup(){
     const [format, setFormat] = useState("login");
+    const [email, emailSet] = useState('');
+    const [pw, pwSet] = useState('');
+    const [pwConfirm, pwConfirmSet] = useState('');
 
     const createAccount = async () => {
-        console.log("Test")
+        emailSet(document.getElementById("createEmail").value);
+        pwSet(document.getElementById("createPass").value);
+        pwConfirmSet(document.getElementById("createConfirmPass").value);
+        console.log(pw);
+        console.log(pwConfirm);
+
+        try {
+            if (pw.toString() === pwConfirm.toString())
+              await createUserWithEmailAndPassword(auth, email, pw); 
+          } catch (e) { console.log("ERROR") }
     }
     const loginAccount = async () => {
         console.log("test2")
@@ -28,7 +54,7 @@ function Login(){
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="createConfirmPass">
+                        <Form.Group className="mb-3" controlId="createConfirmPass" >
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm Password" />
                         </Form.Group>
@@ -74,4 +100,27 @@ function Login(){
     );
 }
 
-export default Login
+export default function Login() {
+    const [loggedin, loggedinSet] = useState(false);
+  
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is logged in
+        loggedinSet(true);
+      } else {
+        // User is not logged in
+        loggedinSet(false);
+      }
+    });
+  
+    const screenGet = () => {
+      if (loggedin) return <FBaseLoggedIn/>;
+      return <FBaseSignup/>
+    }
+  
+    return (
+      <Container>
+        {screenGet()}
+    </Container>
+    );
+  }

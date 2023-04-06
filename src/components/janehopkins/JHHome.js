@@ -2,19 +2,22 @@ import React from 'react'
 import App from '../../App'
 import AddPatient from '../AddPatient'
 import MenuBar from '../MenuBar'
-import Login from '../Login'
+import Login from '../../firebase/Login'
 import { Container, Row, Col, Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import { useState, } from 'react'
 import PatientTable from '../PatientTable'
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
+import FirebaseApp from '../../firebase/FirebaseApp'
+import PatientAppointment from '../PatientAppointment'
 
 
 
 
 function JHHome() {
     const [format, setFormat] = useState("home");
+    const [popup, setPopup] = useState("patient");
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -67,31 +70,47 @@ function JHHome() {
                     <Col sm={2}></Col>
                     </Row>
                     <Row className="content">
-                        <Col sm={2}></Col>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="success" variant="extended" onClick={() => {setShow(true);}} >
+                            <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
                                 <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Patient
                             </Fab>
                         </Col>
-                        <Col sm={2}></Col>
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {setPopup("appt"); setShow(true);}} >
+                                <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Appointment
+                            </Fab>
+                        </Col>
                     </Row>
                     <Row className="content">
                         <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
                     </Row>
                     <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                        <Modal.Title>Add a Patient</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body><AddPatient/></Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="danger" onClick={handleClose}>Close</Button>
-                        </Modal.Footer>
+                        {popup === "patient" ? (
+                            <Container>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add a Patient</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body><AddPatient/></Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                            </Container>
+                        ) : ( 
+                            <Container>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add an Appointment</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body><PatientAppointment/></Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                            </Container>
+                        )}
                     </Modal>
                 </Container>
                 )
 
                 
-
         }
 
         </div>

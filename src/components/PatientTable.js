@@ -74,7 +74,7 @@ function PatientTable() {
                 <Form.Control placeholder="Name" id="filterName"/>
               </Col>
               <Col>
-                <Form.Select id="filterMonth" aria-label="Default select example">
+                <Form.Select id="filterMonth" aria-label="Select Month">
                   <option value="null">Select Month</option>
                   <option value="January">January</option>
                   <option value="February">February</option>
@@ -132,7 +132,6 @@ function PatientTable() {
                 <th>Employment Status</th>
                 <th>Insurance Status</th>
                 <th>ICD-10 Health Codes</th>
-                <th>Visits</th>
                 </tr>
               </thead>
               <tbody>
@@ -142,7 +141,7 @@ function PatientTable() {
                       return(
                         <tr key={key}>
                           <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
-                          <td>{patient.uuid}</td>
+                          <td>{patient.uuid.toString()}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
                           <td>{patient.dob}</td>
@@ -160,7 +159,6 @@ function PatientTable() {
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
                           <td>{patient.icdHealthCodes}</td>
-                          <td>{patient.visits}</td>
                       </tr>
           )}}
                   else{
@@ -186,7 +184,6 @@ function PatientTable() {
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
                           <td>{patient.icdHealthCodes}</td>
-                          <td>{patient.visits}</td>
                       </tr>
           )}}
       })}
@@ -217,7 +214,6 @@ function PatientTable() {
                   <th>Employment Status</th>
                   <th>Insurance Status</th>
                   <th>ICD-10 Health Codes</th>
-                  <th>Visits</th>
                 </tr>
               </thead>
               <tbody>
@@ -243,7 +239,6 @@ function PatientTable() {
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
                       <td>{patient.icdHealthCodes}</td>
-                      <td>{patient.visits}</td>
                     </tr>
                   )
       })}
@@ -260,7 +255,7 @@ function PatientTable() {
     {patients?.map((patient, key) => {
       if(content === patient.uuid){
         return(
-            <>
+            <div>
             <Modal.Header key={key} closeButton>
             <Modal.Title id={patient.uuid}>{patient.name} {patient.lastName}</Modal.Title>
             </Modal.Header>
@@ -328,7 +323,7 @@ function PatientTable() {
             <Button variant="primary" onClick={() => {setFormat("edit");}}><EditRoundedIcon/>Edit Info</Button>
             <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
             </Modal.Footer>
-            </>
+            </div>
         )}
       })}
     </Modal>
@@ -339,7 +334,7 @@ function PatientTable() {
     {patients?.map((patient, key) => {
       if(content === patient.uuid){
         return(
-            <>
+          <div>
             <Modal.Header key={key} closeButton>
             <Modal.Title id={patient.uuid}>
                 <Form.Group className="mb-3" controlId="patientFirstName">
@@ -493,14 +488,14 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-                <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits}</b></Modal.Body>
+                <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits.notes}</b></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>
             <Button variant="success" onClick={() => {editPatient(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
             <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
             </Modal.Footer>
-            </>
+            </div>
         )}
       })}
     </Modal>
