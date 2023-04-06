@@ -1,22 +1,20 @@
 import { initializeApp } from "firebase/app";
-import {onAuthStateChanged} from 'firebase/auth'
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 
-function FirebaseHook() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyDX2AXtzrM0T5kaJUJyWMu39ut11N5n-cI",
-    authDomain: "csc131dreamteam.firebaseapp.com",
-    projectId: "csc131dreamteam",
-    storageBucket: "csc131dreamteam.appspot.com",
-    messagingSenderId: "503706823521",
-    appId: "1:503706823521:web:3b77d6a59dbc34d0fc3320",
-    measurementId: "G-PS0V7G38XL"
-  };
-  
-  // Initialize Firebase
-  return (
-    <div></div>
-  );
+const firebaseConfig = {
+  apiKey: "AIzaSyCAHGc_R9tfURMHeySxq_SKlc2mM5LvRFE",
+  authDomain: "csc131dreamteam-883ba.firebaseapp.com",
+  projectId: "csc131dreamteam-883ba",
+  storageBucket: "csc131dreamteam-883ba.appspot.com",
+  messagingSenderId: "1078873703167",
+  appId: "1:1078873703167:web:510a64162da8556958c2ca",
+  measurementId: "G-N7K7KZ6N9J"
+};
 
-}
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const analytics = getAnalytics(firebaseApp);
 
-export default FirebaseHook
+export const auth = getAuth();
+export default firebaseApp;
