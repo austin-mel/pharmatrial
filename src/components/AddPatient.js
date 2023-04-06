@@ -7,8 +7,6 @@ function AddPatient() {
     const { entities } = useJaneHopkins();
 
     const handleAddPatient = async () => {
-    //add patient
-    const handleAdd = async () => {
       const addResponse = await entities.patient.add(
         {
           name: document.getElementById("firstName").value,
