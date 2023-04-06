@@ -3,6 +3,7 @@ import App from '../../App'
 import MenuBar from '../MenuBar'
 import AddPatient from '../AddPatient'
 import { Container, Row, Col } from 'react-bootstrap'
+import logoHeaderBavaria from '../images/BavariaLogo.jpg'
 
 function BavariaHome() {
     return (
@@ -10,7 +11,7 @@ function BavariaHome() {
             <Container fluid>
                 <Row className="bavheader">
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-end" style={{display:'flex'}}><img src="https://i.imgur.com/4kjMkER.jpg" height="195" width="195"></img></Col>
+                <Col className="justify-content-md-end" style={{display:'flex'}}><img src={logoHeaderBavaria} height="195" width="195"></img></Col>
                 </Row>
                 <Row className="content">
                     <Col sm={2}></Col>

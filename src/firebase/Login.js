@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { useState } from "react";
-import { onAuthStateChanged, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './FirebaseHook'
 
 function FBaseLoggedIn() {
@@ -11,10 +11,12 @@ function FBaseLoggedIn() {
       }
     return(
       <Container>
-        <t>Logged In</t>
-        <Button title="Log out" onPress={logout} />
+        <p>Logged In</p>
+        <Button varient="primary" onClick={logout}>Log Out</Button>
     </Container>
     );
+
+    
   }
 
 function FBaseSignup(){
@@ -22,21 +24,44 @@ function FBaseSignup(){
     const [email, emailSet] = useState('');
     const [pw, pwSet] = useState('');
     const [pwConfirm, pwConfirmSet] = useState('');
+    const [error, errorSet] = useState(null);
 
     const createAccount = async () => {
         emailSet(document.getElementById("createEmail").value);
         pwSet(document.getElementById("createPass").value);
         pwConfirmSet(document.getElementById("createConfirmPass").value);
-        console.log(pw);
-        console.log(pwConfirm);
 
         try {
-            if (pw.toString() === pwConfirm.toString())
+            if (pw.toString() === pwConfirm.toString()){
               await createUserWithEmailAndPassword(auth, email, pw); 
-          } catch (e) { console.log("ERROR") }
+            }
+            else{
+              errorSet("Passwords do not match.");
+            }
+              
+          } catch (e) { console.log("ERROR")}
     }
+
     const loginAccount = async () => {
-        console.log("test2")
+      emailSet(document.getElementById("loginEmail").value);
+      pwSet(document.getElementById("loginPass").value);
+
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pw);
+        }
+        catch (error) {
+        if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password') {
+            errorSet('Your email or password was incorrect');
+            console.log("Email/Password error");
+        } else if (error.code === 'auth/email-already-in-use') {
+            errorSet('An account with this email already exists');
+            console.log("Email in use");
+        } else {
+            errorSet('There was a problem with your request');
+            console.log("Other error");
+        }
+        }
     }
 
     return(

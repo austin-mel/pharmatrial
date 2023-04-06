@@ -316,7 +316,7 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-              <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits}</b></Modal.Body>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>
@@ -488,7 +488,8 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-                <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits.notes}</b></Modal.Body>
+              
+                <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>

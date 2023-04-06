@@ -22,8 +22,7 @@ function AddPatient() {
           oxygenSaturation: document.getElementById("OSat").value,
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employment").value,
-          currentlyInsured: document.getElementById("insuranceStatus").value,
-          
+          currentlyInsured: document.getElementById("insuranceStatus").value
         },
         {
           aclInput:{

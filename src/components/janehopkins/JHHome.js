@@ -11,7 +11,7 @@ import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
 import FirebaseApp from '../../firebase/FirebaseApp'
 import PatientAppointment from '../PatientAppointment'
-
+import logoHeaderJH from '../images/JaneHopkinsLogo.png'
 
 
 
@@ -28,7 +28,7 @@ function JHHome() {
             <Container fluid>
                 <Row className="jhheader">
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-center" style={{display:'flex'}}><img src="https://i.imgur.com/MRTmSG5.png" width="350" height="200"></img></Col>
+                <Col className="justify-content-md-center" style={{display:'flex'}}><img src={logoHeaderJH} width="350" height="200"></img></Col>
                 <Col sm={2}></Col>
                 </Row>
                 <Row className="content">
