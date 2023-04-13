@@ -15,6 +15,7 @@ import { isRouteErrorResponse } from "react-router-dom";
 function PatientTable() {
     const { entities } = useJaneHopkins();
     const [patients, setPatients] = useState();
+    const [icdHealthCodes, seticdHealthCodes] = useState();
     const [format, setFormat] = useState("view");
 
     const [show, setShow] = useState(false);
@@ -112,6 +113,7 @@ function PatientTable() {
           aclInput:{
             acl:[
               {
+                
                 principal: {
                   nodes: ["Bavaria","FDA"]
                 },
@@ -180,6 +182,20 @@ function PatientTable() {
                 },
                 operations: ["READ"],
                 path: "currentlyInsured"
+              },
+              {
+                principal: {
+                  nodes: ["JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "name"
+              },
+              {
+                principal: {
+                  nodes: ["JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "lastName"
               },
             ],
           },
@@ -267,6 +283,7 @@ function PatientTable() {
               </thead>
               <tbody>
                 {patients?.map((patient, key) => {
+
                   if(filterMonth === "null"){
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear)){
                       return(
@@ -284,12 +301,12 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td>{patient.allergies}</td>
-                          <td>{patient.currentMedications}</td>
+                          <td></td>
+                          <td></td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td>{patient.icdHealthCodes}</td>
+                          <td></td>
                       </tr>
           )}}
                   else{
@@ -309,12 +326,12 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td>{patient.allergies}</td>
-                          <td>{patient.currentMedications}</td>
+                          <td></td>
+                          <td></td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td>{patient.icdHealthCodes}</td>
+                          <td></td>
                       </tr>
           )}}
       })}
@@ -364,12 +381,12 @@ function PatientTable() {
                       <td>{patient.bloodType}</td>
                       <td>{patient.temperature}</td>
                       <td>{patient.oxygenSaturation}</td>
-                      <td>{patient.allergies}</td>
-                      <td>{patient.currentMedications}</td>
+                      <td></td>
+                      <td></td>
                       <td>{patient.familyHistory}</td>
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
-                      <td>{patient.icdHealthCodes}</td>
+                      <td></td>
                     </tr>
                   )
       })}
@@ -442,7 +459,7 @@ function PatientTable() {
               <Modal.Body>Insurance Status: <b style={{fontSize: 20}}>{patient.currentlyInsured}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}>{patient.icdHealthCodes}</b></Modal.Body>
+              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}></b></Modal.Body>
               </Col>
             </Row>
             <Row>

@@ -3,17 +3,16 @@ import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form } from "react-bootstrap";
 import {v4 as uuidv4} from 'uuid';
-import useBavaria from "../hooks/useBavaria";
+import useFDA from "../hooks/useFDA";
 
 function AddDrugs() {
-    const { entities } = useJaneHopkins();
-    const { entities2 } = useBavaria();
+    const { entities } = useFDA();
     const [patients, setPatients] = useState();
     const [drugs, setDrugs] = useState();
 
     useEffect(() => {
       listPatients();
-      setDrugs();
+      listDrugs();
     }, []);
 
     const listPatients = async () => {
@@ -23,49 +22,22 @@ function AddDrugs() {
     };
 
     const listDrugs = async () => {
-        let drugList = await entities.drugs.list()
+        let drugList = await entities.drug.list()
         //console.log(patientList.items);
-        setDrugs(patientList.items);
+        setDrugs(drugList.items);
       };
 
     const handleAddDrugs = async () => {
 
-      //let drugUUID = uuidv4();
-      var batchNum = 0;
-      var placeboDrug = false;
-
-      increaseBatchNum();
-      chooseType();
-
-      function increaseBatchNum(){
-        batchNum += 1;
-      }
-
-      function chooseType(){
-        if((Math.random() * (50 - 1) + 1) >= 25){
-          placeboDrug = false;
-        }
-        else{
-          placeboDrug = true;
-        }
-      }
-
-      //console.log(drugUUID);
-      //console.log(batchNum.toString());
-      //console.log(placeboDrug);
-
       async function addDrugs(patient){
 
-        {drugs?.map((drug, key) => {
+        console.log(patient._id);
 
-
-        })}
-
-        console.log(patient);
+        const userResponse = await entities.drug.get('01876c8d-7e0a-a1d7-b332-5cd72425b6a2');
 
         const addResponse = await entities.drug.update(
           {
-              _id: drug._id,
+              _id: userResponse._id,
               id: patient._id,
           },
           {
@@ -82,7 +54,7 @@ function AddDrugs() {
                   principal: {
                     nodes: ["Bavaria","FDA"]
                   },
-                  operations: ["READ"],
+                  operations: ["ALL"],
                   path: "id",
                 },
                 {
@@ -96,31 +68,27 @@ function AddDrugs() {
             },
           } 
         );
+        
         console.log(addResponse);
       }
 
       {patients?.map((patient, key) => { 
         var DOB = patient.dob.substr(patient.dob.length - 4);
-        console.log(DOB);
 
+        //ADD ICD-10 HEALTH CODE ELIGIBILITY
         if(parseInt(DOB) >= 2005){
           console.log("Not Eligible!")
         }
         else{
-          addDrugs(patient._id);
+          addDrugs(patient);
         }
-            })}
-      
-      increaseBatchNum();
+
+    })}
+
     };
 
-    
-
     return (  
-    //   <div className="addDrug">
-    //   
-    //   </div>
-    <Button variant="info" onClick={() => {handleAddDrugs();}}>Give Drugs to Eligible Patients</Button>
+        <Button variant="info" onClick={() => {handleAddDrugs();}}>Give Drugs to Eligible Patients</Button>
     );
 }
 

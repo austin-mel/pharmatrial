@@ -33,8 +33,8 @@ function FBaseLoggedIn() {
         const displayName = user.displayName;
         const email = user.email;
       
-        console.log(displayName);
-        console.log(email);
+        //console.log(displayName);
+        //console.log(email);
       }
       
     return(

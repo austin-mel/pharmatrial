@@ -1,11 +1,11 @@
 import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
-import useJaneHopkins from "../hooks/useJaneHopkins";
+import useBavaria from "../hooks/useBavaria";
 import { Button, Form } from "react-bootstrap";
 import {v4 as uuidv4} from 'uuid';
 
 function SendDrugs() {
-    const { entities } = useJaneHopkins();
+    const { entities } = useBavaria();
     const [patients, setPatients] = useState();
 
     useEffect(() => {
@@ -63,9 +63,16 @@ function SendDrugs() {
                 },
                 {
                   principal: {
-                    nodes: ["Bavaria","FDA"]
+                    nodes: ["Bavaria"]
                   },
                   operations: ["READ"],
+                  path: "id",
+                },
+                {
+                  principal: {
+                    nodes: ["FDA"]
+                  },
+                  operations: ["ALL"],
                   path: "id",
                 },
                 {
@@ -101,10 +108,7 @@ function SendDrugs() {
     
 
     return (  
-    //   <div className="addDrug">
-    //   
-    //   </div>
-    <Button variant="success" onClick={() => {handleSendDrugs();}}>Send Drugs to FDA</Button>
+      <Button variant="success" onClick={() => {handleSendDrugs();}}>Send Drugs to FDA</Button>
     );
 }
 

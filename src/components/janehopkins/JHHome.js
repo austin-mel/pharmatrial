@@ -4,7 +4,7 @@ import AddPatient from '../AddPatient'
 import MenuBar from '../MenuBar'
 import Login from '../../firebase/Login'
 import { Container, Row, Col, Button, Modal } from 'react-bootstrap'
-import { useState, } from 'react'
+import { useState } from 'react'
 import PatientTable from '../PatientTable'
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
@@ -25,7 +25,7 @@ function JHHome() {
                 </Row>
                 <Row className="content">
                     <Col></Col>
-                    <Col className="justify-content-md-center" style={{display:'flex'}}><LoginTest/></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}><Login/></Col>
                     <Col></Col>
                 </Row>
         </Container>

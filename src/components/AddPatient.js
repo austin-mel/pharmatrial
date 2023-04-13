@@ -1,7 +1,7 @@
 import { async } from "@firebase/util";
 import { useEffect } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Button, Form, Row, Col } from "react-bootstrap";
+import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 
 function AddPatient() {
     const { entities } = useJaneHopkins();
@@ -21,15 +21,15 @@ function AddPatient() {
         insuredBool = "Yes";
       }
 
-      const currentPatientMeds = null;
-      const currentICDHealthCodes = null;
-      const currentAllergies = null;
-      const newMedication = {medication: document.getElementById("currentMeds")};
-      const medications = [...currentPatientMeds,newMedication];
-      const newICDHealthCodes = {code: document.getElementById("ICD10")};
-      const icdHealthCodes = [...currentICDHealthCodes,newICDHealthCodes];
-      const newAllergies = {allergy: document.getElementById("allergies")};
-      const allergies = [...currentAllergies,newAllergies];
+      //const currentPatientMeds = null;
+      //const currentICDHealthCodes = null;
+      //const currentAllergies = null;
+      //const newMedication = {medication: document.getElementById("currentMeds")};
+      //const medications = [...currentPatientMeds,newMedication];
+      //const newICDHealthCodes = {code: document.getElementById("ICD10")};
+      //const icdHealthCodes = [...currentICDHealthCodes,newICDHealthCodes];
+      //const newAllergies = {allergy: document.getElementById("allergies")};
+      //const allergies = [...currentAllergies,newAllergies];
 
       const addResponse = await entities.patient.add(
         {
@@ -47,9 +47,9 @@ function AddPatient() {
           familyHistory: historyBool,
           currentlyEmployed: employmentBool,
           currentlyInsured: insuredBool,
-          currentMedications: medications,
-          icdHealthCodes: icdHealthCodes,
-          allergies: allergies
+          //currentMedications: medications,
+          //icdHealthCodes: icdHealthCodes,
+          //allergies: allergies
         },
         {
           aclInput:{
@@ -129,7 +129,9 @@ function AddPatient() {
         } 
       );
       console.log(addResponse)
+      console.log("Successfully Added Patient!");
     };
+
 
     return (
         <div className="addpatient">
