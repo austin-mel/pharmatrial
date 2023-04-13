@@ -10,40 +10,25 @@ import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
 import PatientAppointment from '../PatientAppointment'
 import logoHeaderJH from '../images/JaneHopkinsLogo.png'
-
+import LoginTest from '../../firebase/LoginTest'
 
 
 function JHHome() {
-    const [format, setFormat] = useState("home");
-    const [popup, setPopup] = useState("patient");
 
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
 
     return (
-        <div className="jhhome">
-            {format === "home" ? (
-            <Container fluid>
-                <Row className="jhheader">
+        <Container fluid>
+                    <Row className="jhheader">
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-center" style={{display:'flex'}}><img src={logoHeaderJH} width="350" height="200"></img></Col>
+                <Col className="justify-content-md-center" style={{display:'flex'}}><img src={logoHeaderJH} width="350" height="200" alt="JH Logo"></img></Col>
                 <Col sm={2}></Col>
                 </Row>
                 <Row className="content">
                     <Col></Col>
-                    <Col className="justify-content-md-center" style={{display:'flex'}}><Login /></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}><LoginTest/></Col>
                     <Col></Col>
                 </Row>
-            </Container>
-            ): (
-                <Container>
-                    
-                </Container>
-            )    
-        }
-
-        </div>
+        </Container>
     );
 }
-
 export default JHHome

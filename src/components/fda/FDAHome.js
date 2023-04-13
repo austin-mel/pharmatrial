@@ -4,6 +4,8 @@ import MenuBar from '../MenuBar'
 import AddPatient from '../AddPatient'
 import { Container, Row, Col } from 'react-bootstrap'
 import logoHeaderFDA from '../images/FDALogo.png'
+import Login from '../../firebase/Login'
+import AddDrugs from '../AddDrugs'
 
 function FDAHome() {
     return (
@@ -11,12 +13,12 @@ function FDAHome() {
             <Container fluid>
                 <Row className="fdaheader">
                 <Col sm={1} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-left" style={{display:'flex'}}><img src={logoHeaderFDA} height="155" width="650"></img></Col>
+                <Col className="justify-content-md-left" style={{display:'flex'}}><img src={logoHeaderFDA} height="155" width="650" alt="FDA Logo"></img></Col>
                 </Row>
                 <Row className="content">
-                    <Col sm={2}></Col>
-                    <Col className="justify-content-md-center" style={{display:'flex'}}></Col>
-                    <Col sm={2}></Col>
+                    <Col></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}><AddDrugs /></Col>
+                    <Col></Col>
                 </Row>
             </Container>
         </div>

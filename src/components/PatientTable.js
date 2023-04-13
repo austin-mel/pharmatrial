@@ -57,18 +57,21 @@ function PatientTable() {
 
     const editPatient = async () => {
       
-      var historyBool = "No";
-      var employmentBool = "No";
-      var insuredBool = "No";
+      var familyHistory = document.getElementById("familyHistory").value;
+      var currentlyEmployed = document.getElementById("employment").value;
+      var currentlyInsured = document.getElementById("insuranceStatus").value;
+
+      console.log((document.getElementById("familyHistory").value));
+      console.log((document.getElementById("employment").value));
 
       if(document.getElementById("familyHistory").value === "on"){
-        historyBool = "Yes";
+        familyHistory = "Yes";
       }
       if(document.getElementById("employment").value === "on"){
-        employmentBool = "Yes";
+        currentlyEmployed = "Yes";
       }
       if(document.getElementById("insuranceStatus").value === "on"){
-        insuredBool = "Yes";
+        currentlyInsured = "Yes";
       }
 
 
@@ -87,10 +90,6 @@ function PatientTable() {
       const newICDHealthCodes = {code: document.getElementById("ICD10")};
       const newAllergies = {allergy: document.getElementById("allergies")};
 
-      const userResponse = await entities.patient.get(patientID);
-      console.log(userResponse._id);
-      console.log(patientID);
-
       const editResponse = await entities.patient.update(
         {
           _id: patientID,
@@ -105,9 +104,9 @@ function PatientTable() {
           bloodType,
           temperature,
           oxygenSaturation,
-          familyHistory: historyBool,
-          currentlyEmployed: employmentBool,
-          currentlyInsured: insuredBool
+          familyHistory,
+          currentlyEmployed,
+          currentlyInsured
         },
         {
           aclInput:{
@@ -559,13 +558,13 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-                <Form.Check type="switch" id="familyHistory" label="Family History?" isValid="true"/>
+                <Form.Check type="switch" id="familyHistory" label="Family History?"/>
               </Col>
               <Col>
-                <Form.Check type="switch" id="employment" label="Employed?" isValid="true"/>
+                <Form.Check type="switch" id="employment" label="Employed?"/>
               </Col>
               <Col>
-                <Form.Check type="switch" id="insuranceStatus" label="Insurance?" isValid="true"/>
+                <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
               </Col>
             </Row>
             <Row>
