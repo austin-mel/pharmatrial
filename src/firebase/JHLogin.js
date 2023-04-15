@@ -1,14 +1,15 @@
 import React from "react";
 import { Form, Button, Card, Alert, Container, Col, Row, Modal } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './FirebaseHook'
-import { getAuth, updateProfile } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
 import PatientTable from "../components/PatientTable";
 import PatientAppointment from "../components/PatientAppointment";
 import AddPatient from "../components/AddPatient";
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 function FBaseLoggedIn() {
     const [popup, setPopup] = useState("patient");
@@ -21,35 +22,77 @@ function FBaseLoggedIn() {
         catch (e) { console.error(e); }
       }
 
-      const auth = getAuth();
+    const user = auth.currentUser;
 
-      updateProfile(auth.currentUser, {
-        displayName: "Doctor"
-      })
-      
-      const user = auth.currentUser;
+      const email = user.email;
+      if(email.substring(email.length - 7) === "fda.gov"){
+        visitorType("FDA Admin");
+      }
+      else if(email.substring(email.length - 15) === "janehopkins.com"){
+        if(email === "admin@janehopkins.com"){
+            visitorType("JH Admin");
+        }
+        else{
+            visitorType("Doctor");
+        }
+      }
+      else if(email.substring(email.length - 11) === "bavaria.com"){
+        visitorType("Bavaria Admin");
+      }
+      else if(email.substring(email.length - 5) === "gmail.com"){
+        visitorType("Patient");
+      }
+
+      function visitorType(visitor){
+        updateProfile(auth.currentUser, {
+          displayName: visitor
+        })
+      }
+
+      var access = null;
+
       if (user !== null) {
         // The user object has basic properties such as display name, email, etc.
         const displayName = user.displayName;
-        const email = user.email;
-      
-        //console.log(displayName);
-        //console.log(email);
+        
+        if(displayName === "FDA Admin"){
+            access = "false";
+        }
+        else if(displayName === "Bavaria Admin"){
+            access = "false";
+        }
+        else if(displayName === "JH Admin"){
+            access = "admin";
+        }
+        else if(displayName === "Patient"){
+            access = "patient";
+        }
+        else{
+            access = "doctor";
+        }
       }
+
+      useEffect(() => {
+    }, [user.displayName]);
       
     return(
-      <Container>
-        <p>Logged In</p>
+        <div>
+    {access === "doctor" ? ( 
+        <Container>
+        <Row>
+          <Col className="justify-content-md-end" style={{display:'flex'}}>
+            <p>Logged In!</p>   <AccountCircleRoundedIcon/>
+          </Col>
+        </Row>
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <div><h5>Welcome, {user.displayName}!</h5></div>
           </Col>
           <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
-            <Button varient="danger" onClick={logout}>Log Out</Button>
+            <Button variant="danger" onClick={logout}>Log Out</Button>
           </Col>
         </Row>
-        <Container fluid>
-                    <Row className="content">
+                    <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
                                 <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Patient
@@ -61,7 +104,7 @@ function FBaseLoggedIn() {
                             </Fab>
                         </Col>
                     </Row>
-                    <Row className="content">
+                    <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
                     </Row>
                     <Modal show={show} onHide={handleClose}>
@@ -87,15 +130,31 @@ function FBaseLoggedIn() {
                             </Container>
                         )}
                     </Modal>
-                </Container>
-      </Container>
+        </Container>
+        ):
+        access === "patient" ? ( 
+            <Container fluid>
+                <p>Test</p>
+                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            </Container>
+        ) : 
+        access === "admin" ? ( 
+            <Container fluid>
+                <p>Test2</p>
+                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            </Container>
+        ) : (
+        <Container fluid>
+                <p>Error! No Access!</p>
+                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+        </Container>
+        )}
+        </div>
     );
-
-    
   }
 
 function FBaseSignup(){
-    const [format, setFormat] = useState("login");
+    const [format, setFormat] = useState("landing");
     const [email, emailSet] = useState('');
     const [pw, pwSet] = useState('');
     const [pwConfirm, pwConfirmSet] = useState('');
@@ -138,34 +197,37 @@ function FBaseSignup(){
     return(
         <div className="login">
             {format === "create" ? (
-                <Card className="justify-content-md-center" style={{display:'flex'}}>
-                <Card.Body>
-                    <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
-                    <Form>
-                        <Form.Group className="mb-3" controlId="createEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="createPass">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="createConfirmPass" >
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="Confirm Password" />
-                        </Form.Group>
-                        <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
-                        <Button variant="outline-primary" onClick={() => {createAccount();}}>Create Account</Button>
-                        </Form.Group>
-                        <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
-                        <Form.Text>
-                            Already have an account? Login <Alert.Link onClick={() => {setFormat("login");}}>here</Alert.Link>
-                        </Form.Text>
-                        </Form.Group>
-                    </Form>
-                </Card.Body>
-            </Card>
+              <Container fluid>
+              <Card className="justify-content-md-center" style={{display:'flex'}}>
+              <Card.Body>
+                  <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
+                  <Form>
+                      <Form.Group className="mb-3" controlId="createEmail">
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control type="email" placeholder="Enter email" />
+                      </Form.Group>
+                      <Form.Group className="mb-3" controlId="createPass">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control type="password" placeholder="Password" />
+                      </Form.Group>
+                      <Form.Group className="mb-3" controlId="createConfirmPass" >
+                      <Form.Label>Confirm Password</Form.Label>
+                      <Form.Control type="password" placeholder="Confirm Password" />
+                      </Form.Group>
+                      <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                      <Button variant="outline-primary" onClick={() => {createAccount();}}>Create Account</Button>
+                      </Form.Group>
+                      <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                      <Form.Text>
+                          Already have an account? Login <Alert.Link onClick={() => {setFormat("login");}}>here</Alert.Link>
+                      </Form.Text>
+                      </Form.Group>
+                  </Form>
+              </Card.Body>
+          </Card>
+          </Container>
             ) : (
+              <Container fluid>
             <Card>
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Login</Card.Title>
@@ -190,33 +252,39 @@ function FBaseSignup(){
                     </Form>
                 </Card.Body>
             </Card>
+            </Container>
             )
             }
         </div>
     );
 }
 
-export default function Login() {
-    const [loggedin, loggedinSet] = useState(false);
-  
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is logged in
-        loggedinSet(true);
-      } else {
-        // User is not logged in
-        loggedinSet(false);
-      }
-    });
-  
-    const screenGet = () => {
-      if (loggedin) return <FBaseLoggedIn/>;
-      return <FBaseSignup/>
+export default function JHLogin() {
+  const [loggedin, loggedinSet] = useState(false);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is logged in
+      loggedinSet(true);
+    } else {
+      // User is not logged in
+      loggedinSet(false);
     }
-  
-    return (
-      <Container>
-        {screenGet()}
-      </Container>
-    );
+  });
+
+  //  const screenGet = () => {
+  //    if (loggedin) return <FBaseLoggedIn visitor={visitor}/>;
+  //    return <FBaseSignup/>
+  //  }
+
+  const screenGet = () => {
+    if (loggedin) return <FBaseLoggedIn/>;
+    return <FBaseSignup/>
   }
+
+  return (
+    <Container>
+      {screenGet()}
+    </Container>
+  );
+}

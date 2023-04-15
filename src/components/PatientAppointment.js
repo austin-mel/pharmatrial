@@ -1,10 +1,12 @@
-import { async } from "@firebase/util";
-import { useEffect } from "react";
+import { useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form } from "react-bootstrap";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function PatientAppointment() {
     const { entities } = useJaneHopkins();
+    const [patients, setPatients] = useState();
 
     const handleAddAppointment = async () => {
 
@@ -37,13 +39,18 @@ function PatientAppointment() {
       console.log(addResponse)
     };
 
+    const listPatients = async () => {
+      let patientList = await entities.patient.list()
+      setPatients(patientList.items);
+    };
+
+    listPatients();
+
     return (  
       <div className="addappointment">
       <Form>
-                  <Form.Group className="mb-3" controlId="name">
-                  <Form.Label>Patient Name</Form.Label>
-                  <Form.Control type="name"/>
-                  </Form.Group>
+                  
+
                   <Form.Group className="mb-3" controlId="notes">
                   <Form.Label>Notes</Form.Label>
                   <Form.Control as="textarea" rows={3} type="notes"/>

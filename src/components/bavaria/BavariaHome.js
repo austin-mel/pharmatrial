@@ -1,13 +1,11 @@
 import React from 'react'
-import App from '../../App'
 import MenuBar from '../MenuBar'
-import AddPatient from '../AddPatient'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import logoHeaderBavaria from '../images/BavariaLogo.jpg'
-import Login from '../../firebase/Login'
-import SendDrugs from '../SendDrugs'
+import BavariaLogin from '../../firebase/BavariaLogin'
 
 function BavariaHome() {
+
     return (
         <div className="bavariahome">
             <Container fluid>
@@ -17,7 +15,7 @@ function BavariaHome() {
                 </Row>
                 <Row className="content">
                     <Col></Col>
-                    <Col className="justify-content-md-center" style={{display:'flex'}}><SendDrugs /></Col>
+                    <Col className="justify-content-md-center" style={{display:'flex'}}><BavariaLogin/></Col>
                     <Col></Col>
                 </Row>
             </Container>

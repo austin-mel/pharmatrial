@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
@@ -7,15 +6,13 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import AddHomeRoundedIcon from '@mui/icons-material/AddHomeRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
-import { isRouteErrorResponse } from "react-router-dom";
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 function PatientTable() {
     const { entities } = useJaneHopkins();
     const [patients, setPatients] = useState();
-    const [icdHealthCodes, seticdHealthCodes] = useState();
     const [format, setFormat] = useState("view");
 
     const [show, setShow] = useState(false);
@@ -32,10 +29,15 @@ function PatientTable() {
     
   const [loading, setLoading] = useState(false);
 
+
+  const listPatients = async () => {
+    let patientList = await entities.patient.list()
+    setPatients(patientList.items);
+  };
+
   useEffect(() => {
     listPatients();
     setLoading("true");
-    console.log(loading);
     setTimeout(() => {
       setLoading("false");
     }, 6500);
@@ -48,12 +50,6 @@ function PatientTable() {
       setFilterName(filterName);
       setFilterYear(filterYear);
       setFilterMonth(filterMonth);
-    };
-
-    const listPatients = async () => {
-      let patientList = await entities.patient.list()
-      console.log(patientList.items);
-      setPatients(patientList.items);
     };
 
     const editPatient = async () => {
@@ -212,8 +208,17 @@ function PatientTable() {
 
     return (
         <div className="table">
+        {loading === "true" ? (
           <Container>
             <Row>
+              <Col>
+                <LinearProgress />
+              </Col>
+            </Row>
+          </Container>
+        ) : (
+          <Container>
+                        <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
@@ -244,17 +249,9 @@ function PatientTable() {
                 <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
               </Col>
             </Row>
-          </Container>
-        {loading === "true" ? (
-          <Container>
             <Row>
-              <Col>
-                <LinearProgress />
-              </Col>
+              <Button variant="info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
-          </Container>
-        ) : (
-          <Container>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
             <Table striped bordered hover size="sm">
@@ -368,7 +365,7 @@ function PatientTable() {
                 {patients?.map((patient, key) => {
                   return(
                     <tr key={key}>
-                      <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                      <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                       <td>{patient.uuid}</td>
                       <td>{patient.name}</td>
                       <td>{patient.lastName}</td>
@@ -401,7 +398,7 @@ function PatientTable() {
   <Container>
     <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     {patients?.map((patient, key) => {
-      if(content === patient.uuid){
+      if(content === patient._id){
         return(
             <div key={key}> 
             <Modal.Header closeButton>
@@ -465,6 +462,12 @@ function PatientTable() {
             <Row>
               <Col>
               <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Modal.Body>Doses: {patient.insuranceNumber}/5</Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.insuranceNumber} variant="success" /></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>
@@ -546,8 +549,9 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
+                <Form.Group className="mb-3" controlId="bloodType">
+                <Form.Label>Blood Type</Form.Label>
                 <Form.Select aria-label="Blood Type" id="bloodType">
-                  <option>Blood Type</option>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
                   <option value="AB+">AB+</option>
@@ -557,6 +561,7 @@ function PatientTable() {
                   <option value="O+">O+</option>
                   <option value="O-">O-</option>
                 </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
             <Row>

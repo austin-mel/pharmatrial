@@ -194,8 +194,9 @@ function AddPatient() {
               </Row>
               <Row>
                 <Col>
+                  <Form.Group className="mb-3" controlId="bloodType">
+                  <Form.Label>Blood Type</Form.Label>
                   <Form.Select aria-label="Blood Type" id="bloodType">
-                    <option>Blood Type</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
                     <option value="AB+">AB+</option>
@@ -205,6 +206,7 @@ function AddPatient() {
                     <option value="O+">O+</option>
                     <option value="O-">O-</option>
                   </Form.Select>
+                  </Form.Group>
                 </Col>
               </Row>
               <Row>

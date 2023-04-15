@@ -1,11 +1,9 @@
-import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
-import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form } from "react-bootstrap";
-import {v4 as uuidv4} from 'uuid';
+//import {v4 as uuidv4} from 'uuid';
 import useFDA from "../hooks/useFDA";
 
-function AddDrugs() {
+function AssignDrugs(props) {
     const { entities } = useFDA();
     const [patients, setPatients] = useState();
     const [drugs, setDrugs] = useState();
@@ -17,13 +15,11 @@ function AddDrugs() {
 
     const listPatients = async () => {
       let patientList = await entities.patient.list()
-      //console.log(patientList.items);
       setPatients(patientList.items);
     };
 
     const listDrugs = async () => {
         let drugList = await entities.drug.list()
-        //console.log(patientList.items);
         setDrugs(drugList.items);
       };
 
@@ -31,13 +27,11 @@ function AddDrugs() {
 
       async function addDrugs(patient){
 
-        console.log(patient._id);
+        const drugID = await entities.drug.get(props.props);
 
-        const userResponse = await entities.drug.get('01876c8d-7e0a-a1d7-b332-5cd72425b6a2');
-
-        const addResponse = await entities.drug.update(
+        const addDrugs = await entities.drug.update(
           {
-              _id: userResponse._id,
+              _id: drugID._id,
               id: patient._id,
           },
           {
@@ -68,19 +62,50 @@ function AddDrugs() {
             },
           } 
         );
+
+        const addResponse = await entities.patient.update(
+          {
+              _id: patient._id,
+              drugID: drugID._id,
+              studyID: drugID.studyID,
+          },
+          {
+            aclInput:{
+              acl:[
+                {
+                  principal: {
+                    nodes: ["Bavaria","FDA"]
+                  },
+                  operations: ["ALL"],
+                  path: "drugID",
+                },
+                {
+                  principal: {
+                    nodes: ["Bavaria","FDA"]
+                  },
+                  operations: ["ALL"],
+                  path: "studyID",
+                },
+              ],
+            },
+          } 
+        );
         
         console.log(addResponse);
       }
 
       {patients?.map((patient, key) => { 
-        var DOB = patient.dob.substr(patient.dob.length - 4);
+        key = {key}
+        var dobYear = patient.dob.substr(patient.dob.length - 4);
 
         //ADD ICD-10 HEALTH CODE ELIGIBILITY
-        if(parseInt(DOB) >= 2005){
-          console.log("Not Eligible!")
-        }
-        else{
-          addDrugs(patient);
+        if(patient.drugID === null){
+          if(parseInt(dobYear) >= 2005){
+            console.log("Not Eligible!")
+          }
+          else{
+            addDrugs(patient);
+          }
         }
 
     })}
@@ -92,4 +117,4 @@ function AddDrugs() {
     );
 }
 
-export default AddDrugs;
+export default AssignDrugs;

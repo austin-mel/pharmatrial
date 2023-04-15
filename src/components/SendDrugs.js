@@ -1,27 +1,45 @@
-import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
 import useBavaria from "../hooks/useBavaria";
 import { Button, Form } from "react-bootstrap";
 import {v4 as uuidv4} from 'uuid';
 
-function SendDrugs() {
+function SendDrugs(props) {
     const { entities } = useBavaria();
     const [patients, setPatients] = useState();
+    const [studies, setStudy] = useState();
+    const [drugs, setDrugs] = useState();
+    var batchNum = 0;
+
+    {drugs?.map((drug, key) => {
+      if(drug.batchNumber > batchNum){
+        batchNum = drug.batchNumber
+      }
+    })}
 
     useEffect(() => {
       listPatients();
+      listStudies();
+      listDrugs();
     }, []);
 
     const listPatients = async () => {
       let patientList = await entities.patient.list()
-      //console.log(patientList.items);
       setPatients(patientList.items);
+    };
+
+    const listStudies = async () => {
+      let studyList = await entities.study.list()
+      setStudy(studyList.items);
+    };
+
+    const listDrugs = async () => {
+      let drugList = await entities.drug.list()
+      setDrugs(drugList.items);
     };
 
     const handleSendDrugs = async () => {
 
       //let drugUUID = uuidv4();
-      var batchNum = 0;
       var placeboDrug = false;
 
       increaseBatchNum();
@@ -40,9 +58,7 @@ function SendDrugs() {
         }
       }
 
-      //console.log(drugUUID);
-      //console.log(batchNum.toString());
-      //console.log(placeboDrug);
+      const studyID = props.props;
 
       async function sendDrugs(){
         const addResponse = await entities.drug.add(
@@ -50,6 +66,7 @@ function SendDrugs() {
               placebo: placeboDrug,
               batchNumber: batchNum.toString(),
               id: "",
+              studyID: studyID,
           },
           {
             aclInput:{
@@ -90,22 +107,21 @@ function SendDrugs() {
       }
 
       {patients?.map((patient, key) => { 
-        var test = patient.dob.substr(patient.dob.length - 4);
-        console.log(test);
+        key={key}
+        if(patient.dob != null){
+          var dobYear = patient.dob.substring(patient.dob.length - 4);
+        }
 
-        if(parseInt(test) >= 2005){
+        if(parseInt(dobYear) >= 2005){
           console.log("Not Eligible!")
         }
         else{
           chooseType();
           sendDrugs();
         }
-            })}
-      
+      })}
       increaseBatchNum();
     };
-
-    
 
     return (  
       <Button variant="success" onClick={() => {handleSendDrugs();}}>Send Drugs to FDA</Button>
