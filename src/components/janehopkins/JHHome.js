@@ -7,9 +7,8 @@ import JHLogin from '../../firebase/JHLogin'
 
 
 function JHHome() {
-
-
     return (
+        //JANE HOPKINS PAGE
         <Container fluid>
                     <Row className="jhheader">
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>

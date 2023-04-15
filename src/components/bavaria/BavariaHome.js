@@ -7,6 +7,7 @@ import BavariaLogin from '../../firebase/BavariaLogin'
 function BavariaHome() {
 
     return (
+        //BAVARIA PAGE
         <div className="bavariahome">
             <Container fluid>
                 <Row className="bavheader">

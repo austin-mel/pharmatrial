@@ -272,11 +272,6 @@ export default function JHLogin() {
     }
   });
 
-  //  const screenGet = () => {
-  //    if (loggedin) return <FBaseLoggedIn visitor={visitor}/>;
-  //    return <FBaseSignup/>
-  //  }
-
   const screenGet = () => {
     if (loggedin) return <FBaseLoggedIn/>;
     return <FBaseSignup/>

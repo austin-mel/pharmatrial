@@ -11,38 +11,52 @@ import LinearProgress from '@mui/material/LinearProgress';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 function PatientTable() {
+  //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
+    //CREATE ARRAY FOR PATIENTS
     const [patients, setPatients] = useState();
-    const [format, setFormat] = useState("view");
 
+    //CREATE USE STATE (FOR MODAL POPUP)
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleOpen = () => setShow(true);
 
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
+    const [format, setFormat] = useState("view");
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
     const [content, setContent] = useState();
+    //CREATE USE STATE (FOR  EACH FILTER TYPE)
     const [filterName, setFilterName] = useState();
     const [filterYear, setFilterYear] = useState();
     const [filterMonth, setFilterMonth] = useState();
     const [filterStatus, setFilterStatus] = useState();
 
+    //CREATE ARRAY FOR PATIENT IDS
     const [patientID, setPatientID] = useState();
     
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
   const [loading, setLoading] = useState(false);
 
-
+    //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
   const listPatients = async () => {
     let patientList = await entities.patient.list()
     setPatients(patientList.items);
   };
 
+  //RUNS WHEN PAGE LOADS/RELOADS
   useEffect(() => {
+    //CALL LISTPATIENTS FUNCTION
     listPatients();
+    //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
     setLoading("true");
     setTimeout(() => {
       setLoading("false");
     }, 6500);
   }, []);
 
+  //FUNCTION TO RETREIVE VALUES FROM FILTER OPTIONS
+  //STORES VALUES IN USESTATE ARRAYS ABOVE (FOR CONDITIONAL RENDERING)
     const checkFilter = async () => {
       const filterName = document.getElementById("filterName").value;
       const filterYear = document.getElementById("filterYear").value;
@@ -52,58 +66,29 @@ function PatientTable() {
       setFilterMonth(filterMonth);
     };
 
+  //FUNCTION TO EDIT A PATIENT
     const editPatient = async () => {
-      
-      var familyHistory = document.getElementById("familyHistory").value;
-      var currentlyEmployed = document.getElementById("employment").value;
-      var currentlyInsured = document.getElementById("insuranceStatus").value;
 
-      console.log((document.getElementById("familyHistory").value));
-      console.log((document.getElementById("employment").value));
-
-      if(document.getElementById("familyHistory").value === "on"){
-        familyHistory = "Yes";
-      }
-      if(document.getElementById("employment").value === "on"){
-        currentlyEmployed = "Yes";
-      }
-      if(document.getElementById("insuranceStatus").value === "on"){
-        currentlyInsured = "Yes";
-      }
-
-
-      const name = document.getElementById("patientFirstName").value
-      const lastName = document.getElementById("patientLastName").value
-      const dob = document.getElementById("patientDOB").value
-      const address = document.getElementById("patientAddress").value
-      const insuranceNumber = document.getElementById("patientInsuranceNum").value
-      const height = document.getElementById("patientHeight").value
-      const weight = document.getElementById("patientWeight").value
-      const bloodPressure = document.getElementById("bloodPressure").value
-      const bloodType = document.getElementById("bloodType").value
-      const temperature = document.getElementById("temp").value
-      const oxygenSaturation = document.getElementById("OSat").value
-      const newMedication = {medication: document.getElementById("currentMeds")};
-      const newICDHealthCodes = {code: document.getElementById("ICD10")};
-      const newAllergies = {allergy: document.getElementById("allergies")};
-
-      const editResponse = await entities.patient.update(
+      //VENDIA FUNCTION TO EDIT PATIENT
+      //GET VALUES FROM THE FORM BELOW BY FETCHING IDS FROM FORM
+      //_id MUST BE ID OF PATIENT YOU WANT TO EDIT
+      const editPatient = await entities.patient.update(
         {
           _id: patientID,
-          name,
-          lastName,
-          dob,
-          address,
-          insuranceNumber,
-          height,
-          weight,
-          bloodPressure,
-          bloodType,
-          temperature,
-          oxygenSaturation,
-          familyHistory,
-          currentlyEmployed,
-          currentlyInsured
+          name: document.getElementById("patientFirstName").value,
+          lastName: document.getElementById("patientLastName").value,
+          dob: document.getElementById("patientDOB").value,
+          address: address = document.getElementById("patientAddress").value,
+          insuranceNumber: document.getElementById("patientInsuranceNum").value,
+          height: document.getElementById("patientHeight").value,
+          weight: document.getElementById("patientWeight").value,
+          bloodPressure: document.getElementById("bloodPressure").value,
+          bloodType: document.getElementById("bloodType").value,
+          temperature: document.getElementById("temp").value,
+          oxygenSaturation: document.getElementById("OSat").value,
+          familyHistory: document.getElementById("familyHistory").value,
+          currentlyEmployed: document.getElementById("employmentStatus").value,
+          currentlyInsured: document.getElementById("insuranceStatus").value,
         },
         {
           aclInput:{
@@ -197,19 +182,17 @@ function PatientTable() {
           },
         } 
       );
-      console.log(editResponse)
+      console.log(editPatient);
     };
 
-    const editVisits = async () => {
-      console.log("test2!");
-
-    };
-
-
+    //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
     return (
-        <div className="table">
+        <div className="patienttable">
         {loading === "true" ? (
           <Container>
+        {
+          //IF LOADING IS TRUE DISPLAY A LINEAR PROGRESS LOADING BAR ON THE PAGE
+        }
             <Row>
               <Col>
                 <LinearProgress />
@@ -218,6 +201,9 @@ function PatientTable() {
           </Container>
         ) : (
           <Container>
+            {
+              //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
+            }
                         <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
@@ -245,15 +231,24 @@ function PatientTable() {
               <Col>
                 <Form.Control placeholder="Year" id="filterYear"/>
               </Col>
+              {
+                //BUTTON TO CLEAR FILTER
+              }
               <Col sm="2" className="justify-content-md-left" style={{display:'flex'}}>
                 <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
               </Col>
             </Row>
+            {
+              //BUTTON TO REFRESH TABLE
+            }
             <Row>
               <Button variant="info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+             {
+              //IF FILTER IS ENABLED
+            }
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -279,13 +274,25 @@ function PatientTable() {
                 </tr>
               </thead>
               <tbody>
+                {
+                  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+                }
                 {patients?.map((patient, key) => {
-
+                  {
+                    //IF NAME AND YEAR (BUT NO MONTH SET)
+                  }
                   if(filterMonth === "null"){
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                          {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid.toString()}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -306,11 +313,20 @@ function PatientTable() {
                           <td></td>
                       </tr>
           )}}
+            //IF NAME AND YEAR AND MONTH ARE SET
                   else{
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED && MONTH INCLUDES MONTH FILTERED
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
+                        
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                         {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -336,7 +352,11 @@ function PatientTable() {
             </Table>
           </Container>
 ) : (
+  
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            {
+              //IF FILTER IS DISABLED
+            }
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -362,9 +382,18 @@ function PatientTable() {
                 </tr>
               </thead>
               <tbody>
+                {
+                  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+                }
                 {patients?.map((patient, key) => {
+                  //RENDER EVERY PATIENT
                   return(
                     <tr key={key}>
+                   {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                    }
                       <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                       <td>{patient.uuid}</td>
                       <td>{patient.name}</td>
@@ -395,14 +424,21 @@ function PatientTable() {
         )}
 
 {format === "view" ? (
-  <Container>
+  <Container fluid> 
+  {
+    //IF SETSTATE (format) IS VIEW SHOW PATIENT DETAILS
+  }
     <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    {
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    }
     {patients?.map((patient, key) => {
       if(content === patient._id){
+        //RENDER VALUES AS TEXT
         return(
             <div key={key}> 
             <Modal.Header closeButton>
-            <Modal.Title id={patient.uuid}>{patient.name} {patient.lastName}</Modal.Title>
+            <Modal.Title id={patient._id}>{patient.name} {patient.lastName}</Modal.Title>
             </Modal.Header>
             <Row>
               <Col>
@@ -471,6 +507,10 @@ function PatientTable() {
               </Col>
             </Row>
             <Modal.Footer>
+            {
+            //BUTTON TO ENABLE EDITING (CHANGE format SETSTATE TO EDIT)
+            //BUTTON TO CLOSE MODAL
+            }
             <Button variant="primary" onClick={() => {setFormat("edit");}}><EditRoundedIcon/>Edit Info</Button>
             <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
             </Modal.Footer>
@@ -481,13 +521,23 @@ function PatientTable() {
   </Container>
 ) : (
   <Container>
+      {
+    //IF format SETSTATE IS EDIT THEN SHOW FORM TO ALLOW EDITS
+    }
     <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    {
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    }
     {patients?.map((patient, key) => {
-      if(content === patient.uuid){
+      {
+        //FINDS PATIENT THAT IS EQUAL TO THE PATIENT PASSED FROM ABOVE (THROUGH content SETSTATE)
+      }
+      if(content === patient._id){
+        //RENDER FORM TO ALLOW EDITS
         return(
           <Container key={key}>
           <Modal.Header closeButton>
-          <Modal.Title id={patient.uuid}>
+          <Modal.Title id={patient._id}>
                 <Row>
                   <Col>
                   <Form.Group className="mb-3" controlId="patientFirstName">
@@ -618,6 +668,10 @@ function PatientTable() {
           </Row>
           </Modal.Body>
           <Modal.Footer>
+          {
+            //BUTTON TO CALL FUNCTION EDIT A PATIENT
+            //BUTTON TO CLOSE MODAL
+          }
           <Button variant="success" onClick={() => {editPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
           <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
           </Modal.Footer>

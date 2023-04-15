@@ -4,22 +4,12 @@ import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 
 function AddPatient() {
+  
+    //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
 
+    //FUNCTION THAT ADDS A NEW PATIENT
     const handleAddPatient = async () => {
-      var historyBool = "No";
-      var employmentBool = "No";
-      var insuredBool = "No";
-
-      if(document.getElementById("familyHistory").value === "on"){
-        historyBool = "Yes";
-      }
-      if(document.getElementById("employment").value === "on"){
-        employmentBool = "Yes";
-      }
-      if(document.getElementById("insuranceStatus").value === "on"){
-        insuredBool = "Yes";
-      }
 
       //const currentPatientMeds = null;
       //const currentICDHealthCodes = null;
@@ -31,6 +21,8 @@ function AddPatient() {
       //const newAllergies = {allergy: document.getElementById("allergies")};
       //const allergies = [...currentAllergies,newAllergies];
 
+      //VENDIA FUNCTION TO ADD PATIENT TO DATABASE
+      //GET VALUES FROM THE FORM BELOW BY FETCHING IDS
       const addResponse = await entities.patient.add(
         {
           name: document.getElementById("firstName").value,
@@ -44,9 +36,9 @@ function AddPatient() {
           bloodType: document.getElementById("bloodType").value,
           temperature: document.getElementById("temp").value,
           oxygenSaturation: document.getElementById("OSat").value,
-          familyHistory: historyBool,
-          currentlyEmployed: employmentBool,
-          currentlyInsured: insuredBool,
+          familyHistory: document.getElementById("familyHistory").value,
+          currentlyEmployed: document.getElementById("employmentStatus").value,
+          currentlyInsured: document.getElementById("insuranceStatus").value,
           //currentMedications: medications,
           //icdHealthCodes: icdHealthCodes,
           //allergies: allergies
@@ -128,11 +120,10 @@ function AddPatient() {
           },
         } 
       );
-      console.log(addResponse)
-      console.log("Successfully Added Patient!");
     };
 
-
+    //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ADDPATIENT
+    //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (
         <div className="addpatient">
             <Form>
@@ -196,7 +187,7 @@ function AddPatient() {
                 <Col>
                   <Form.Group className="mb-3" controlId="bloodType">
                   <Form.Label>Blood Type</Form.Label>
-                  <Form.Select aria-label="Blood Type" id="bloodType">
+                  <Form.Select id="bloodType">
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
                     <option value="AB+">AB+</option>
@@ -225,13 +216,31 @@ function AddPatient() {
               </Row>
               <Row>
                 <Col>
-                  <Form.Check type="switch" id="familyHistory" label="Family History?"/>
+                <Form.Group className="mb-3" controlId="familyHistory">
+                  <Form.Label>Family History?</Form.Label>
+                  <Form.Select id="familyHistory">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Check type="switch" id="employment" label="Employed?"/>
+                <Form.Group className="mb-3" controlId="employmentStatus">
+                  <Form.Label>Employed?</Form.Label>
+                  <Form.Select id="employmentStatus">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
+                <Form.Group className="mb-3" controlId="insuranceStatus">
+                  <Form.Label>Valid Insurnace?</Form.Label>
+                  <Form.Select id="insuranceStatus">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
               </Row>
               <Row>
@@ -257,6 +266,9 @@ function AddPatient() {
                 </Col>
               </Row>
                         <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                          {
+                            //BUTTON THAT CALLS FUNCTION TO ADD PATIENT ON CLICK
+                          }
                         <Button variant="outline-success" onClick={() => {handleAddPatient();}}>Add Patient to Database</Button>
                         </Form.Group>
               </Form>

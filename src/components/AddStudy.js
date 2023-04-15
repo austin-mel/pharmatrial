@@ -4,12 +4,18 @@ import useFDA from "../hooks/useFDA";
 import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 
 function AddStudy() {
+
+    //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useFDA();
 
+    //FUNCTOIN THAT CREATES A NEW STUDY
     const handleCreateStudy = async () => {
 
+      //VENDIA FUNCTION TO ADD STUDY
       const createStudy = await entities.study.add(
         {
+          //RETREIVE DRUG NAME FROM FORM
+          //SET OTHER VALUES AS DEFAULT VALUES DESIRED
           drugName: document.getElementById("drugName").value,
           fdaApproved: false,
           bavariaApproved: false,
@@ -34,7 +40,14 @@ function AddStudy() {
               },
               {
                 principal: {
-                  nodes: ["Bavaria","FDA"]
+                  nodes: ["Bavaria"]
+                },
+                operations: ["ALL"],
+                path: "drugName",
+              },
+              {
+                principal: {
+                  nodes: ["FDA"]
                 },
                 operations: ["READ"],
                 path: "drugName",
@@ -52,7 +65,8 @@ function AddStudy() {
       );
     };
 
-
+    //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ADDPATIENT
+    //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (
         <div className="addpatient">
             <Form>
@@ -66,6 +80,9 @@ function AddStudy() {
                 </Row>
                 <Row>
                         <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                        {
+                            //BUTTON THAT CALLS FUNCTION TO ADD STUDY ON CLICK
+                        }
                         <Button variant="outline-success" onClick={() => {handleCreateStudy();}}>Create New Study</Button>
                         </Form.Group>
                 </Row>

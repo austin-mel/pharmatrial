@@ -6,7 +6,7 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import LinearProgress from '@mui/material/LinearProgress';
 
 
-function FDATable() {
+function TestTable() {
     const { entities } = useFDA();
     const [patients, setPatients] = useState();
 
@@ -200,4 +200,4 @@ function FDATable() {
 )}
     
 
-export default FDATable;
+export default TestTable;

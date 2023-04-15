@@ -7,6 +7,7 @@ import FDALogin from '../../firebase/FDALogin'
 function FDAHome() {
 
     return (
+        //FDA PAGE
         <div className="fdahome">
                 <Container fluid>
                 <Row className="fdaheader">
