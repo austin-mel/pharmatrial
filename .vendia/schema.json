@@ -7,6 +7,9 @@
     },
     "drugACL": {
       "type": "Drug"
+    },
+    "studyACL": {
+      "type": "Study"
     }
   },
   "type": "object",
@@ -17,6 +20,9 @@
         "type": "object",
         "properties": {
           "name": {
+            "type": "string"
+          },
+          "lastName": {
             "type": "string"
           },
           "patientPicture": {
@@ -37,6 +43,9 @@
           "bloodPressure": {
             "type": "string"
           },
+          "bloodType": {
+            "type": "string"
+          },
           "temperature": {
             "type": "string"
           },
@@ -48,6 +57,18 @@
           },
           "address": {
             "type": "string"
+          },
+          "drugID": {
+            "type": "string"
+          },
+          "studyID": {
+            "type": "string"
+          },
+          "doseNum": {
+            "type": "string"
+          },
+          "isEligible": {
+            "type": "boolean"
           },
           "currentMedications": {
             "type": "array",
@@ -127,6 +148,32 @@
           },
           "id": {
             "type": "string"
+          },
+          "patientID": {
+            "type": "string"
+          },
+          "studyID": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Study": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fdaApproved": {
+            "type": "boolean"
+          },
+          "bavariaApproved": {
+            "type": "boolean"
+          },
+          "drugName": {
+            "type": "string"
+          },
+          "inProgress": {
+            "type": "boolean"
           }
         }
       }

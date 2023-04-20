@@ -1,12 +1,28 @@
 import { async } from "@firebase/util";
 import { useEffect } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 
 function AddPatient() {
+  
+    //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
 
+    //FUNCTION THAT ADDS A NEW PATIENT
     const handleAddPatient = async () => {
+
+      //const currentPatientMeds = null;
+      //const currentICDHealthCodes = null;
+      //const currentAllergies = null;
+      //const newMedication = {medication: document.getElementById("currentMeds")};
+      //const medications = [...currentPatientMeds,newMedication];
+      //const newICDHealthCodes = {code: document.getElementById("ICD10")};
+      //const icdHealthCodes = [...currentICDHealthCodes,newICDHealthCodes];
+      //const newAllergies = {allergy: document.getElementById("allergies")};
+      //const allergies = [...currentAllergies,newAllergies];
+
+      //VENDIA FUNCTION TO ADD PATIENT TO DATABASE
+      //GET VALUES FROM THE FORM BELOW BY FETCHING IDS
       const addResponse = await entities.patient.add(
         {
           name: document.getElementById("firstName").value,
@@ -18,11 +34,14 @@ function AddPatient() {
           weight: document.getElementById("weight").value,
           bloodPressure: document.getElementById("bloodPressure").value,
           bloodType: document.getElementById("bloodType").value,
-          tempterature: document.getElementById("temp").value,
+          temperature: document.getElementById("temp").value,
           oxygenSaturation: document.getElementById("OSat").value,
           familyHistory: document.getElementById("familyHistory").value,
-          currentlyEmployed: document.getElementById("employment").value,
-          currentlyInsured: document.getElementById("insuranceStatus").value
+          currentlyEmployed: document.getElementById("employmentStatus").value,
+          currentlyInsured: document.getElementById("insuranceStatus").value,
+          //currentMedications: medications,
+          //icdHealthCodes: icdHealthCodes,
+          //allergies: allergies
         },
         {
           aclInput:{
@@ -32,25 +51,79 @@ function AddPatient() {
                   nodes: ["Bavaria","FDA"]
                 },
                 operations: ["READ"],
-                path: "name",
+                path: "dob",
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "height"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "weight"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodPressure"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodType"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "temperature"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "oxygenSaturation"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "familyHistory"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyEmployed"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyInsured"
               },
             ],
           },
         } 
       );
-      console.log(addResponse)
     };
 
-    //list patients
-    const listPatients = async () => {
-        let patientList = await entities.patient.list()
-        console.log(patientList.items);
-    };
-
-    useEffect(() =>{
-      listPatients();
-    }, []);
-
+    //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ADDPATIENT
+    //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (
         <div className="addpatient">
             <Form>
@@ -112,8 +185,9 @@ function AddPatient() {
               </Row>
               <Row>
                 <Col>
-                  <Form.Select aria-label="Blood Type" id="bloodType">
-                    <option>Blood Type</option>
+                  <Form.Group className="mb-3" controlId="bloodType">
+                  <Form.Label>Blood Type</Form.Label>
+                  <Form.Select id="bloodType">
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
                     <option value="AB+">AB+</option>
@@ -123,6 +197,7 @@ function AddPatient() {
                     <option value="O+">O+</option>
                     <option value="O-">O-</option>
                   </Form.Select>
+                  </Form.Group>
                 </Col>
               </Row>
               <Row>
@@ -141,13 +216,31 @@ function AddPatient() {
               </Row>
               <Row>
                 <Col>
-                  <Form.Check type="switch" id="familyHistory" label="Family History?"/>
+                <Form.Group className="mb-3" controlId="familyHistory">
+                  <Form.Label>Family History?</Form.Label>
+                  <Form.Select id="familyHistory">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Check type="switch" id="employment" label="Employed?"/>
+                <Form.Group className="mb-3" controlId="employmentStatus">
+                  <Form.Label>Employed?</Form.Label>
+                  <Form.Select id="employmentStatus">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
+                <Form.Group className="mb-3" controlId="insuranceStatus">
+                  <Form.Label>Valid Insurnace?</Form.Label>
+                  <Form.Select id="insuranceStatus">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Form.Select>
+                </Form.Group>
                 </Col>
               </Row>
               <Row>
@@ -173,6 +266,9 @@ function AddPatient() {
                 </Col>
               </Row>
                         <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                          {
+                            //BUTTON THAT CALLS FUNCTION TO ADD PATIENT ON CLICK
+                          }
                         <Button variant="outline-success" onClick={() => {handleAddPatient();}}>Add Patient to Database</Button>
                         </Form.Group>
               </Form>

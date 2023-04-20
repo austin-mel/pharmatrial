@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
@@ -7,36 +6,57 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import AddHomeRoundedIcon from '@mui/icons-material/AddHomeRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 function PatientTable() {
+  //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
+    //CREATE ARRAY FOR PATIENTS
     const [patients, setPatients] = useState();
-    const [format, setFormat] = useState("view");
 
+    //CREATE USE STATE (FOR MODAL POPUP)
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleOpen = () => setShow(true);
 
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
+    const [format, setFormat] = useState("view");
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
     const [content, setContent] = useState();
+    //CREATE USE STATE (FOR  EACH FILTER TYPE)
     const [filterName, setFilterName] = useState();
     const [filterYear, setFilterYear] = useState();
     const [filterMonth, setFilterMonth] = useState();
     const [filterStatus, setFilterStatus] = useState();
+
+    //CREATE ARRAY FOR PATIENT IDS
+    const [patientID, setPatientID] = useState();
     
+    //CREATE USE STATE (FOR CONDITIONAL RENDERING)
   const [loading, setLoading] = useState(false);
 
+    //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
+  const listPatients = async () => {
+    let patientList = await entities.patient.list()
+    setPatients(patientList.items);
+  };
+
+  //RUNS WHEN PAGE LOADS/RELOADS
   useEffect(() => {
+    //CALL LISTPATIENTS FUNCTION
     listPatients();
+    //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
     setLoading("true");
-    console.log(loading);
     setTimeout(() => {
       setLoading("false");
     }, 6500);
   }, []);
 
+  //FUNCTION TO RETREIVE VALUES FROM FILTER OPTIONS
+  //STORES VALUES IN USESTATE ARRAYS ABOVE (FOR CONDITIONAL RENDERING)
     const checkFilter = async () => {
       const filterName = document.getElementById("filterName").value;
       const filterYear = document.getElementById("filterYear").value;
@@ -46,27 +66,146 @@ function PatientTable() {
       setFilterMonth(filterMonth);
     };
 
-    const listPatients = async () => {
-      let patientList = await entities.patient.list()
-      console.log(patientList.items);
-      setPatients(patientList.items);
-    };
-
+  //FUNCTION TO EDIT A PATIENT
     const editPatient = async () => {
-      console.log("test!");
 
+      //VENDIA FUNCTION TO EDIT PATIENT
+      //GET VALUES FROM THE FORM BELOW BY FETCHING IDS FROM FORM
+      //_id MUST BE ID OF PATIENT YOU WANT TO EDIT
+      const editPatient = await entities.patient.update(
+        {
+          _id: patientID,
+          name: document.getElementById("patientFirstName").value,
+          lastName: document.getElementById("patientLastName").value,
+          dob: document.getElementById("patientDOB").value,
+          address: document.getElementById("patientAddress").value,
+          insuranceNumber: document.getElementById("patientInsuranceNum").value,
+          height: document.getElementById("patientHeight").value,
+          weight: document.getElementById("patientWeight").value,
+          bloodPressure: document.getElementById("bloodPressure").value,
+          bloodType: document.getElementById("bloodType").value,
+          temperature: document.getElementById("temp").value,
+          oxygenSaturation: document.getElementById("OSat").value,
+          familyHistory: document.getElementById("familyHistory").value,
+          currentlyEmployed: document.getElementById("employmentStatus").value,
+          currentlyInsured: document.getElementById("insuranceStatus").value,
+          
+        },
+        {
+          aclInput:{
+            acl:[
+              {
+                
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "dob",
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "height"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "weight"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodPressure"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "bloodType"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "temperature"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "oxygenSaturation"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "familyHistory"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyEmployed"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentlyInsured"
+              },
+              {
+                principal: {
+                  nodes: ["JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "name"
+              },
+              {
+                principal: {
+                  nodes: ["JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "lastName"
+              },
+            ],
+          },
+        } 
+      );
+      console.log(editPatient);
     };
 
-    const editVisits = async () => {
-      console.log("test2!");
-
-    };
-
-
+    //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
     return (
-        <div className="table">
+        <div className="patienttable">
+        {loading === "true" ? (
           <Container>
+        {
+          //IF LOADING IS TRUE DISPLAY A LINEAR PROGRESS LOADING BAR ON THE PAGE
+        }
             <Row>
+              <Col>
+                <LinearProgress />
+              </Col>
+            </Row>
+          </Container>
+        ) : (
+          <Container>
+            {
+              //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
+            }
+                        <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
@@ -93,23 +232,24 @@ function PatientTable() {
               <Col>
                 <Form.Control placeholder="Year" id="filterYear"/>
               </Col>
+              {
+                //BUTTON TO CLEAR FILTER
+              }
               <Col sm="2" className="justify-content-md-left" style={{display:'flex'}}>
                 <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
               </Col>
             </Row>
-          </Container>
-        {loading === "true" ? (
-          <Container>
+            {
+              //BUTTON TO REFRESH TABLE
+            }
             <Row>
-              <Col>
-                <LinearProgress />
-              </Col>
+              <Button variant="info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
-          </Container>
-        ) : (
-          <Container>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+             {
+              //IF FILTER IS ENABLED
+            }
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -135,12 +275,30 @@ function PatientTable() {
                 </tr>
               </thead>
               <tbody>
+                {
+                  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+                }
                 {patients?.map((patient, key) => {
+                  {
+                    //IF NAME AND YEAR (BUT NO MONTH SET)
+                  }
                   if(filterMonth === "null"){
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                          {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+
+
+                            //CURRENTLY CANT DISPLAY currentMedications, allergies, icdHealthCodes, Visits (THEY ARE STORED AS ARRAYS IN VENDIA)
+                            //BELOW IS HOW WE ACCESS THE OTHER VARIABLES (SINCE THEY ARE JUST STORED AS STRINGS)
+                            //WE HAVE TO DO SOMETHING SIMLIAR TO PATIENTAPPOINTMENT??
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid.toString()}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -153,19 +311,28 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td>{patient.allergies}</td>
-                          <td>{patient.currentMedications}</td>
+                          <td></td>
+                          <td></td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td>{patient.icdHealthCodes}</td>
+                          <td></td>
                       </tr>
           )}}
+            //IF NAME AND YEAR AND MONTH ARE SET
                   else{
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED && MONTH INCLUDES MONTH FILTERED
                     if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
+                        
                         <tr key={key}>
-                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                         {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.name}</td>
                           <td>{patient.lastName}</td>
@@ -178,12 +345,12 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td>{patient.allergies}</td>
-                          <td>{patient.currentMedications}</td>
+                          <td></td>
+                          <td></td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td>{patient.icdHealthCodes}</td>
+                          <td></td>
                       </tr>
           )}}
       })}
@@ -191,7 +358,11 @@ function PatientTable() {
             </Table>
           </Container>
 ) : (
+  
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            {
+              //IF FILTER IS DISABLED
+            }
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -217,10 +388,19 @@ function PatientTable() {
                 </tr>
               </thead>
               <tbody>
+                {
+                  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+                }
                 {patients?.map((patient, key) => {
+                  //RENDER EVERY PATIENT
                   return(
                     <tr key={key}>
-                      <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setContent(patient.uuid);}}><Person2RoundedIcon/>View Patient</Button></td>
+                   {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                    }
+                      <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                       <td>{patient.uuid}</td>
                       <td>{patient.name}</td>
                       <td>{patient.lastName}</td>
@@ -233,12 +413,12 @@ function PatientTable() {
                       <td>{patient.bloodType}</td>
                       <td>{patient.temperature}</td>
                       <td>{patient.oxygenSaturation}</td>
-                      <td>{patient.allergies}</td>
-                      <td>{patient.currentMedications}</td>
+                      <td></td>
+                      <td></td>
                       <td>{patient.familyHistory}</td>
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
-                      <td>{patient.icdHealthCodes}</td>
+                      <td></td>
                     </tr>
                   )
       })}
@@ -250,14 +430,21 @@ function PatientTable() {
         )}
 
 {format === "view" ? (
-  <Container>
+  <Container fluid> 
+  {
+    //IF SETSTATE (format) IS VIEW SHOW PATIENT DETAILS
+  }
     <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    {
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    }
     {patients?.map((patient, key) => {
-      if(content === patient.uuid){
+      if(content === patient._id){
+        //RENDER VALUES AS TEXT
         return(
-            <div>
-            <Modal.Header key={key} closeButton>
-            <Modal.Title id={patient.uuid}>{patient.name} {patient.lastName}</Modal.Title>
+            <div key={key}> 
+            <Modal.Header closeButton>
+            <Modal.Title id={patient._id}>{patient.name} {patient.lastName}</Modal.Title>
             </Modal.Header>
             <Row>
               <Col>
@@ -311,7 +498,7 @@ function PatientTable() {
               <Modal.Body>Insurance Status: <b style={{fontSize: 20}}>{patient.currentlyInsured}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}>{patient.icdHealthCodes}</b></Modal.Body>
+              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}></b></Modal.Body>
               </Col>
             </Row>
             <Row>
@@ -319,7 +506,17 @@ function PatientTable() {
               <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <Modal.Body>Doses: {patient.insuranceNumber}/5</Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.insuranceNumber} variant="success" /></Modal.Body>
+              </Col>
+            </Row>
             <Modal.Footer>
+            {
+            //BUTTON TO ENABLE EDITING (CHANGE format SETSTATE TO EDIT)
+            //BUTTON TO CLOSE MODAL
+            }
             <Button variant="primary" onClick={() => {setFormat("edit");}}><EditRoundedIcon/>Edit Info</Button>
             <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
             </Modal.Footer>
@@ -330,173 +527,161 @@ function PatientTable() {
   </Container>
 ) : (
   <Container>
+      {
+    //IF format SETSTATE IS EDIT THEN SHOW FORM TO ALLOW EDITS
+    }
     <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    {
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    }
     {patients?.map((patient, key) => {
-      if(content === patient.uuid){
+      {
+        //FINDS PATIENT THAT IS EQUAL TO THE PATIENT PASSED FROM ABOVE (THROUGH content SETSTATE)
+      }
+      if(content === patient._id){
+        //RENDER FORM TO ALLOW EDITS
         return(
-          <div>
-            <Modal.Header key={key} closeButton>
-            <Modal.Title id={patient.uuid}>
-                <Form.Group className="mb-3" controlId="patientFirstName">
-                  <Row>
-                    <Col>
-                    <Form.Label>First Name:</Form.Label>
-                    <Form.Control type="firstName" placeholder={patient.name}/>
-                    </Col>
-                    <Col>
-                    <Form.Label>Last Name:</Form.Label>
-                    <Form.Control type="lastName" placeholder={patient.lastName}/>
-                    </Col>
-                  </Row>
-              </Form.Group>
-            </Modal.Title>
-            </Modal.Header>
+          <Container key={key}>
+          <Modal.Header closeButton>
+          <Modal.Title id={patient._id}>
+                <Row>
+                  <Col>
+                  <Form.Group className="mb-3" controlId="patientFirstName">
+                  <Form.Label>First Name:</Form.Label>
+                  <Form.Control type="patientFirstName" defaultValue={patient.name}/>
+                  </Form.Group>
+                  </Col>
+                  <Col>
+                  <Form.Group className="mb-3" controlId="patientLastName">
+                  <Form.Label>Last Name:</Form.Label>
+                  <Form.Control type="patientLastName" defaultValue={patient.lastName}/>
+                  </Form.Group>
+                  </Col>
+                </Row>
+          </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientDOB">
-                    <Form.Label>DOB:</Form.Label>
-                    <Form.Control type="dob" placeholder={patient.dob}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientDOB">
+                  <Form.Label>DOB</Form.Label>
+                  <Form.Control type="patientDOB" defaultValue={patient.dob}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientWeight">
-                    <Form.Label>Address:</Form.Label>
-                    <Form.Control type="weight" placeholder={patient.weight}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientInsuranceNum">
-                    <Form.Label>Insurance #:</Form.Label>
-                    <Form.Control type="insuranceNum" placeholder={patient.insuranceNumber}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientAddress">
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control type="patientAddress" defaultValue={patient.address}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientHeight">
-                    <Form.Label>Height:</Form.Label>
-                    <Form.Control type="height" placeholder={patient.height}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="patientWeight">
-                    <Form.Label>Weight:</Form.Label>
-                    <Form.Control type="weight" placeholder={patient.weight}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="bloodPressure">
-                    <Form.Label>Blood Pressure:</Form.Label>
-                    <Form.Control type="bloodPressure" placeholder={patient.bloodPressure}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientInsuranceNum">
+                  <Form.Label>Insurance Number</Form.Label>
+                  <Form.Control type="patientInsuranceNum" defaultValue={patient.insuranceNumber}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="bloodType">
-                    <Form.Label>Blood Type:</Form.Label>
-                    <Form.Control type="bloodType" placeholder={patient.bloodType}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientHeight">
+                  <Form.Label>Height</Form.Label>
+                  <Form.Control type="patientHeight" defaultValue={patient.height}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="temperature">
-                    <Form.Label>Temperature:</Form.Label>
-                    <Form.Control type="temperature" placeholder={patient.temperature}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="patientWeight">
+                  <Form.Label>Weight</Form.Label>
+                  <Form.Control type="patientWeight" defaultValue={patient.height}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="oxygenSaturation">
-                    <Form.Label>O Saturation:</Form.Label>
-                    <Form.Control type="oxygenSaturation" placeholder={patient.oxygenSaturation}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="bloodPressure">
+                  <Form.Label>Blood Pressure</Form.Label>
+                  <Form.Control type="bloodPressure" defaultValue={patient.bloodPressure}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="allergies">
-                    <Form.Label>Allergies:</Form.Label>
-                    <Form.Control type="allergies" placeholder={patient.allergies}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentMeds">
-                    <Form.Label>Current Meds:</Form.Label>
-                    <Form.Control type="currentMeds" placeholder={patient.currentMedications}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="familyHistory">
-                    <Form.Label>Family History:</Form.Label>
-                    <Form.Control type="familyHistory" placeholder={patient.familyHistory}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="bloodType">
+                <Form.Label>Blood Type</Form.Label>
+                <Form.Select aria-label="Blood Type" id="bloodType">
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentlyEmployed">
-                    <Form.Label>Employed:</Form.Label>
-                    <Form.Control type="currentlyEmployed" placeholder={patient.currentlyEmployed}/>
-                  </Form.Group>
-                </Modal.Body>
+                <Form.Group className="mb-3" controlId="temp">
+                  <Form.Label>Temperature</Form.Label>
+                  <Form.Control type="temp" defaultValue={patient.temperature}/>
+                </Form.Group>
               </Col>
               <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="currentlyInsured">
-                    <Form.Label>Insured:</Form.Label>
-                    <Form.Control type="currentlyInsured" placeholder={patient.currentlyInsured}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-              <Col>
-                <Modal.Body>
-                  <Form.Group className="mb-3" controlId="icdHealthCodes">
-                    <Form.Label>ICD-10 Codes:</Form.Label>
-                    <Form.Control type="icdHealthCodes" placeholder={patient.icdHealthCodes}/>
-                  </Form.Group>
-                </Modal.Body>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="d-grid gap-2" style={{display:'flex'}}>
-                  <Button variant="primary" size="lg" onClick={() => {editVisits();}}><AddHomeRoundedIcon/>Add a Visit</Button>
+                <Form.Group className="mb-3" controlId="OSat">
+                  <Form.Label>Ox Saturation</Form.Label>
+                  <Form.Control type="OSat" defaultValue={patient.oxygenSaturation}/>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col>
-              
-                <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+                <Form.Check type="switch" id="familyHistory" label="Family History?"/>
+              </Col>
+              <Col>
+                <Form.Check type="switch" id="employment" label="Employed?"/>
+              </Col>
+              <Col>
+                <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
               </Col>
             </Row>
-            <Modal.Footer>
-            <Button variant="success" onClick={() => {editPatient(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
-            <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
-            </Modal.Footer>
-            </div>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="allergies">
+                  <Form.Label>Allergies</Form.Label>
+                  <Form.Control type="allergies"/>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="currentMeds">
+                  <Form.Label>Current Medications</Form.Label>
+                  <Form.Control type="currentMeds"/>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="ICD10">
+                  <Form.Label>ICD-10 Health Codes</Form.Label>
+                  <Form.Control type="ICD10"/>
+                </Form.Group>
+              </Col>
+            </Row>
+          <Row>
+            <Col>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+            </Col>
+          </Row>
+          </Modal.Body>
+          <Modal.Footer>
+          {
+            //BUTTON TO CALL FUNCTION EDIT A PATIENT
+            //BUTTON TO CLOSE MODAL
+          }
+          <Button variant="success" onClick={() => {editPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
+          <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
+          </Modal.Footer>
+        </Container>
         )}
       })}
     </Modal>
