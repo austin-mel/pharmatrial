@@ -113,8 +113,12 @@ function FBaseLoggedIn() {
       </Container>
         ) : (
         <Container fluid>
-                <p>Error! No Access!</p>
+          <Row>
+            <Col className="justify-content-md-center" style={{display:'flex'}}>
+                 <p>Error! No Access!</p>
                 <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            </Col>
+          </Row>
         </Container>
         )}
         </div>
