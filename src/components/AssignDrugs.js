@@ -60,6 +60,8 @@ function AssignDrugs(props) {
             //IF PATIENT IS ELIGIBLE ASSIGN DRUG TO GIVEN PATIENT
             else{
               //PASSES CURRENT PATIENT OBJECT TO FUNCTION BELOW
+
+              //IF COMMENT BELOW IS REMOVED IT WILL ADD DRUGS TO VENDIA (UNCOMMENT TO TEST)
               //addDrugs(patient._id);
             }
           }
@@ -72,17 +74,15 @@ function AssignDrugs(props) {
 
         const patientID = props.props;
 
-        //VENDIA FUNCTION TO GET DETAILS OF A CERTAIN OBJECT (STUDYID)
-        //var currentStudy = await entities.study.get(drugID);
-
-        var drugIDS = drugID
+        //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+        //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
 
         //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
         //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
         const assignDrugs = await entities.drug.update(
           {
               //SECOND ID VALUE SHOULD BE ID OF THE PATIENT IT IS ASSIGNED TOO
-              _id: drugID,
+              _id: "",
               patientID: patientID,
               studyID: studyID,
           },
@@ -115,8 +115,9 @@ function AssignDrugs(props) {
           } 
         );
         
-      //VENDIA FUNCTION TO GET DETAILS OF A CERTAIN OBJECT (THE STUDY ID PASSED FROM STUDYTABLE)
-      //const studyID = await entities.drug.get(props._id);
+        //UPDATE THE DRUG THAT WAS CHOSEN ABOVE
+        //SET drugID PARAMETER TO VARIABLE OF THAT DRUG ID THAT WAS CHOSEN
+
 
       //VENDIA FUNCTION TO UPDATE A PATIENT IN THE DATABASE
       //_id MUST BE THE ID OF THE PATIENT YOU WANT TO EDIT
