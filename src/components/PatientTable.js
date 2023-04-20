@@ -293,8 +293,10 @@ function PatientTable() {
                             //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
                             //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
 
-                            
+
                             //CURRENTLY CANT DISPLAY currentMedications, allergies, icdHealthCodes, Visits (THEY ARE STORED AS ARRAYS IN VENDIA)
+                            //BELOW IS HOW WE ACCESS THE OTHER VARIABLES (SINCE THEY ARE JUST STORED AS STRINGS)
+                            //WE HAVE TO DO SOMETHING SIMLIAR TO PATIENTAPPOINTMENT??
                           }
                           <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid.toString()}</td>
