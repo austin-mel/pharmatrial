@@ -89,6 +89,7 @@ function PatientTable() {
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employmentStatus").value,
           currentlyInsured: document.getElementById("insuranceStatus").value,
+          
         },
         {
           aclInput:{
@@ -291,6 +292,9 @@ function PatientTable() {
                             //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
                             //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
                             //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+
+                            
+                            //CURRENTLY CANT DISPLAY currentMedications, allergies, icdHealthCodes, Visits (THEY ARE STORED AS ARRAYS IN VENDIA)
                           }
                           <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid.toString()}</td>
