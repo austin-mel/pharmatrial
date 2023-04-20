@@ -12,6 +12,9 @@ function AssignDrugs(props) {
     //CREATE ARRAY FOR DRUGS
     const [drugs, setDrugs] = useState();
 
+    //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
+    const studyID = props.props;
+
     //FIRES WHEN PAGE LOADS/RELOADS
     //CALLS LISTPATIENTS FUNCTION
     //CALL LISTDRUGS FUNCTION
@@ -40,6 +43,7 @@ function AssignDrugs(props) {
     //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
       {patients?.map((patient, key) => { 
         key={key}
+
         //IF PATIENT HAS A DOB LISTED
         //SUBTRING THE LAST 4 DIGITS OF THE DOB TO FIND YEAR
         if(patient.dob != null){
@@ -48,42 +52,39 @@ function AssignDrugs(props) {
 
         //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
         if(patient.drugID === null){
-          //IF PATIENT IS INELIGIBLE SKIP THEM
-          if(parseInt(dobYear) >= 2005){
-            console.log("Not Eligible!")
-          }
-          //IF PATIENT IS ELIGIBLE ASSIGN DRUG TO GIVEN PATIENT
-          else{
-            //PASSES CURRENT PATIENT OBJECT TO FUNCTION BELOW
-            addDrugs(patient);
+          if(patient.dob != null){
+            var dobYear = patient.dob.substring(patient.dob.length - 4);
+            if(parseInt(dobYear) >= 2005){
+              console.log("Not Eligible!")
+            }
+            //IF PATIENT IS ELIGIBLE ASSIGN DRUG TO GIVEN PATIENT
+            else{
+              //PASSES CURRENT PATIENT OBJECT TO FUNCTION BELOW
+              //addDrugs(patient._id);
+            }
           }
         }
       })}
 
       //FUNCTION TO ASSIGN DRUGS TO PATIENTS
       //KEEPS PATIENT FROM ABOVE
-      async function addDrugs(patient){
+      async function addDrugs(props){
 
-      //AN ATTEMPT TO GET THE FIRST AVAILABLE DRUG (ONE WITHOUT A PATIENT ID PROPERTY)
-      //DID NOT WORK!!
-        for(var i=0; i<drugs.length; i++){
-          if(drugs[i].patientID === null){
-            var drugID = drugs[i]._id;
-            break;
-          }
-        }
+        const patientID = props.props;
 
-        //VENDIA FUNCTION TO GET DETAILS OF A CERTAIN OBJECT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
-        const drugIDs = await entities.drug.get(drugID);
-        console.log(drugIDs);
+        //VENDIA FUNCTION TO GET DETAILS OF A CERTAIN OBJECT (STUDYID)
+        //var currentStudy = await entities.study.get(drugID);
+
+        var drugIDS = drugID
 
         //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
         //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
         const assignDrugs = await entities.drug.update(
           {
               //SECOND ID VALUE SHOULD BE ID OF THE PATIENT IT IS ASSIGNED TOO
-              _id: drugIDs._id,
-              id: patient._id,
+              _id: drugID,
+              patientID: patientID,
+              studyID: studyID,
           },
           {
             aclInput:{
@@ -115,7 +116,7 @@ function AssignDrugs(props) {
         );
         
       //VENDIA FUNCTION TO GET DETAILS OF A CERTAIN OBJECT (THE STUDY ID PASSED FROM STUDYTABLE)
-      const studyID = await entities.drug.get(props.props);
+      //const studyID = await entities.drug.get(props._id);
 
       //VENDIA FUNCTION TO UPDATE A PATIENT IN THE DATABASE
       //_id MUST BE THE ID OF THE PATIENT YOU WANT TO EDIT
@@ -123,9 +124,9 @@ function AssignDrugs(props) {
       //STUDY ID SET TO ID VALUE (THE STUDY ID PASSED FROM STUDYTABLE)
         const updatePatient = await entities.patient.update(
           {
-              _id: patient._id,
-              drugID: drugIDs._id,
-              studyID: studyID._id,
+              _id: patientID,
+              drugID: "",
+              studyID: studyID,
               doseNum: "1",
           },
           {

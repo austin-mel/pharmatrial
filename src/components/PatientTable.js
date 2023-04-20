@@ -78,7 +78,7 @@ function PatientTable() {
           name: document.getElementById("patientFirstName").value,
           lastName: document.getElementById("patientLastName").value,
           dob: document.getElementById("patientDOB").value,
-          address: address = document.getElementById("patientAddress").value,
+          address: document.getElementById("patientAddress").value,
           insuranceNumber: document.getElementById("patientInsuranceNum").value,
           height: document.getElementById("patientHeight").value,
           weight: document.getElementById("patientWeight").value,

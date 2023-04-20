@@ -64,7 +64,7 @@ function StudyTable() {
         var bavariaAccount = currentStudy.bavariaApproved;
         var fdaAccount = currentStudy.fdaApproved;
 
-        //FIREBASE FUNCTION TO GET CURRENT SIGNED IN USER
+        //FIREBASE FUNCTION TO GET CURRENT SIGNED IN USER && VISTOR TYPE
         const user = auth.currentUser;
 
         if (user !== null) {
@@ -115,6 +115,10 @@ function StudyTable() {
           );
           console.log(changeApproval);
         };
+
+    //FIREBASE FUNCTION TO GET CURRENT SIGNED IN USER && VISTOR TYPE
+    const user = auth.currentUser;    
+    const displayName = user.displayName;
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE STUDYTABLE
     return (
