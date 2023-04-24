@@ -9,6 +9,9 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import Fab from '@mui/material/Fab';
+import PatientAppointment from "./PatientAppointment";
+import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 
 function PatientTable() {
   //RETRIVE DATA FROM VENDIA USING HOOK
@@ -89,7 +92,9 @@ function PatientTable() {
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employmentStatus").value,
           currentlyInsured: document.getElementById("insuranceStatus").value,
-          
+          allergies: null,
+          currentMedications: null,
+          icdHealthCodes: null,
         },
         {
           aclInput:{
@@ -311,12 +316,12 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                       </tr>
           )}}
             //IF NAME AND YEAR AND MONTH ARE SET
@@ -345,12 +350,12 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                       </tr>
           )}}
       })}
@@ -413,12 +418,12 @@ function PatientTable() {
                       <td>{patient.bloodType}</td>
                       <td>{patient.temperature}</td>
                       <td>{patient.oxygenSaturation}</td>
-                      <td></td>
-                      <td></td>
+                      <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                      <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                       <td>{patient.familyHistory}</td>
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
-                      <td></td>
+                      <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                     </tr>
                   )
       })}
@@ -481,10 +486,14 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-              <Modal.Body>Allergies: <b style={{fontSize: 20}}>{patient.allergies}</b></Modal.Body>
+              <Modal.Body>Allergies: <b style={{fontSize: 20}}>{patient.allergies ? patient.allergies.map((item, index) => (
+                <li key={index}>{item.allergy}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>Current Meds: <b style={{fontSize: 20}}>{patient.currentMedications}</b></Modal.Body>
+              <Modal.Body>Current Meds: <b style={{fontSize: 20}}>{patient.currentMedications ? patient.currentMedications.map((item, index) => (
+                <li key={index}>{item.medication}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
               <Col>
               <Modal.Body>Family History: <b style={{fontSize: 20}}>{patient.familyHistory}</b></Modal.Body>
@@ -498,18 +507,24 @@ function PatientTable() {
               <Modal.Body>Insurance Status: <b style={{fontSize: 20}}>{patient.currentlyInsured}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}></b></Modal.Body>
+              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => (
+                <li key={index}>{item.code}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
             </Row>
             <Row>
               <Col>
-              <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits ? patient.visits.map((item, index) => (
+                <div>
+                <p key={index}>Date & Time: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
+                </div>
+              )) : null}</b></Modal.Body>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>Doses: {patient.insuranceNumber}/5</Modal.Body>
-                <Modal.Body><ProgressBar animated now={patient.insuranceNumber} variant="success" /></Modal.Body>
+                <Modal.Body>Doses: {patient.doseNum}/5</Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.doseNum} variant="success"/></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>
@@ -636,13 +651,31 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-                <Form.Check type="switch" id="familyHistory" label="Family History?"/>
+                <Form.Group className="mb-3" controlId="familyHistory">
+                <Form.Label>Family History?</Form.Label>
+                <Form.Select id="familyHistory">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Check type="switch" id="employment" label="Employed?"/>
+              <Form.Group className="mb-3" controlId="employmentStatus">
+                <Form.Label>Employment Status?</Form.Label>
+                <Form.Select id="employmentStatus">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
+              <Form.Group className="mb-3" controlId="insuranceStatus">
+                <Form.Label>Insurance Status?</Form.Label>
+                <Form.Select id="insuranceStatus">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
             <Row>

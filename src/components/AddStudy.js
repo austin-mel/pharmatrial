@@ -47,7 +47,7 @@ function AddStudy() {
               },
               {
                 principal: {
-                  nodes: ["FDA"]
+                  nodes: ["FDA","JaneHopkins"]
                 },
                 operations: ["READ"],
                 path: "drugName",

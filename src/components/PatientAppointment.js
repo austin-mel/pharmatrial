@@ -1,29 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form } from "react-bootstrap";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-function PatientAppointment() {
+async function PatientAppointment() {
     //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
-    //CREATE ARRAY FOR PATIENTS
-    const [patients, setPatients] = useState();
 
     //FUNCTION TO HANDLE ADDING APPOINTMENTS
     const handleAddAppointment = async () => {
 
-      const userResponse = await entities.patient.get('018657df-9a40-f7e5-db30-57bbc6db5866');
+      //const currentPatientVisits = patient.visits;
 
-      const currentPatientVisits = userResponse.visits;
+      const newVisit = {
+        patient: "", 
+        dateTime: document.getElementById("date").value, 
+        notes: document.getElementById("notes").value, 
+        hivViralLoad: document.getElementById("hivViralLoad").value,
+      };
 
-      const newVisit = {patient: "Billy", dateTime: "April 20, 2023", notes: "Awesome dude!", hivViralLoad: "tons of HIV"};
-      const visits = [...currentPatientVisits,newVisit];
+      //const visits = [...currentPatientVisits,newVisit];
+
+      //var currentDose = patient.doseNum
+      //var test = parseInt(currentDose) + 1
+      //var nextDose = test.toString();
+
 
       const addResponse = await entities.patient.update(
         {
-          _id: userResponse._id, 
-          visits,
+          _id: document.getElementById("patient").value, 
+          doseNum: "",
+          visits: "",
         },
         {
           aclInput:{
@@ -42,21 +50,21 @@ function PatientAppointment() {
       console.log(addResponse)
     };
 
-    //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
-    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
-    const listPatients = async () => {
-      let patientList = await entities.patient.list()
-      setPatients(patientList.items);
-    };
-
-    //SETS ARRAY TO PATIENTS
-    listPatients();
-
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTAPPOINTMENT
     //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (  
       <div className="addappointment">
       <Form>
+            <Form.Group className="mb-3" controlId="patient">
+            <Form.Label>Patient Name</Form.Label>
+            <Form.Select aria-label="Default select example">
+            
+            </Form.Select>
+            </Form.Group>
+                  <Form.Group className="mb-3" controlId="date">
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control type="date"/>
+                  </Form.Group>
                   <Form.Group className="mb-3" controlId="notes">
                   <Form.Label>Notes</Form.Label>
                   <Form.Control as="textarea" rows={3} type="notes"/>

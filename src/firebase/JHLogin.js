@@ -10,8 +10,16 @@ import PatientTable from "../components/PatientTable";
 import PatientAppointment from "../components/PatientAppointment";
 import AddPatient from "../components/AddPatient";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import TestTable from "../components/TestTable";
+import AdminTable from "../components/AdminTable";
+import useJaneHopkins from "../hooks/useJaneHopkins";
 
 function FBaseLoggedIn() {
+    //RETRIVE DATA FROM VENDIA USING HOOK
+    const { entities } = useJaneHopkins();
+    //CREATE ARRAY FOR PATIENTS
+    const [patients, setPatients] = useState();
+
     const [popup, setPopup] = useState("patient");
 
     const [show, setShow] = useState(false);
@@ -21,6 +29,13 @@ function FBaseLoggedIn() {
       try { await signOut(auth); }
         catch (e) { console.error(e); }
       }
+
+        //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
+  const listPatients = async () => {
+    let patientList = await entities.patient.list()
+    setPatients(patientList.items);
+  };
 
     const user = auth.currentUser;
 
@@ -73,12 +88,13 @@ function FBaseLoggedIn() {
       }
 
       useEffect(() => {
+        listPatients();
     }, [user.displayName]);
       
     return(
         <div>
     {access === "doctor" ? ( 
-        <Container>
+        <Container fluid>
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -139,10 +155,38 @@ function FBaseLoggedIn() {
             </Container>
         ) : 
         access === "admin" ? ( 
-            <Container fluid>
-                <p>Test2</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
-            </Container>
+          <Container fluid>
+          <Row>
+            <Col className="justify-content-md-end" style={{display:'flex'}}>
+              <p>Logged In!</p>   <AccountCircleRoundedIcon/>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="justify-content-md-end" style={{display:'flex'}}>
+              <div><h5>Welcome, {user.displayName}!</h5></div>
+            </Col>
+            <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
+              <Button variant="danger" onClick={logout}>Log Out</Button>
+            </Col>
+          </Row>
+                      <Row>
+        {
+        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
+        }
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
+                        </Col>
+        {
+        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
+        }
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
+                        </Col>
+        </Row>
+                      <Row>
+                          <Col className="justify-content-md-center" style={{display:'flex'}}><AdminTable/></Col>
+                      </Row>
+          </Container>
         ) : (
         <Container fluid>
           <Row>

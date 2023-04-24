@@ -615,20 +615,6 @@ function StudyTable() {
           </Col>
         </Row>
         <Modal.Footer>
-        <Row>
-        {
-        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
-                        </Col>
-        {
-        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
-                        </Col>
-        </Row>
         {
          //BUTTON TO CLOSING MODAL
         }
@@ -660,20 +646,6 @@ function StudyTable() {
           </Col>
         </Row>
         <Modal.Footer>
-        <Row>
-        {
-        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
-                        </Col>
-        {
-        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
-                        </Col>
-        </Row>
         {
         //BUTTON TO CLOSING MODAL
         }
@@ -705,20 +677,6 @@ function StudyTable() {
           </Col>
         </Row>
         <Modal.Footer>
-        <Row>
-        {
-        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
-                        </Col>
-        {
-        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
-                        </Col>
-        </Row>
         {
         //BUTTON TO CLOSING MODAL
         }
@@ -750,20 +708,6 @@ function StudyTable() {
           </Col>
         </Row>
         <Modal.Footer>
-        <Row>
-        {
-        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
-                        </Col>
-        {
-        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
-        }
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
-                        </Col>
-        </Row>
         {
         //BUTTON TO CALL ASSIGNDRUGS FILE (PASSES STUDY ID AS PROPS)
         }

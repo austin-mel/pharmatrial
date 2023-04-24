@@ -11,6 +11,7 @@ function AddPatient() {
     //FUNCTION THAT ADDS A NEW PATIENT
     const handleAddPatient = async () => {
 
+      var eligibility = null;
       //const currentPatientMeds = null;
       //const currentICDHealthCodes = null;
       //const currentAllergies = null;
@@ -20,6 +21,12 @@ function AddPatient() {
       //const icdHealthCodes = [...currentICDHealthCodes,newICDHealthCodes];
       //const newAllergies = {allergy: document.getElementById("allergies")};
       //const allergies = [...currentAllergies,newAllergies];
+      if(document.getElementById("addDOB").value.substring(document.getElementById("addDOB").value.length - 4) <= 2005){
+        eligibility = true;
+      }
+      else{
+        eligibility = false;
+      }
 
       //VENDIA FUNCTION TO ADD PATIENT TO DATABASE
       //GET VALUES FROM THE FORM BELOW BY FETCHING IDS
@@ -42,10 +49,26 @@ function AddPatient() {
           //currentMedications: medications,
           //icdHealthCodes: icdHealthCodes,
           //allergies: allergies
+          doseNum: "0",
+          isEligible: eligibility,
         },
         {
           aclInput:{
             acl:[
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "name",
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "lastName",
+              },
               {
                 principal: {
                   nodes: ["Bavaria","FDA"]
@@ -115,6 +138,62 @@ function AddPatient() {
                 },
                 operations: ["READ"],
                 path: "currentlyInsured"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "isEligible"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA","JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "doseNum"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA","JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "drugID"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA","JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "studyID"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "currentMedications"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "allergies"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["READ"],
+                path: "icdHealthCodes"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "visits"
               },
             ],
           },
