@@ -20,7 +20,7 @@ async function PatientAppointment() {
         hivViralLoad: document.getElementById("hivViralLoad").value,
       };
 
-      const visits = [...currentPatientVisits,newVisit];
+      //const visits = [...currentPatientVisits,newVisit];
 
       //var currentDose = patient.doseNum
       //var test = parseInt(currentDose) + 1
@@ -31,7 +31,7 @@ async function PatientAppointment() {
         {
           _id: document.getElementById("patient").value, 
           doseNum: "",
-          visits: visits,
+          visits: "",
         },
         {
           aclInput:{
