@@ -90,6 +90,443 @@ function FBaseLoggedIn() {
       useEffect(() => {
         listPatients();
     }, [user.displayName]);
+
+//FUNCTION TO HANDLE INCREASING DOSES BY ONE
+const handleMaximumDoses = async () => {
+
+  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    {patients?.map((patient, key) => { 
+      key={key}
+      const name = patient.name;
+      const lastName = patient.lastName;
+      const dob = patient.dob;
+      const insuranceNum = patient.insuranceNumber;
+      const height = patient.height;
+      const weight = patient.weight;
+      const bloodPressure = patient.bloodPressure;
+      const bloodType = patient.bloodType;
+      const tempterature = patient.temperature;
+      const oxSat = patient.oxygenSaturation;
+      const address = patient.address;
+      const isEligible = patient.isEligible;
+      const familyHistory = patient.familyHistory;
+      const currentlyEmployed = patient.currentlyEmployed;
+      const currentlyInsured = patient.currentInsured;
+      const drugID = patient.drugID;
+      const studyID = patient.studyID;
+      const uuid = patient.uuid;
+      const doseNum = "5";
+      
+      //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
+      if(patient.studyID != null){
+          maximumDoses();
+          }
+
+              async function maximumDoses(){
+
+                //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+                //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+                //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+        
+                //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+                //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+                const maxDoses = await entities.patient.update(
+                  {
+                      _id: patient._id,
+                      name: name,
+                      uuid: uuid,
+                      lastName: lastName,
+                      dob: dob,
+                      insuranceNumber: insuranceNum,
+                      height: height,
+                      weight: weight,
+                      bloodPressure: bloodPressure,
+                      bloodType: bloodType,
+                      temperature: tempterature,
+                      oxygenSaturation: oxSat,
+                      address: address,
+                      isEligible: isEligible,
+                      familyHistory: familyHistory,
+                      currentlyEmployed: currentlyEmployed,
+                      currentlyInsured: currentlyInsured,
+                      drugID: drugID,
+                      studyID: studyID,
+                      doseNum: doseNum,
+                  },
+                  {
+                    aclInput:{
+                      acl:[
+                        {
+                          principal: {
+                            nodes: ["FDA","Bavaria"]
+                          },
+                          operations: ["ALL"],
+                          path: "drugID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "studyID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "doseNum",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "name",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "lastName",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "dob",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "height"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "weight"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodPressure"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodType"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "temperature"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "oxygenSaturation"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "familyHistory"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyEmployed"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyInsured"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "isEligible"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentMedications"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "allergies"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "icdHealthCodes"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "visits"
+                        },
+                      ],
+                    },
+                  } 
+                );
+                console.log(maxDoses);
+              }
+            })}
+  }
+
+//FUNCTION TO HANDLE INCREASING DOSES BY ONE
+const handleIncreaseDoses = async () => {
+
+  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    {patients?.map((patient, key) => { 
+      key={key}
+      const name = patient.name;
+      const lastName = patient.lastName;
+      const dob = patient.dob;
+      const insuranceNum = patient.insuranceNumber;
+      const height = patient.height;
+      const weight = patient.weight;
+      const bloodPressure = patient.bloodPressure;
+      const bloodType = patient.bloodType;
+      const tempterature = patient.temperature;
+      const oxSat = patient.oxygenSaturation;
+      const address = patient.address;
+      const isEligible = patient.isEligible;
+      const familyHistory = patient.familyHistory;
+      const currentlyEmployed = patient.currentlyEmployed;
+      const currentlyInsured = patient.currentInsured;
+      const drugID = patient.drugID;
+      const studyID = patient.studyID;
+      const uuid = patient.uuid;
+      const doseNum = patient.doseNum;
+      var newDoseNum = parseInt(doseNum);
+      var patientCount = 0;
+      
+      //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
+      if(patient.studyID != null){
+        patientCount++;
+        if(patient.doseNum === "5"){
+
+        }
+        else{
+          newDoseNum++;
+          increaseDoses();
+        }
+              }
+
+              async function increaseDoses(){
+
+                //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+                //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+                //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+        
+                //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+                //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+                const assignDrugs = await entities.patient.update(
+                  {
+                      _id: patient._id,
+                      name: name,
+                      uuid: uuid,
+                      lastName: lastName,
+                      dob: dob,
+                      insuranceNumber: insuranceNum,
+                      height: height,
+                      weight: weight,
+                      bloodPressure: bloodPressure,
+                      bloodType: bloodType,
+                      temperature: tempterature,
+                      oxygenSaturation: oxSat,
+                      address: address,
+                      isEligible: isEligible,
+                      familyHistory: familyHistory,
+                      currentlyEmployed: currentlyEmployed,
+                      currentlyInsured: currentlyInsured,
+                      drugID: drugID,
+                      studyID: studyID,
+                      doseNum: newDoseNum.toString(),
+                  },
+                  {
+                    aclInput:{
+                      acl:[
+                        {
+                          principal: {
+                            nodes: ["FDA","Bavaria"]
+                          },
+                          operations: ["ALL"],
+                          path: "drugID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "studyID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "doseNum",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "name",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "lastName",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "dob",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "height"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "weight"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodPressure"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodType"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "temperature"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "oxygenSaturation"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "familyHistory"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyEmployed"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyInsured"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "isEligible"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentMedications"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "allergies"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "icdHealthCodes"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "visits"
+                        },
+                      ],
+                    },
+                  } 
+                );
+                console.log(assignDrugs);
+              }
+            })}
+  }
       
     return(
         <div>
@@ -174,13 +611,13 @@ function FBaseLoggedIn() {
         //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
         }
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses by One</Fab>
+                            <Fab color="primary" variant="extended" onClick={() => {handleIncreaseDoses();}} >Advance Doses by One</Fab>
                         </Col>
         {
         //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
         }
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
-                            <Fab color="primary" variant="extended" onClick={() => {}} >Advance Doses to Complete</Fab>
+                            <Fab color="primary" variant="extended" onClick={() => {handleMaximumDoses();}} >Advance Doses to Complete</Fab>
                         </Col>
         </Row>
                       <Row>

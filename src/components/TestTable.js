@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import useFDA from "../hooks/useFDA";
-import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
+import { Table, Button, Row, Col, Modal, Form, Container, ProgressBar } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import LinearProgress from '@mui/material/LinearProgress';
+import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
+import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
+
 
 
 function TestTable() {
@@ -11,6 +14,14 @@ function TestTable() {
     const [patients, setPatients] = useState();
 
     const [content, setContent] = useState();
+  //CREATE ARRAY FOR PATIENT IDS
+  const [patientID, setPatientID] = useState();
+
+        //CREATE USE STATE (FOR MODAL POPUP)
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const handleOpen = () => setShow(true);
+
     const [filterYear, setFilterYear] = useState();
     const [filterMonth, setFilterMonth] = useState();
     const [filterStatus, setFilterStatus] = useState(false);
@@ -86,6 +97,7 @@ function TestTable() {
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
+                <th></th>
                 <th>Patient #</th>
                 <th>DOB</th>
                 <th>Height (cm)</th>
@@ -108,6 +120,7 @@ function TestTable() {
                     if(patient.dob.includes(filterYear)){
                       return(
                         <tr key={key}>
+                          <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.dob}</td>
                           <td>{patient.height}</td>
@@ -128,6 +141,7 @@ function TestTable() {
                     if(patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
                       return(
                         <tr key={key}>
+                          <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.dob}</td>
                           <td>{patient.height}</td>
@@ -153,6 +167,7 @@ function TestTable() {
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
+                  <th></th>
                   <th>Patient #</th>
                   <th>DOB</th>
                   <th>Height (cm)</th>
@@ -173,6 +188,7 @@ function TestTable() {
                 {patients?.map((patient, key) => {
                   return(
                     <tr key={key}>
+                      <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                       <td>{patient.uuid}</td>
                       <td>{patient.dob}</td>
                       <td>{patient.height}</td>
@@ -192,9 +208,104 @@ function TestTable() {
       })}
       </tbody>
       </Table>
+      <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    {
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    }
+    {patients?.map((patient, key) => {
+      if(content === patient._id){
+        //RENDER VALUES AS TEXT
+        return(
+            <div key={key}> 
+            <Modal.Header closeButton>
+            <Modal.Title id={patient._id}>{patient.uuid}</Modal.Title>
+            </Modal.Header>
+            <Row>
+              <Col>
+                <Modal.Body>DOB: <b style={{fontSize: 20}}>{patient.dob}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+              <Modal.Body>Height: <b style={{fontSize: 20}}>{patient.height}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Weight: <b style={{fontSize: 20}}>{patient.weight}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Blood Pressure: <b style={{fontSize: 20}}>{patient.bloodPressure}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+              <Modal.Body>Blood Type: <b style={{fontSize: 20}}>{patient.bloodType}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Temperature: <b style={{fontSize: 20}}>{patient.temperature}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>O Saturation: <b style={{fontSize: 20}}>{patient.oxygenSaturation}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+              <Modal.Body>Allergies: <b style={{fontSize: 20}}>{patient.allergies ? patient.allergies.map((item, index) => (
+                <li key={index}>{item.allergy}<br /></li>
+              )) : null}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Current Meds: <b style={{fontSize: 20}}>{patient.currentMedications ? patient.currentMedications.map((item, index) => (
+                <li key={index}>{item.medication}<br /></li>
+              )) : null}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Family History: <b style={{fontSize: 20}}>{patient.familyHistory}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+              <Modal.Body>Employment Status: <b style={{fontSize: 20}}>{patient.currentlyEmployed}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>Insurance Status: <b style={{fontSize: 20}}>{patient.currentlyInsured}</b></Modal.Body>
+              </Col>
+              <Col>
+              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => (
+                <li key={index}>{item.code}<br /></li>
+              )) : null}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits ? patient.visits.map((item, index) => (
+                <div>
+                <p key={index}>Date & Time: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
+                </div>
+              )) : null}</b></Modal.Body>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Modal.Body>Doses: {patient.doseNum}/5</Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.doseNum*20} variant="success"/></Modal.Body>
+              </Col>
+            </Row>
+            <Modal.Footer>
+            {
+            //BUTTON TO ENABLE EDITING (CHANGE format SETSTATE TO EDIT)
+            //BUTTON TO CLOSE MODAL
+            }
+            <Button variant="danger" onClick={handleClose}><CloseFullscreenRoundedIcon/>Close</Button>
+            </Modal.Footer>
+            </div>
+        )}
+      })}
+    </Modal>
   </Container>
 )}
           </Container>
+
+          
         )}
   </div>
 )}

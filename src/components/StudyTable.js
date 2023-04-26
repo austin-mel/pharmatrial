@@ -14,10 +14,103 @@ function StudyTable() {
     const { entities } = useFDA();
     //CREATE ARRAY FOR STUDIES
     const [studies, setStudy] = useState();
+    const [patients, setPatients] = useState();
     //CREATE ARRAY FOR DRUGS
     const [drugs, setDrugs] = useState();
     //GET AUTH FROM FIREBASE HOOK
     const auth = getAuth();
+
+    var patientCount = 0;
+    var completedCount = 0;
+
+    function checkTrialStatus(){
+      {studies?.map((study, key) => { 
+        if(study.inProgress === true){
+
+        key={key}
+        const fdaApproved = study.fdaApproved;
+        const bavariaApproved = study.bavariaApproved;
+        const drugName = study.drugName;
+
+        {patients?.map((patient, key) => { 
+          key={key}
+          if(patient.studyID === study._id){
+            patientCount++;
+            if(patient.doseNum === "5"){
+              completedCount++;
+            }
+          }
+        })}
+
+      console.log(patientCount);
+      console.log(completedCount);
+      if(patientCount === completedCount){
+        completeTrial();
+
+        async function completeTrial(){
+
+          //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+          //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+          //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+  
+          //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+          //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+          const endStudy = await entities.study.update(
+            {
+                _id: study._id,
+                fdaApproved: fdaApproved,
+                bavariaApproved: bavariaApproved,
+                drugName: drugName,
+                inProgress: false,
+            },
+            {
+              aclInput:{
+                acl:[
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["ALL"],
+                    path: "fdaApproved",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["ALL"],
+                    path: "bavariaApproved",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria"]
+                    },
+                    operations: ["ALL"],
+                    path: "drugName",
+                  },
+                  {
+                    principal: {
+                      nodes: ["FDA","JaneHopkins"]
+                    },
+                    operations: ["READ"],
+                    path: "drugName",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA","JaneHopkins"]
+                    },
+                    operations: ["ALL"],
+                    path: "inProgress"
+                  },
+                ],
+              },
+            } 
+          );
+          console.log(endStudy);
+        }
+      }
+    }
+    })}
+  }
 
     //CREATE USE STATE (FOR MODAL POPUP)
     const [show, setShow] = useState(false);
@@ -34,6 +127,8 @@ function StudyTable() {
         //CALL LISTSTUDIES FUNCTION
         listStudies();
         listDrugs();
+        listPatients();
+        checkTrialStatus();
         //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
         setLoading("true");
         setTimeout(() => {
@@ -46,6 +141,13 @@ function StudyTable() {
     const listStudies = async () => {
       let studyList = await entities.study.list()
       setStudy(studyList.items);
+    };
+
+        //VENDIA FUNCTION TO GET STUDIES IN DATABASE
+    //STORES STUDIES FROM DATABASE INTO THE ARRAY ABOVE
+    const listPatients = async () => {
+      let patientList = await entities.patient.list()
+      setPatients(patientList.items);
     };
 
     //VENDIA FUNCTION TO GET DRUGS IN DATABASE
@@ -164,7 +266,7 @@ function StudyTable() {
                     }
                             {studies?.map((study, key) => {
                               //IF STUDY IS NOT APPROVED BY EITHER PARTY, DISPLAY FALSE ON PAGE FOR BOTH
-                                if(study.fdaApproved === false && study.bavariaApproved === false){
+                                if(study.fdaApproved === false && study.bavariaApproved === false && study.inProgress === true){
                                     return(
                                         <tr key={key}>
                                             <td>False</td>
@@ -177,7 +279,7 @@ function StudyTable() {
                                         </tr>
                                     )}
                                 //IF STUDY IS NOT APPROVED BY JUST BAVARIA, DISPLAY FALSE ON BAVARIA TRUE FOR FDA
-                                else if(study.bavariaApproved === false && study.fdaApproved === true){
+                                else if(study.bavariaApproved === false && study.fdaApproved === true && study.inProgress === true){
                                     return(
                                         <tr key={key}>
                                             <td>True</td>
@@ -190,7 +292,7 @@ function StudyTable() {
                                         </tr> 
                                 )}
                                 //IF STUDY IS NOT APPROVED BY JUST FDA, DISPLAY FALSE ON FDA TRUE FOR BAVARIA
-                                else if(study.bavariaApproved === true && study.fdaApproved === false){
+                                else if(study.bavariaApproved === true && study.fdaApproved === false && study.inProgress === true){
                                     return(
                                         <tr key={key}>
                                             <td>False</td>
@@ -230,7 +332,7 @@ function StudyTable() {
                     }
                             {studies?.map((study, key) => {
                               //IF STUDY IS APPROVED BY BOTH PARTIES DISPLAY TRUE FOR BOTH
-                                if(study.bavariaApproved === true && study.fdaApproved === true){
+                                if(study.bavariaApproved === true && study.fdaApproved === true && study.inProgress === true){
                                     return(
                                         <tr key={key}>
                                             <td>True</td>
@@ -458,7 +560,7 @@ function StudyTable() {
                 }
                     {studies?.map((study, key) => {
                   //IF NEITHER PARTY HAS APPROVED DISPLAY FALSE FOR BOTH
-                        if(study.fdaApproved === false && study.bavariaApproved === false){
+                        if(study.fdaApproved === false && study.bavariaApproved === false && study.inProgress === true){
                             return(
                                 <tr key={key}>
                                     <td>False</td>
@@ -471,7 +573,7 @@ function StudyTable() {
                                 </tr>
                             )}
                         //IF FDA APPROVES BUT BAVARIA DOESNT, DISPLAY TRUE FOR FDA AND FALSE FOR BAVARIA
-                        else if(study.bavariaApproved === false && study.fdaApproved === true){
+                        else if(study.bavariaApproved === false && study.fdaApproved === true && study.inProgress === true){
                             return(
                                 <tr key={key}>
                                     <td>True</td>
@@ -484,7 +586,7 @@ function StudyTable() {
                                 </tr> 
                         )}
                         //IF BAVARIA APPROVES BUT FDA DOESNT, DISPLAY TRUE FOR BAVARIA AND FALSE FOR FDA
-                        else if(study.bavariaApproved === true && study.fdaApproved === false){
+                        else if(study.bavariaApproved === true && study.fdaApproved === false && study.inProgress === true){
                             return(
                                 <tr key={key}>
                                     <td>False</td>
@@ -524,7 +626,7 @@ function StudyTable() {
                 }
                     {studies?.map((study, key) => {
                       //IF BOTH PARTIES APPROVE OF THE STUDY THEN DISPLAY TRUE FOR BOTH
-                        if(study.bavariaApproved === true && study.fdaApproved === true){
+                        if(study.bavariaApproved === true && study.fdaApproved === true && study.inProgress === true){
                             return(
                                 <tr key={key}>
                                     <td>True</td>

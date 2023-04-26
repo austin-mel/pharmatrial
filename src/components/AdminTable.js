@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import useFDA from "../hooks/useFDA";
 import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import LinearProgress from '@mui/material/LinearProgress';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import useJaneHopkins from "../hooks/useJaneHopkins";
 
 
 function AdminTable() {
-    const { entities } = useFDA();
+    const { entities } = useJaneHopkins();
     const [patients, setPatients] = useState();
 
     const [content, setContent] = useState();

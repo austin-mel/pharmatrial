@@ -72,7 +72,7 @@ function SendDrugs(props) {
 
       //INCREASE BATCH NUMBER BY ONE
       function increaseBatchNum(){
-        batchNum += 1;
+        batchNum++;
       }
 
       //RANDOMLY SELECT PLACEBO OR REAL
@@ -85,8 +85,7 @@ function SendDrugs(props) {
         }
       }
 
-      
-
+    
       //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
       {patients?.map((patient, key) => { 
         key={key}
@@ -102,8 +101,10 @@ function SendDrugs(props) {
         }
         //IF PATIENT IS ELIGIBLE CREATE NEW DRUG
         else{
-          chooseType();
-          sendDrugs();
+          if(patient.drugID === null){
+            chooseType();
+            sendDrugs();
+          }
 
       //FUNCTION TO CREATE DRUGS FOR ELIGIBLE PATIENTS
       async function sendDrugs(){

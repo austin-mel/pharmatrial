@@ -524,7 +524,7 @@ function PatientTable() {
             <Row>
               <Col>
                 <Modal.Body>Doses: {patient.doseNum}/5</Modal.Body>
-                <Modal.Body><ProgressBar animated now={patient.doseNum} variant="success"/></Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.doseNum*20} variant="success"/></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>

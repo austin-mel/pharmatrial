@@ -1,5 +1,5 @@
 import { async } from "@firebase/util";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form, Row, Col, Alert } from "react-bootstrap";
 
@@ -8,8 +8,43 @@ function AddPatient() {
     //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useJaneHopkins();
 
+        //CREATE ARRAY FOR PATIENTS
+        const [patients, setPatients] = useState();
+
+            //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
+    const listPatients = async () => {
+      let patientList = await entities.patient.list()
+      setPatients(patientList.items);
+    };
+
+    //FIRES WHEN PAGE LOADS/RELOADS
+    //CALLS LISTPATIENTS FUNCTION
+    useEffect(() => {
+      listPatients();
+    }, []);
+
+    var patientNum = 0;
+
+        //RUNS THROUGH ENTIRE ARRAY OF DRUGS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+        {patients?.map((patient, key) => {
+          key={key}
+          if(parseInt(patient.uuid) > patientNum){
+            //SET BATCH NUMBER TO CURRENT HIGHEST BATCH NUMBER SO IT WILL KEEP INCREASING
+            patientNum = parseInt(patient.uuid)
+          }
+        })}
+
     //FUNCTION THAT ADDS A NEW PATIENT
     const handleAddPatient = async () => {
+
+      //INCREASE BATCH NUMBER BY ONE
+           function increasePatientNum(){
+            patientNum++;
+          }
+
+      //CALL INCREASEBATCHNUM FUNCTION
+      increasePatientNum();
 
       var eligibility = null;
       //const currentPatientMeds = null;
@@ -51,6 +86,7 @@ function AddPatient() {
           //allergies: allergies
           doseNum: "0",
           isEligible: eligibility,
+          uuid: patientNum,
         },
         {
           aclInput:{
@@ -194,6 +230,13 @@ function AddPatient() {
                 },
                 operations: ["ALL"],
                 path: "visits"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA","JaneHopkins"]
+                },
+                operations: ["ALL"],
+                path: "uuid"
               },
             ],
           },

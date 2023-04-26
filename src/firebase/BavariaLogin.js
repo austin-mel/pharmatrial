@@ -6,6 +6,7 @@ import { auth } from './FirebaseHook'
 import { updateProfile } from "firebase/auth";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import SendDrugs from "../components/SendDrugs";
+import TestTable from "../components/TestTable";
 import StudyTable from "../components/StudyTable";
 
 function FBaseLoggedIn() {
@@ -89,6 +90,11 @@ function FBaseLoggedIn() {
         <Row>
           <Col className="justify-content-md-center" style={{display:'flex'}}> 
             <StudyTable/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="justify-content-md-center" style={{display:'flex'}}> 
+            <TestTable/>
           </Col>
         </Row>
     </Container>
