@@ -91,7 +91,7 @@ function SendDrugs(props) {
         key={key}
         //IF PATIENT HAS A DOB LISTED
         //SUBTRING THE LAST 4 DIGITS OF THE DOB TO FIND YEAR
-        if(patient.dob != null){
+        if(patient.isEligible != null){
           var dobYear = patient.dob.substring(patient.dob.length - 4);
 
         //ADD ICD-10 HEALTH CODE ELIGIBILITY!!

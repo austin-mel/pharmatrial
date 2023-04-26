@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import useFDA from "../hooks/useFDA";
-import { Table, Button, Row, Col, Modal, Container } from "react-bootstrap";
+import { Table, Button, Row, Col, Modal, Container, Spinner } from "react-bootstrap";
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import { getAuth } from "firebase/auth";
-import Spinner from 'react-bootstrap/Spinner';
 import Fab from '@mui/material/Fab';
 import SendDrugs from "./SendDrugs";
 import AssignDrugs from "./AssignDrugs";
@@ -129,11 +128,11 @@ function StudyTable() {
         listDrugs();
         listPatients();
         checkTrialStatus();
-        //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
+        //RENDER LOADING BAR FOR 7 SECONDS TO LET VENDIA RETREIVE DATA
         setLoading("true");
         setTimeout(() => {
           setLoading("false");
-        }, 6500);
+        }, 7000);
       }, []);
 
     //VENDIA FUNCTION TO GET STUDIES IN DATABASE
@@ -156,6 +155,16 @@ function StudyTable() {
         let drugList = await entities.drug.list()
         setDrugs(drugList.items);
       };
+
+      function deleteStudy(props){
+        const studyID = props;
+  
+        const deleteStudies = async () => {
+          const deleteStudy = await entities.study.remove(studyID);
+        }
+  
+        deleteStudies();
+      }
 
     //FUNCTION TO HANDLE APPROVING STUDIES (PROPS ARE STUDYID)
     const handleApprove = async (props) => {
@@ -226,7 +235,7 @@ function StudyTable() {
     return (
         <div className="studyTable">
         {loading === "true" ? (
-          <Container fluid style={{display:'flex'}}>
+          <Container fluid>
         {
           //IF LOADING IS TRUE DISPLAY A CIRCULAR LOADING WHEEL ON THE PAGE
         }
@@ -364,6 +373,7 @@ function StudyTable() {
                         <th>Bavaria Approval</th>
                         <th>Drug Name</th>
                         <th></th>
+                        <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -382,6 +392,7 @@ function StudyTable() {
                                             //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED YET!!!)
                                             }
                                             <td><Button variant="primary" onClick={() => {}}>Download Results</Button></td>
+                                            <td><Button variant="danger" onClick={() => {deleteStudy(study._id);}}>Delete Study</Button></td>
                                         </tr> 
                                     )
                                 }
@@ -390,6 +401,9 @@ function StudyTable() {
                         </Table>
                         </Col>
                     </Row>
+                    <Row>
+                        <Button variant="outline-info" onClick={() => {listStudies(); }}>Refresh Studies</Button>
+                      </Row>
                     {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY
                     }
@@ -618,6 +632,7 @@ function StudyTable() {
                 <th>Bavaria Approval</th>
                 <th>Drug Name</th>
                 <th></th>
+                <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -636,6 +651,7 @@ function StudyTable() {
                                             //BUTTON TO VIEW STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
                                     }
                                     <td><Button variant="primary" onClick={() => {setContent(study._id); handleOpen();}}>View Study</Button></td>
+                                    <td><Button variant="danger" onClick={() => {deleteStudy(study._id);}}>Delete Study</Button></td>
                                 </tr> 
                             )
                         }
@@ -684,6 +700,9 @@ function StudyTable() {
                 </Table>
                 </Col>
             </Row>
+            <Row>
+                        <Button variant="outline-info" onClick={() => {listStudies(); }}>Refresh Studies</Button>
+                      </Row>
             {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY
             }

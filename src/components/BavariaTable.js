@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useFDA from "../hooks/useFDA";
-import { Table, Button, Row, Col, Modal, Form, Container, ProgressBar } from "react-bootstrap";
+import { Table, Button, Row, Col, Modal, Form, Container, ProgressBar, Spinner } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -9,7 +9,7 @@ import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRound
 
 
 
-function TestTable() {
+function BavariaTable() {
     const { entities } = useFDA();
     const [patients, setPatients] = useState();
 
@@ -31,22 +31,22 @@ function TestTable() {
   useEffect(() => {
     listPatients();
     setLoading("true");
-    console.log(loading);
     setTimeout(() => {
       setLoading("false");
     }, 6500);
   }, []);
 
-    const checkFilter = async () => {
-      const filterYear = document.getElementById("filterYear").value;
-      const filterMonth = document.getElementById("filterMonth").value;
-      setFilterYear(filterYear);
-      setFilterMonth(filterMonth);
-    };
+      //FUNCTION TO RETREIVE VALUES FROM FILTER OPTIONS
+  //STORES VALUES IN USESTATE ARRAYS ABOVE (FOR CONDITIONAL RENDERING)
+  const checkFilter = async () => {
+    const filterYear = document.getElementById("filterYear").value;
+    const filterMonth = document.getElementById("filterMonth").value;
+    setFilterYear(filterYear);
+    setFilterMonth(filterMonth);
+  };
 
     const listPatients = async () => {
       let patientList = await entities.patient.list()
-      console.log(patientList.items);
       setPatients(patientList.items);
     };
 
@@ -55,7 +55,7 @@ function TestTable() {
           <Container fluid>
             <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
-                <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
+                <Button variant="warning" onClick={() => {checkFilter(); setFilterStatus(true);}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
               <Col>
                 <Form.Select id="filterMonth" aria-label="Select Month">
@@ -85,20 +85,23 @@ function TestTable() {
         {loading === "true" ? (
           <Container>
             <Row>
-              <Col>
-                <LinearProgress />
-              </Col>
+              <Col className="justify-content-md-center" style={{display:'flex'}}>
+                    <Spinner animation="border" />
+                </Col>
             </Row>
           </Container>
         ) : (
           <Container>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+             {
+              //IF FILTER IS ENABLED
+            }
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
                 <th></th>
-                <th>Patient #</th>
+                <th>UUID</th>
                 <th>DOB</th>
                 <th>Height (cm)</th>
                 <th>Weight (lbs)</th>
@@ -115,13 +118,31 @@ function TestTable() {
                 </tr>
               </thead>
               <tbody>
+                {
+                  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+                }
                 {patients?.map((patient, key) => {
+                  {
+                    //IF NAME AND YEAR (BUT NO MONTH SET)
+                  }
                   if(filterMonth === "null"){
-                    if(patient.dob.includes(filterYear)){
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED
+                    if(patient.dob != null && patient.dob.includes(filterYear)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
                         <tr key={key}>
-                          <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
-                          <td>{patient.uuid}</td>
+                          {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+
+
+                            //CURRENTLY CANT DISPLAY currentMedications, allergies, icdHealthCodes, Visits (THEY ARE STORED AS ARRAYS IN VENDIA)
+                            //BELOW IS HOW WE ACCESS THE OTHER VARIABLES (SINCE THEY ARE JUST STORED AS STRINGS)
+                            //WE HAVE TO DO SOMETHING SIMLIAR TO PATIENTAPPOINTMENT??
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
+                          <td>{patient.uuid.toString()}</td>
                           <td>{patient.dob}</td>
                           <td>{patient.height}</td>
                           <td>{patient.weight}</td>
@@ -129,19 +150,28 @@ function TestTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                       </tr>
-          )}}
+            )}}
+            //IF NAME AND YEAR AND MONTH ARE SET
                   else{
-                    if(patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                    //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED && MONTH INCLUDES MONTH FILTERED
+                    if(patient.dob != null && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                      //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
+                        
                         <tr key={key}>
-                          <td><Button variant="primary" onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
+                         {
+                            //BUTTON TO OPEN MODAL AND VIEW PATIENT INTO
+                            //WHEN CLICKED SETSTATE (patientID) TO ID OF PATIENT THAT IS CLICKED ON
+                            //WHEN CLICKED SETSTATE (content) TO STORE WHAT PATIENT ID IS CLICKED ON
+                          }
+                          <td><Button variant="primary" id={patient.uuid} onClick={() => {handleOpen(); setPatientID(patient._id); setContent(patient._id);}}><Person2RoundedIcon/>View Patient</Button></td>
                           <td>{patient.uuid}</td>
                           <td>{patient.dob}</td>
                           <td>{patient.height}</td>
@@ -150,12 +180,12 @@ function TestTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                       </tr>
           )}}
       })}
@@ -182,6 +212,7 @@ function TestTable() {
                   <th>Employment Status</th>
                   <th>Insurance Status</th>
                   <th>ICD-10 Health Codes</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -197,12 +228,12 @@ function TestTable() {
                       <td>{patient.bloodType}</td>
                       <td>{patient.temperature}</td>
                       <td>{patient.oxygenSaturation}</td>
-                      <td></td>
-                      <td></td>
+                      <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                      <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                       <td>{patient.familyHistory}</td>
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
-                      <td></td>
+                      <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
                     </tr>
                   )
       })}
@@ -279,7 +310,7 @@ function TestTable() {
               <Col>
               <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits ? patient.visits.map((item, index) => (
                 <div>
-                <p key={index}>Date & Time: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
+                <p key={index}>Date: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
                 </div>
               )) : null}</b></Modal.Body>
               </Col>
@@ -311,4 +342,4 @@ function TestTable() {
 )}
     
 
-export default TestTable;
+export default BavariaTable;

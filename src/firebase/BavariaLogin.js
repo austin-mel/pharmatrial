@@ -5,9 +5,8 @@ import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWith
 import { auth } from './FirebaseHook'
 import { updateProfile } from "firebase/auth";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import SendDrugs from "../components/SendDrugs";
-import TestTable from "../components/TestTable";
 import StudyTable from "../components/StudyTable";
+import BavariaTable from "../components/BavariaTable";
 
 function FBaseLoggedIn() {
     const [popup, setPopup] = useState("patient");
@@ -88,23 +87,21 @@ function FBaseLoggedIn() {
           </Col>
         </Row>
         <Row>
-          <Col className="justify-content-md-center" style={{display:'flex'}}> 
-            <StudyTable/>
-          </Col>
+          <StudyTable/>
         </Row>
         <Row>
-          <Col className="justify-content-md-center" style={{display:'flex'}}> 
-            <TestTable/>
-          </Col>
+          <BavariaTable/>
         </Row>
     </Container>
         ) : (
         <Container fluid>
-          <Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
-                 <p>Error! No Access!</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            <h3><b>Error! No Access!</b></h3>
             </Col>
+          </Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+          <Button variant="danger" onClick={logout}>Return to Sign In</Button>
           </Row>
         </Container>
         )}

@@ -86,25 +86,11 @@ function AddPatient() {
           //allergies: allergies
           doseNum: "0",
           isEligible: eligibility,
-          uuid: patientNum,
+          uuid: patientNum.toString(),
         },
         {
           aclInput:{
             acl:[
-              {
-                principal: {
-                  nodes: ["Bavaria","FDA"]
-                },
-                operations: ["READ"],
-                path: "name",
-              },
-              {
-                principal: {
-                  nodes: ["Bavaria","FDA"]
-                },
-                operations: ["READ"],
-                path: "lastName",
-              },
               {
                 principal: {
                   nodes: ["Bavaria","FDA"]
@@ -233,9 +219,9 @@ function AddPatient() {
               },
               {
                 principal: {
-                  nodes: ["Bavaria","FDA","JaneHopkins"]
+                  nodes: ["Bavaria","FDA"]
                 },
-                operations: ["ALL"],
+                operations: ["READ"],
                 path: "uuid"
               },
             ],

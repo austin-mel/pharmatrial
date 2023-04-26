@@ -7,12 +7,11 @@ import { updateProfile } from "firebase/auth";
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
 import PatientTable from "../components/PatientTable";
-import PatientAppointment from "../components/PatientAppointment";
 import AddPatient from "../components/AddPatient";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import TestTable from "../components/TestTable";
 import AdminTable from "../components/AdminTable";
 import useJaneHopkins from "../hooks/useJaneHopkins";
+import AddAppointment from "../components/AddAppointment";
 
 function FBaseLoggedIn() {
     //RETRIVE DATA FROM VENDIA USING HOOK
@@ -558,7 +557,7 @@ const handleIncreaseDoses = async () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
+                      <PatientTable/>
                     </Row>
                     <Modal show={show} onHide={handleClose}>
                         {popup === "patient" ? (
@@ -576,7 +575,7 @@ const handleIncreaseDoses = async () => {
                             <Modal.Header closeButton>
                             <Modal.Title>Add an Appointment</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body><PatientAppointment/></Modal.Body>
+                            <Modal.Body><AddAppointment/></Modal.Body>
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
@@ -621,16 +620,18 @@ const handleIncreaseDoses = async () => {
                         </Col>
         </Row>
                       <Row>
-                          <Col className="justify-content-md-center" style={{display:'flex'}}><AdminTable/></Col>
+                          <AdminTable/>
                       </Row>
           </Container>
         ) : (
-        <Container fluid>
-          <Row>
+          <Container fluid>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
-                 <p>Error! No Access!</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            <h3><b>Error! No Access!</b></h3>
             </Col>
+          </Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+          <Button variant="danger" onClick={logout}>Return to Sign In</Button>
           </Row>
         </Container>
         )}

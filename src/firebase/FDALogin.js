@@ -95,9 +95,7 @@ function FBaseLoggedIn() {
                         </Col>
                     </Row>
         <Row>
-          <Col className="justify-content-md-center" style={{display:'flex'}}> 
-            <StudyTable/>
-          </Col>
+          <StudyTable/>
         </Row>
                     <Modal show={show} onHide={handleClose}>
                             <Container>
@@ -113,11 +111,13 @@ function FBaseLoggedIn() {
       </Container>
         ) : (
         <Container fluid>
-          <Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
-                 <p>Error! No Access!</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            <h3><b>Error! No Access!</b></h3>
             </Col>
+          </Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+          <Button variant="danger" onClick={logout}>Return to Sign In</Button>
           </Row>
         </Container>
         )}

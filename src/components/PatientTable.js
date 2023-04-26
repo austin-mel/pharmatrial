@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
+import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, Spinner } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
@@ -9,8 +9,6 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import Fab from '@mui/material/Fab';
-import PatientAppointment from "./PatientAppointment";
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 
 function PatientTable() {
@@ -69,6 +67,18 @@ function PatientTable() {
       setFilterMonth(filterMonth);
     };
 
+    function deletePatient(props){
+      const patientID = props;
+      console.log(props);
+      console.log(patientID);
+
+      const deletePatients = async () => {
+        const deletePatient = await entities.patient.remove(patientID);
+      }
+
+      deletePatients();
+    }
+
   //FUNCTION TO EDIT A PATIENT
     const editPatient = async () => {
 
@@ -92,9 +102,9 @@ function PatientTable() {
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employmentStatus").value,
           currentlyInsured: document.getElementById("insuranceStatus").value,
-          allergies: null,
-          currentMedications: null,
-          icdHealthCodes: null,
+          //allergies: null,
+          //currentMedications: null,
+          //icdHealthCodes: null,
         },
         {
           aclInput:{
@@ -170,20 +180,6 @@ function PatientTable() {
                 operations: ["READ"],
                 path: "currentlyInsured"
               },
-              {
-                principal: {
-                  nodes: ["JaneHopkins"]
-                },
-                operations: ["ALL"],
-                path: "name"
-              },
-              {
-                principal: {
-                  nodes: ["JaneHopkins"]
-                },
-                operations: ["ALL"],
-                path: "lastName"
-              },
             ],
           },
         } 
@@ -200,9 +196,9 @@ function PatientTable() {
           //IF LOADING IS TRUE DISPLAY A LINEAR PROGRESS LOADING BAR ON THE PAGE
         }
             <Row>
-              <Col>
-                <LinearProgress />
-              </Col>
+                <Col className="justify-content-md-center" style={{display:'flex'}}>
+                    <Spinner animation="border" />
+                </Col>
             </Row>
           </Container>
         ) : (
@@ -212,7 +208,7 @@ function PatientTable() {
             }
                         <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
-                <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
+                <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
               <Col>
                 <Form.Control placeholder="Name" id="filterName"/>
@@ -248,7 +244,7 @@ function PatientTable() {
               //BUTTON TO REFRESH TABLE
             }
             <Row>
-              <Button variant="info" onClick={() => {listPatients(); }}>Refresh Table</Button>
+              <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
@@ -277,6 +273,7 @@ function PatientTable() {
                 <th>Employment Status</th>
                 <th>Insurance Status</th>
                 <th>ICD-10 Health Codes</th>
+                <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -322,6 +319,7 @@ function PatientTable() {
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
                           <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                          <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                       </tr>
           )}}
             //IF NAME AND YEAR AND MONTH ARE SET
@@ -356,6 +354,7 @@ function PatientTable() {
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
                           <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                          <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                       </tr>
           )}}
       })}
@@ -390,6 +389,7 @@ function PatientTable() {
                   <th>Employment Status</th>
                   <th>Insurance Status</th>
                   <th>ICD-10 Health Codes</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -424,6 +424,7 @@ function PatientTable() {
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
                       <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                      <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                     </tr>
                   )
       })}
@@ -516,7 +517,7 @@ function PatientTable() {
               <Col>
               <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits ? patient.visits.map((item, index) => (
                 <div>
-                <p key={index}>Date & Time: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
+                <p key={index}>Date: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
                 </div>
               )) : null}</b></Modal.Body>
               </Col>
