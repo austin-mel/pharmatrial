@@ -383,7 +383,7 @@ function AddPatient() {
                           {
                             //BUTTON THAT CALLS FUNCTION TO ADD PATIENT ON CLICK
                           }
-                        <Button variant="outline-success" onClick={() => {handleAddPatient(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Add Patient to Database</Button>
+                        <Button variant="outline-success" onClick={() => {handleAddPatient(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Add Patient to Database</Button>
                         </Form.Group>
               </Form>
           ) : (
@@ -531,7 +531,7 @@ function AddPatient() {
                           {
                             //BUTTON THAT CALLS FUNCTION TO ADD PATIENT ON CLICK
                           }
-                        <Button variant="outline-success" onClick={() => {handleAddPatient(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Add Patient to Database</Button>
+                        <Button variant="outline-success" onClick={() => {handleAddPatient(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Add Patient to Database</Button>
                         </Form.Group>
                 </Row>
                           <Row>

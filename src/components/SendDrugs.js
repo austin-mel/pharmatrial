@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useBavaria from "../hooks/useBavaria";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Container, Badge, Row } from "react-bootstrap";
 import {v4 as uuidv4} from 'uuid';
 
 //FUNCTION RETRIVES DATA (PROPS) FROM WHERE IT WAS CALLED (IN STUDYTABLE FILE) (PASSES STUDY ID)
@@ -15,6 +15,12 @@ function SendDrugs(props) {
     const [drugs, setDrugs] = useState();
     //INITALIZE BATCHNUM
     var batchNum = 0;
+
+    
+    //CREATE USE STATE (FOR ALERT POPUP)
+    const [show, setShow] = useState(false);
+    const handleHide = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
     const studyID = props.props;
@@ -165,8 +171,22 @@ function SendDrugs(props) {
 
       //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE SENDDRUGS
     return (  
-      //BUTTON THAT CALLS FUNCTION TO HANDLE SENDING/CREATING DRUGS ON CLICK
-      <Button variant="success" onClick={() => {handleSendDrugs();}}>Send Drugs to FDA</Button>
+      <div>
+      {show === false ? (
+        <Container fluid>
+        <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
+      </Container>
+      ) : (
+        <Container fluid>
+          <Row>
+        <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
+        </Row>
+        <Row>
+        <Badge bg="success">Success!</Badge>
+        </Row>
+        </Container>
+      )}
+      </div>
     );
 }
 

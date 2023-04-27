@@ -89,7 +89,7 @@ function AddStudy() {
                         {
                             //BUTTON THAT CALLS FUNCTION TO ADD STUDY ON CLICK
                         }
-                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Create New Study</Button>
+                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Create New Study</Button>
                         </Form.Group>
                 </Row>
               </Form>
@@ -108,7 +108,7 @@ function AddStudy() {
                         {
                             //BUTTON THAT CALLS FUNCTION TO ADD STUDY ON CLICK
                         }
-                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Create New Study</Button>
+                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Create New Study</Button>
                         </Form.Group>
                 </Row>
                 <Row>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Container, Badge, Row } from "react-bootstrap";
 //import {v4 as uuidv4} from 'uuid';
 import useFDA from "../hooks/useFDA";
 import useJaneHopkins from "../hooks/useJaneHopkins";
@@ -12,6 +12,11 @@ function AssignDrugs(props) {
     const [patients, setPatients] = useState();
     //CREATE ARRAY FOR DRUGS
     const [drugs, setDrugs] = useState();
+
+            //CREATE USE STATE (FOR ALERT POPUP)
+            const [show, setShow] = useState(false);
+            const handleHide = () => setShow(false);
+            const handleShow = () => setShow(true);
 
     //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
     const studyID = props.props;
@@ -112,7 +117,7 @@ function AssignDrugs(props) {
                 currentlyInsured: currentlyInsured,
                 drugID: drug._id,
                 studyID: studyID,
-                doseNum: "1",
+                doseNum: "0",
             },
             {
               aclInput:{
@@ -275,8 +280,23 @@ function AssignDrugs(props) {
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ASSIGNDRUGS
     return (  
+      <div>
+      {show === false ? (
     //BUTTON THAT CALLS FUNCTION TO HANDLE ASSIGNING DRUGS ON CLICK
-        <Button variant="info" onClick={() => {handleAssignDrugs();}}>Give Drugs to Eligible Patients</Button>
+       <Container fluid>
+        <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
+        </Container>
+      ) : (
+        <Container fluid>
+        <Row>
+        <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
+        </Row>
+        <Row>
+        <Badge bg="success">Success!</Badge>
+        </Row>
+        </Container>
+      )}
+      </div>
     );
 }
 

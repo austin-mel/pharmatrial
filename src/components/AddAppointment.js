@@ -263,7 +263,7 @@ function AddAppointment() {
               <Form.Group className="mb-3" controlId="patient">
               <Form.Label>Patient Name</Form.Label>
               <Form.Select aria-label="Default select example">
-                <option value="0187bee6-6165-cf61-e3ce-82abac047842">Billy Roberts</option>
+                <option value="018657df-9a40-f7e5-db30-57bbc6db5866">Billy Roberts</option>
               </Form.Select>
               </Form.Group>
                     <Form.Group className="mb-3" controlId="date">
@@ -279,7 +279,7 @@ function AddAppointment() {
                     <Form.Control type="hivViralLoad"/>
                     </Form.Group>
                     <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
-                    <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Save Appointment</Button>
+                    <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Save Appointment</Button>
                     </Form.Group>
                 </Form>
           ) : (
@@ -303,7 +303,7 @@ function AddAppointment() {
                   <Form.Control type="hivViralLoad"/>
                   </Form.Group>
                   <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
-                  <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Save Appointment</Button>
+                  <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Save Appointment</Button>
                   </Form.Group>
                   <Row>
                             <Badge bg="success">Appointment Saved!</Badge>

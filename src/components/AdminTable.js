@@ -50,8 +50,6 @@ function AdminTable() {
 
     function deletePatient(props){
       const patientID = props;
-      console.log(props);
-      console.log(patientID);
 
       const deletePatients = async () => {
         const deletePatient = await entities.patient.remove(patientID);
