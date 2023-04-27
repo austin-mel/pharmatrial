@@ -41,8 +41,6 @@ function StudyTable() {
           }
         })}
 
-      console.log(patientCount);
-      console.log(completedCount);
       if(patientCount === completedCount){
         completeTrial();
 
@@ -127,7 +125,6 @@ function StudyTable() {
         listStudies();
         listDrugs();
         listPatients();
-        checkTrialStatus();
         //RENDER LOADING BAR FOR 7 SECONDS TO LET VENDIA RETREIVE DATA
         setLoading("true");
         setTimeout(() => {
@@ -373,7 +370,6 @@ function StudyTable() {
                         <th>Bavaria Approval</th>
                         <th>Drug Name</th>
                         <th></th>
-                        <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -392,7 +388,6 @@ function StudyTable() {
                                             //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED YET!!!)
                                             }
                                             <td><Button variant="primary" onClick={() => {}}>Download Results</Button></td>
-                                            <td><Button variant="danger" onClick={() => {deleteStudy(study._id);}}>Delete Study</Button></td>
                                         </tr> 
                                     )
                                 }
@@ -674,6 +669,7 @@ function StudyTable() {
                 <th>Bavaria Approval</th>
                 <th>Drug Name</th>
                 <th></th>
+                <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -692,6 +688,7 @@ function StudyTable() {
                                   //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED!!!)
                                   }
                                     <td><Button variant="primary" onClick={() => {}}>Download Results</Button></td>
+                                    <td><Button variant="danger" onClick={() => {deleteStudy(study._id);}}>Delete Study</Button></td>
                                 </tr> 
                             )
                         }
@@ -701,7 +698,7 @@ function StudyTable() {
                 </Col>
             </Row>
             <Row>
-                        <Button variant="outline-info" onClick={() => {listStudies(); }}>Refresh Studies</Button>
+                        <Button variant="outline-info" onClick={() => {checkTrialStatus(); setTimeout(() => {listStudies();}, 1500);}}>Refresh Studies</Button>
                       </Row>
             {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY
