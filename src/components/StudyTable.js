@@ -35,13 +35,16 @@ function StudyTable() {
           key={key}
           if(patient.studyID === study._id){
             patientCount++;
-            if(patient.doseNum === "5"){
+            if(parseInt(patient.doseNum) === 5){
               completedCount++;
             }
           }
         })}
 
-      if(patientCount === completedCount){
+        console.log(patientCount);
+        console.log(completedCount);
+
+      if(patientCount != 0 && patientCount === completedCount){
         completeTrial();
 
         async function completeTrial(){
@@ -65,35 +68,28 @@ function StudyTable() {
                 acl:[
                   {
                     principal: {
-                      nodes: ["Bavaria","FDA"]
+                      nodes: ["Bavaria"]
                     },
                     operations: ["ALL"],
                     path: "fdaApproved",
                   },
                   {
                     principal: {
-                      nodes: ["Bavaria","FDA"]
+                      nodes: ["Bavaria"]
                     },
                     operations: ["ALL"],
                     path: "bavariaApproved",
                   },
                   {
                     principal: {
-                      nodes: ["Bavaria"]
-                    },
-                    operations: ["ALL"],
-                    path: "drugName",
-                  },
-                  {
-                    principal: {
-                      nodes: ["FDA","JaneHopkins"]
+                      nodes: ["Bavaria", "JaneHopkins"]
                     },
                     operations: ["READ"],
                     path: "drugName",
                   },
                   {
                     principal: {
-                      nodes: ["Bavaria","FDA","JaneHopkins"]
+                      nodes: ["Bavaria","JaneHopkins"]
                     },
                     operations: ["ALL"],
                     path: "inProgress"
@@ -275,8 +271,8 @@ function StudyTable() {
                                 if(study.fdaApproved === false && study.bavariaApproved === false && study.inProgress === true){
                                     return(
                                         <tr key={key}>
-                                            <td>False</td>
-                                            <td>False</td>
+                                            <td><b style={{color: "red"}}>False</b></td>
+                                            <td><b style={{color: "red"}}>False</b></td>
                                             <td>{study.drugName}</td>
                                             {
                                             //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -288,8 +284,8 @@ function StudyTable() {
                                 else if(study.bavariaApproved === false && study.fdaApproved === true && study.inProgress === true){
                                     return(
                                         <tr key={key}>
-                                            <td>True</td>
-                                            <td>False</td>
+                                            <td><b style={{color: "green"}}>True</b></td>
+                                            <td><b style={{color: "red"}}>False</b></td>
                                             <td>{study.drugName}</td>
                                             {
                                             //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -301,8 +297,8 @@ function StudyTable() {
                                 else if(study.bavariaApproved === true && study.fdaApproved === false && study.inProgress === true){
                                     return(
                                         <tr key={key}>
-                                            <td>False</td>
-                                            <td>True</td>
+                                            <td><b style={{color: "red"}}>False</b></td>
+                                            <td><b style={{color: "green"}}>True</b></td>
                                             <td>{study.drugName}</td>
                                             {
                                             //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -341,8 +337,8 @@ function StudyTable() {
                                 if(study.bavariaApproved === true && study.fdaApproved === true && study.inProgress === true){
                                     return(
                                         <tr key={key}>
-                                            <td>True</td>
-                                            <td>True</td>
+                                            <td><b style={{color: "green"}}>True</b></td>
+                                            <td><b style={{color: "green"}}>True</b></td>
                                             <td>{study.drugName}</td>
                                             {
                                             //BUTTON TO VIEW STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -381,8 +377,8 @@ function StudyTable() {
                                 if(study.inProgress === false){
                                     return(
                                         <tr key={key}>
-                                            <td>True</td>
-                                            <td>True</td>
+                                            <td><b style={{color: "green"}}>True</b></td>
+                                            <td><b style={{color: "green"}}>True</b></td>
                                             <td>{study.drugName}</td>
                                             {
                                             //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED YET!!!)
@@ -572,8 +568,8 @@ function StudyTable() {
                         if(study.fdaApproved === false && study.bavariaApproved === false && study.inProgress === true){
                             return(
                                 <tr key={key}>
-                                    <td>False</td>
-                                    <td>False</td>
+                                    <td><b style={{color: "red"}}>False</b></td>
+                                    <td><b style={{color: "red"}}>False</b></td>
                                     <td>{study.drugName}</td>
                                     {
                                       //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -585,8 +581,8 @@ function StudyTable() {
                         else if(study.bavariaApproved === false && study.fdaApproved === true && study.inProgress === true){
                             return(
                                 <tr key={key}>
-                                    <td>True</td>
-                                    <td>False</td>
+                                    <td><b style={{color: "green"}}>True</b></td>
+                                    <td><b style={{color: "red"}}>False</b></td>
                                     <td>{study.drugName}</td>
                                     {
                                       //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -598,8 +594,8 @@ function StudyTable() {
                         else if(study.bavariaApproved === true && study.fdaApproved === false && study.inProgress === true){
                             return(
                                 <tr key={key}>
-                                    <td>False</td>
-                                    <td>True</td>
+                                    <td><b style={{color: "red"}}>False</b></td>
+                                    <td><b style={{color: "green"}}>True</b></td>
                                     <td>{study.drugName}</td>
                                     {
                                       //BUTTON TO APPROVE STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -639,8 +635,8 @@ function StudyTable() {
                         if(study.bavariaApproved === true && study.fdaApproved === true && study.inProgress === true){
                             return(
                                 <tr key={key}>
-                                    <td>True</td>
-                                    <td>True</td>
+                                    <td><b style={{color: "green"}}>True</b></td>
+                                    <td><b style={{color: "green"}}>True</b></td>
                                     <td>{study.drugName}</td>
                                     {
                                             //BUTTON TO VIEW STUDY (PASSED STUDY ID TO APPROVE AS PROPS)
@@ -698,7 +694,7 @@ function StudyTable() {
                 </Col>
             </Row>
             <Row>
-                        <Button variant="outline-info" onClick={() => {checkTrialStatus(); setTimeout(() => {listStudies();}, 1500);}}>Refresh Studies</Button>
+                        <Button variant="outline-info" onClick={() => {checkTrialStatus(); setTimeout(() => {listStudies();}, 800);}}>Refresh Studies</Button>
                       </Row>
             {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY

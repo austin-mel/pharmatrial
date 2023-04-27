@@ -92,6 +92,7 @@ const handleEditPatient = async () => {
         const studyID = patient.studyID;
         const doseNum = patient.doseNum;
         const isEligible = patient.isEligible;
+        const uuid = patient.uuid;
 
         if(patientID === patient._id){
           editPatient();
@@ -123,6 +124,7 @@ const handleEditPatient = async () => {
           studyID: studyID,
           doseNum: doseNum,
           isEligible: isEligible,
+          uuid: uuid,
           //allergies: null,
           //currentMedications: null,
           //icdHealthCodes: null,
@@ -267,18 +269,18 @@ const handleEditPatient = async () => {
               <Col>
                 <Form.Select id="filterMonth" aria-label="Select Month">
                   <option value="null">Select Month</option>
-                  <option value="January">January</option>
-                  <option value="February">February</option>
-                  <option value="March">March</option>
-                  <option value="April">April</option>
-                  <option value="May">May</option>
-                  <option value="June">June</option>
-                  <option value="July">July</option>
-                  <option value="August">August</option>
-                  <option value="September">September</option>
-                  <option value="October">October</option>
-                  <option value="November">November</option>
-                  <option value="Decemeber">December</option>
+                  <option value="01">January</option>
+                  <option value="02">February</option>
+                  <option value="03">March</option>
+                  <option value="04">April</option>
+                  <option value="05">May</option>
+                  <option value="06">June</option>
+                  <option value="07">July</option>
+                  <option value="08">August</option>
+                  <option value="09">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
                 </Form.Select>
               </Col>
               <Col>
@@ -376,7 +378,7 @@ const handleEditPatient = async () => {
             //IF NAME AND YEAR AND MONTH ARE SET
                   else{
                     //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED && MONTH INCLUDES MONTH FILTERED
-                    if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                    if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.substring(0,2) === filterMonth){
                       //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
                         
