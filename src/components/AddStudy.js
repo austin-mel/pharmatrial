@@ -1,12 +1,17 @@
 import { async } from "@firebase/util";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFDA from "../hooks/useFDA";
-import { Button, Form, Row, Col, Alert } from "react-bootstrap";
+import { Button, Form, Row, Col, Badge } from "react-bootstrap";
 
 function AddStudy() {
 
     //RETRIVE DATA FROM VENDIA USING HOOK
     const { entities } = useFDA();
+
+        //CREATE USE STATE (FOR ALERT POPUP)
+        const [show, setShow] = useState(false);
+        const handleHide = () => setShow(false);
+        const handleShow = () => setShow(true);
 
     //FUNCTOIN THAT CREATES A NEW STUDY
     const handleCreateStudy = async () => {
@@ -69,6 +74,7 @@ function AddStudy() {
     //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (
         <div className="addpatient">
+          {show === false ? (
             <Form>
               <Row>
                 <Col>
@@ -83,10 +89,33 @@ function AddStudy() {
                         {
                             //BUTTON THAT CALLS FUNCTION TO ADD STUDY ON CLICK
                         }
-                        <Button variant="outline-success" onClick={() => {handleCreateStudy();}}>Create New Study</Button>
+                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Create New Study</Button>
                         </Form.Group>
                 </Row>
               </Form>
+          ) : (
+            <Form>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-3" controlId="drugName">
+                    <Form.Label>Drug Name</Form.Label>
+                    <Form.Control type="studyName"/>
+                  </Form.Group>
+                </Col>
+                </Row>
+                <Row>
+                        <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                        {
+                            //BUTTON THAT CALLS FUNCTION TO ADD STUDY ON CLICK
+                        }
+                        <Button variant="outline-success" onClick={() => {handleCreateStudy(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Create New Study</Button>
+                        </Form.Group>
+                </Row>
+                <Row>
+                            <Badge bg="success">Study Created!</Badge>
+                          </Row>
+              </Form>
+          )}
         </div>
       );
 }

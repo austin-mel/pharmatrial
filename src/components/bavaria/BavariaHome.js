@@ -15,9 +15,7 @@ function BavariaHome() {
                 <Col className="justify-content-md-end" style={{display:'flex'}}><img src={logoHeaderBavaria} height="195" width="195" alt="Bavaria Logo"></img></Col>
                 </Row>
                 <Row className="content">
-                    <Col></Col>
                     <Col className="justify-content-md-center" style={{display:'flex'}}><BavariaLogin/></Col>
-                    <Col></Col>
                 </Row>
             </Container>
         </div>

@@ -619,9 +619,9 @@ const handleIncreaseDoses = async () => {
                             <Fab color="primary" variant="extended" onClick={() => {handleMaximumDoses();}} >Advance Doses to Complete</Fab>
                         </Col>
         </Row>
-                      <Row>
-                          <AdminTable/>
-                      </Row>
+        <Row>
+          <AdminTable/>
+        </Row>
           </Container>
         ) : (
           <Container fluid>

@@ -1,12 +1,17 @@
 import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Button, Form, Container } from "react-bootstrap";
+import { Button, Form, Container, Badge, Row, Col } from "react-bootstrap";
 
 function AddAppointment() {
     const { entities } = useJaneHopkins();
 
     const [patients, setPatients] = useState();
+
+        //CREATE USE STATE (FOR ALERT POPUP)
+        const [show, setShow] = useState(false);
+        const handleHide = () => setShow(false);
+        const handleShow = () => setShow(true);
   
       //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
       //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
@@ -253,6 +258,7 @@ function AddAppointment() {
 
     return (
         <div className="addappointment">
+          {show === false ? (
         <Form>
               <Form.Group className="mb-3" controlId="patient">
               <Form.Label>Patient Name</Form.Label>
@@ -273,9 +279,37 @@ function AddAppointment() {
                     <Form.Control type="hivViralLoad"/>
                     </Form.Group>
                     <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
-                    <Button variant="outline-success" onClick={() => {handleAddAppointment();}}>Save Appointment</Button>
+                    <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Save Appointment</Button>
                     </Form.Group>
                 </Form>
+          ) : (
+            <Form>
+            <Form.Group className="mb-3" controlId="patient">
+            <Form.Label>Patient Name</Form.Label>
+            <Form.Select aria-label="Default select example">
+              <option value="0187bee6-6165-cf61-e3ce-82abac047842">Billy Roberts</option>
+            </Form.Select>
+            </Form.Group>
+                  <Form.Group className="mb-3" controlId="date">
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control type="date"/>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="notes">
+                  <Form.Label>Notes</Form.Label>
+                  <Form.Control as="textarea" rows={3} type="notes"/>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="hivViralLoad">
+                  <Form.Label>HIV Viral Load</Form.Label>
+                  <Form.Control type="hivViralLoad"/>
+                  </Form.Group>
+                  <Form.Group className="justify-content-md-center" style={{display:'flex'}}>
+                  <Button variant="outline-success" onClick={() => {handleAddAppointment(); handleShow(); setTimeout(() => {handleHide();}, 2000);}}>Save Appointment</Button>
+                  </Form.Group>
+                  <Row>
+                            <Badge bg="success">Appointment Saved!</Badge>
+                          </Row>
+              </Form>
+          )}
         </div>
     );
 }

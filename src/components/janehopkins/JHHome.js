@@ -16,9 +16,7 @@ function JHHome() {
                 <Col sm={2}></Col>
                 </Row>
                 <Row className="content">
-                    <Col></Col>
                     <Col className="justify-content-md-center" style={{display:'flex'}}><JHLogin/></Col>
-                    <Col></Col>
                 </Row>
         </Container>
     );

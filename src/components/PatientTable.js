@@ -49,6 +49,7 @@ function PatientTable() {
   useEffect(() => {
     //CALL LISTPATIENTS FUNCTION
     listPatients();
+    checkEligibility();
     //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
     setLoading("true");
     setTimeout(() => {
@@ -69,8 +70,6 @@ function PatientTable() {
 
     function deletePatient(props){
       const patientID = props;
-      console.log(props);
-      console.log(patientID);
 
       const deletePatients = async () => {
         const deletePatient = await entities.patient.remove(patientID);
@@ -79,13 +78,31 @@ function PatientTable() {
       deletePatients();
     }
 
+    function checkEligibility(){
+
+    }
+
   //FUNCTION TO EDIT A PATIENT
-    const editPatient = async () => {
+//FUNCTION TO HANDLE ASSIGNING DRUGS
+const handleEditPatient = async () => {
+
+      {patients?.map((patient, key) => { 
+        key={key}
+        const drugID = patient.drugID;
+        const studyID = patient.studyID;
+        const doseNum = patient.doseNum;
+        const isEligible = patient.isEligible;
+
+        if(patientID === patient._id){
+          editPatient();
+        }
+
+      async function editPatient(){
 
       //VENDIA FUNCTION TO EDIT PATIENT
       //GET VALUES FROM THE FORM BELOW BY FETCHING IDS FROM FORM
       //_id MUST BE ID OF PATIENT YOU WANT TO EDIT
-      const editPatient = await entities.patient.update(
+      const editVendiaPatient = await entities.patient.update(
         {
           _id: patientID,
           name: document.getElementById("patientFirstName").value,
@@ -102,6 +119,10 @@ function PatientTable() {
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employmentStatus").value,
           currentlyInsured: document.getElementById("insuranceStatus").value,
+          drugID: drugID,
+          studyID: studyID,
+          doseNum: doseNum,
+          isEligible: isEligible,
           //allergies: null,
           //currentMedications: null,
           //icdHealthCodes: null,
@@ -180,11 +201,41 @@ function PatientTable() {
                 operations: ["READ"],
                 path: "currentlyInsured"
               },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "drugID"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "studyID"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "doseNum"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "isEligible"
+              },
             ],
           },
         } 
       );
-      console.log(editPatient);
+      console.log(editVendiaPatient);
+      }
+      })}
     };
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
@@ -712,7 +763,7 @@ function PatientTable() {
             //BUTTON TO CALL FUNCTION EDIT A PATIENT
             //BUTTON TO CLOSE MODAL
           }
-          <Button variant="success" onClick={() => {editPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
+          <Button variant="success" onClick={() => {handleEditPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
           <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
           </Modal.Footer>
         </Container>
