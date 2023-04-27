@@ -530,7 +530,8 @@ const handleIncreaseDoses = async () => {
     return(
         <div>
     {access === "doctor" ? ( 
-        <Container fluid>
+        <div className="jhhome">
+          <div className="profilebar">
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -544,6 +545,8 @@ const handleIncreaseDoses = async () => {
             <Button variant="danger" onClick={logout}>Log Out</Button>
           </Col>
         </Row>
+        </div>
+        <div className="jhcontent">
                     <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
@@ -559,9 +562,10 @@ const handleIncreaseDoses = async () => {
                     <Row>
                       <PatientTable/>
                     </Row>
+                </div>
                     <Modal show={show} onHide={handleClose}>
                         {popup === "patient" ? (
-                            <Container>
+                            <div>
                             <Modal.Header closeButton>
                             <Modal.Title>Add a Patient</Modal.Title>
                             </Modal.Header>
@@ -569,9 +573,9 @@ const handleIncreaseDoses = async () => {
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
-                            </Container>
+                            </div>
                         ) : ( 
-                            <Container>
+                            <div>
                             <Modal.Header closeButton>
                             <Modal.Title>Add an Appointment</Modal.Title>
                             </Modal.Header>
@@ -579,19 +583,20 @@ const handleIncreaseDoses = async () => {
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
-                            </Container>
+                            </div>
                         )}
                     </Modal>
-        </Container>
+        </div>
         ):
         access === "patient" ? ( 
-            <Container fluid>
+          <div className="jhhome">
                 <p>Test</p>
                 <Button variant="danger" onClick={logout}>Return to Sign In</Button>
-            </Container>
+            </div>
         ) : 
         access === "admin" ? ( 
-          <Container fluid>
+          <div className="jhhome">
+            <div className="profilebar">
           <Row>
             <Col className="justify-content-md-end" style={{display:'flex'}}>
               <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -605,16 +610,12 @@ const handleIncreaseDoses = async () => {
               <Button variant="danger" onClick={logout}>Log Out</Button>
             </Col>
           </Row>
+          </div>
+          <div className="jhcontent">
                       <Row>
-        {
-        //BUTTON TO ADVANCE DOSES BY ONE [NOT IMPLEMENTED!!!]
-        }
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="primary" variant="extended" onClick={() => {handleIncreaseDoses();}} >Advance Doses by One</Fab>
                         </Col>
-        {
-        //BUTTON TO ADVANCE DOSES TO FIVE (COMPLETE) [NOT IMPLEMENTED!!!]
-        }
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="primary" variant="extended" onClick={() => {handleMaximumDoses();}} >Advance Doses to Complete</Fab>
                         </Col>
@@ -622,9 +623,10 @@ const handleIncreaseDoses = async () => {
         <Row>
           <AdminTable/>
         </Row>
-          </Container>
+        </div>
+          </div>
         ) : (
-          <Container fluid>
+          <div className="errorpage">
           <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
             <h3><b>Error! No Access!</b></h3>
@@ -633,7 +635,7 @@ const handleIncreaseDoses = async () => {
           <Row className="justify-content-md-center" style={{display:'flex'}}>
           <Button variant="danger" onClick={logout}>Return to Sign In</Button>
           </Row>
-        </Container>
+        </div>
         )}
         </div>
     );

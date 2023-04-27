@@ -53,6 +53,7 @@ function BavariaTable() {
     return (
         <div className="table">
           <Container fluid>
+          <div className="tablefilter">
             <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="warning" onClick={() => {checkFilter(); setFilterStatus(true);}}><FilterAltRoundedIcon/>Set Filter</Button>
@@ -81,6 +82,7 @@ function BavariaTable() {
                 <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
               </Col>
             </Row>
+            </div>
           </Container>
         {loading === "true" ? (
           <Container>
@@ -94,6 +96,7 @@ function BavariaTable() {
           <Container>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
              {
               //IF FILTER IS ENABLED
             }
@@ -190,9 +193,11 @@ function BavariaTable() {
       })}
               </tbody>
             </Table>
+            </div>
           </Container>
 ) : (
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="patienttable">
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -237,6 +242,7 @@ function BavariaTable() {
       })}
       </tbody>
       </Table>
+      </div>
       <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     {
       //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS

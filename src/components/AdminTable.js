@@ -61,6 +61,7 @@ function AdminTable() {
     return (
         <div className="table">
           <Container fluid>
+          <div className="tablefilter">
             <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
@@ -92,6 +93,7 @@ function AdminTable() {
             <Row>
               <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
+            </div>
           </Container>
         {loading === "true" ? (
           <Container>
@@ -105,6 +107,7 @@ function AdminTable() {
           <Container>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -239,9 +242,11 @@ function AdminTable() {
       })}
               </tbody>
             </Table>
+            </div>
           </Container>
 ) : (
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -322,6 +327,7 @@ function AdminTable() {
       })}
       </tbody>
       </Table>
+      </div>
       <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     {
       //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS

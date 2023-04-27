@@ -73,7 +73,8 @@ function FBaseLoggedIn() {
     return(
         <div>
     {access === true ? ( 
-        <Container fluid>
+        <div className="fdahome">
+          <div className="profilebar">
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon sx={{ mr: 1 }}/>
@@ -87,6 +88,8 @@ function FBaseLoggedIn() {
             <Button variant="danger" onClick={logout}>Log Out</Button>
           </Col>
         </Row>
+          </div>
+          <div className="fdacontent">
         <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="success" variant="extended" onClick={() => {setShow(true);}} >
@@ -97,8 +100,8 @@ function FBaseLoggedIn() {
         <Row>
           <StudyTable/>
         </Row>
+        </div>
                     <Modal show={show} onHide={handleClose}>
-                            <Container>
                             <Modal.Header closeButton>
                             <Modal.Title>Create a New Study</Modal.Title>
                             </Modal.Header>
@@ -106,11 +109,10 @@ function FBaseLoggedIn() {
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
-                            </Container>
                     </Modal>
-      </Container>
+      </div>
         ) : (
-        <Container fluid>
+          <div className="errorpage">
           <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
             <h3><b>Error! No Access!</b></h3>
@@ -119,7 +121,7 @@ function FBaseLoggedIn() {
           <Row className="justify-content-md-center" style={{display:'flex'}}>
           <Button variant="danger" onClick={logout}>Return to Sign In</Button>
           </Row>
-        </Container>
+        </div>
         )}
         </div>
     );

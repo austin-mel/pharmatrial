@@ -9,15 +9,13 @@ function FDAHome() {
     return (
         //FDA PAGE
         <div className="fdahome">
-                <Container fluid>
-                <Row className="fdaheader">
+                <div className="fdaheader">
                 <Col sm={1} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
                 <Col className="justify-content-md-left" style={{display:'flex'}}><img src={logoHeaderFDA} height="155" width="650" alt="FDA Logo"></img></Col>
-                </Row>
-                <Row className="content">
-                    <Col className="justify-content-md-center" style={{display:'flex'}}><FDALogin/></Col>
-                </Row>
-                </Container>
+                </div>
+                <div className="fda">
+                    <FDALogin/>
+                </div>
         </div>
     )
 }

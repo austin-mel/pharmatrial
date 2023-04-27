@@ -242,7 +242,7 @@ const handleEditPatient = async () => {
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
     return (
-        <div className="patienttable">
+        <div className="table">
         {loading === "true" ? (
           <Container>
         {
@@ -255,11 +255,12 @@ const handleEditPatient = async () => {
             </Row>
           </Container>
         ) : (
-          <Container>
+          <Container fluid>
             {
               //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
             }
-                        <Row>
+            <div className="tablefilter">
+              <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
                 <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
@@ -299,8 +300,10 @@ const handleEditPatient = async () => {
             <Row>
               <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
+            </div>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
              {
               //IF FILTER IS ENABLED
             }
@@ -413,10 +416,12 @@ const handleEditPatient = async () => {
       })}
               </tbody>
             </Table>
+            </div>
           </Container>
 ) : (
   
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
             {
               //IF FILTER IS DISABLED
             }
@@ -483,6 +488,7 @@ const handleEditPatient = async () => {
       })}
       </tbody>
       </Table>
+      </div>
   </Container>
 )}
           </Container>

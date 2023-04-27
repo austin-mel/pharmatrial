@@ -226,7 +226,7 @@ function StudyTable() {
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE STUDYTABLE
     return (
-        <div className="studyTable">
+        <div className="studytable">
         {loading === "true" ? (
           <Container fluid>
         {
@@ -246,6 +246,7 @@ function StudyTable() {
             }
                 {displayName === "Bavaria Admin"? (
                     <Container fluid>
+                      <div className="studytable">
                     <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <h5>Pending Studies:</h5>
@@ -395,6 +396,7 @@ function StudyTable() {
                     <Row>
                         <Button variant="outline-info" onClick={() => {listStudies(); }}>Refresh Studies</Button>
                       </Row>
+                      </div>
                     {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY
                     }
@@ -539,6 +541,7 @@ function StudyTable() {
                   </Container>
                 ) : (
                     <Container fluid>
+                      <div className="studytable">
            {
               //IF LOADING IS FALSE DISPLAY PAGE
               //IF ACCOUNT TYPE IS FDA ADMIN LOAD THIS
@@ -696,6 +699,7 @@ function StudyTable() {
             <Row>
                         <Button variant="outline-info" onClick={() => {checkTrialStatus(); setTimeout(() => {listStudies();}, 800);}}>Refresh Studies</Button>
                       </Row>
+            </div>
             {
                     //MODAL THAT WILL POP WHEN VIEWING A STUDY
             }
