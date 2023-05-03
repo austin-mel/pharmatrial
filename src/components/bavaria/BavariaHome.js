@@ -10,11 +10,13 @@ function BavariaHome() {
         //BAVARIA PAGE
         <div className="bavaria">
                 <div className="bavheader">
+                <Row>
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
                 <Col className="justify-content-md-end" style={{display:'flex'}}><img src={logoHeaderBavaria} height="195" width="195" alt="Bavaria Logo"></img></Col>
+                </Row>
                 </div>
 
-                <div className="bav">
+                <div className="content">
                     <BavariaLogin/>
                 </div>
         </div>
