@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useBavaria from "../hooks/useBavaria";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Container, Badge, Row } from "react-bootstrap";
 import {v4 as uuidv4} from 'uuid';
 
 //FUNCTION RETRIVES DATA (PROPS) FROM WHERE IT WAS CALLED (IN STUDYTABLE FILE) (PASSES STUDY ID)
@@ -16,11 +16,21 @@ function SendDrugs(props) {
     //INITALIZE BATCHNUM
     var batchNum = 0;
 
+    
+    //CREATE USE STATE (FOR ALERT POPUP)
+    const [show, setShow] = useState(false);
+    const handleHide = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
+    const studyID = props.props;
+
     //RUNS THROUGH ENTIRE ARRAY OF DRUGS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
     {drugs?.map((drug, key) => {
-      if(drug.batchNumber > batchNum){
+      key={key}
+      if(parseInt(drug.batchNumber) > batchNum){
         //SET BATCH NUMBER TO CURRENT HIGHEST BATCH NUMBER SO IT WILL KEEP INCREASING
-        batchNum = drug.batchNumber
+        batchNum = parseInt(drug.batchNumber)
       }
     })}
 
@@ -68,7 +78,7 @@ function SendDrugs(props) {
 
       //INCREASE BATCH NUMBER BY ONE
       function increaseBatchNum(){
-        batchNum += 1;
+        batchNum++;
       }
 
       //RANDOMLY SELECT PLACEBO OR REAL
@@ -81,12 +91,30 @@ function SendDrugs(props) {
         }
       }
 
-      //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
-      const studyID = props.props;
+    
+      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+      {patients?.map((patient, key) => { 
+        key={key}
+        //IF PATIENT HAS A DOB LISTED
+        //SUBTRING THE LAST 4 DIGITS OF THE DOB TO FIND YEAR
+        if(patient.isEligible != null){
+          var dobYear = patient.dob.substring(patient.dob.length - 4);
+
+        //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
+        //IF PATIENT IS INELIGIBLE SKIP THEM
+        if(patient.isEligible === false){
+          console.log("Not Eligible!")
+        }
+        //IF PATIENT IS ELIGIBLE CREATE NEW DRUG
+        else{
+          if(patient.drugID === null){
+            chooseType();
+            sendDrugs();
+          }
 
       //FUNCTION TO CREATE DRUGS FOR ELIGIBLE PATIENTS
       async function sendDrugs(){
-        
+
         //VENDIA FUNCTION TO ADD A DRUG IN THE DATABASE
         //VALUES TAKEN FROM PLACEBODRUG AND BATCHNUM VARIABLES ABOVE
         //ID SHOULD BE BLANK 
@@ -95,7 +123,7 @@ function SendDrugs(props) {
           {
               placebo: placeboDrug,
               batchNumber: batchNum.toString(),
-              id: "",
+              patientID: patient._id,
               studyID: studyID,
           },
           {
@@ -110,24 +138,24 @@ function SendDrugs(props) {
                 },
                 {
                   principal: {
-                    nodes: ["Bavaria"]
-                  },
-                  operations: ["READ"],
-                  path: "id",
-                },
-                {
-                  principal: {
-                    nodes: ["FDA"]
-                  },
-                  operations: ["ALL"],
-                  path: "id",
-                },
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA"]
+                    nodes: ["Bavaria","JaneHopkins"]
                   },
                   operations: ["READ"],
                   path: "batchNumber",
+                },
+                {
+                  principal: {
+                    nodes: ["FDA","Bavaria","JaneHopkins"]
+                  },
+                  operations: ["ALL"],
+                  path: "patientID",
+                },
+                {
+                  principal: {
+                    nodes: ["Bavaria","FDA","JaneHopkins"]
+                  },
+                  operations: ["ALL"],
+                  path: "studyID",
                 },
               ],
             },
@@ -136,32 +164,29 @@ function SendDrugs(props) {
         console.log(createDrugs);
       }
 
-      //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
-      {patients?.map((patient, key) => { 
-        key={key}
-        //IF PATIENT HAS A DOB LISTED
-        //SUBTRING THE LAST 4 DIGITS OF THE DOB TO FIND YEAR
-        if(patient.dob != null){
-          var dobYear = patient.dob.substring(patient.dob.length - 4);
         }
-
-        //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
-        //IF PATIENT IS INELIGIBLE SKIP THEM
-        if(parseInt(dobYear) >= 2005){
-          console.log("Not Eligible!")
-        }
-        //IF PATIENT IS ELIGIBLE CREATE NEW DRUG
-        else{
-          chooseType();
-          sendDrugs();
-        }
+      }
       })}
     };
 
       //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE SENDDRUGS
     return (  
-      //BUTTON THAT CALLS FUNCTION TO HANDLE SENDING/CREATING DRUGS ON CLICK
-      <Button variant="success" onClick={() => {handleSendDrugs();}}>Send Drugs to FDA</Button>
+      <div>
+      {show === false ? (
+        <Container fluid>
+        <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
+      </Container>
+      ) : (
+        <Container fluid>
+          <Row>
+        <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
+        </Row>
+        <Row>
+        <Badge bg="success">Success!</Badge>
+        </Row>
+        </Container>
+      )}
+      </div>
     );
 }
 

@@ -5,8 +5,8 @@ import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWith
 import { auth } from './FirebaseHook'
 import { updateProfile } from "firebase/auth";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import SendDrugs from "../components/SendDrugs";
 import StudyTable from "../components/StudyTable";
+import BavariaTable from "../components/BavariaTable";
 
 function FBaseLoggedIn() {
     const [popup, setPopup] = useState("patient");
@@ -72,7 +72,8 @@ function FBaseLoggedIn() {
     return(
         <div>
     {access === true ? ( 
-        <Container>
+        <div className="bavhome">
+            <div className="profilebar">
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -86,21 +87,27 @@ function FBaseLoggedIn() {
             <Button variant="danger" onClick={logout}>Log Out</Button>
           </Col>
         </Row>
+          </div>
+          <div className="bavcontent">
         <Row>
-          <Col className="justify-content-md-center" style={{display:'flex'}}> 
-            <StudyTable/>
-          </Col>
+          <StudyTable/>
         </Row>
-    </Container>
+        <Row>
+          <BavariaTable/>
+        </Row>
+        </div>
+    </div>
         ) : (
-        <Container fluid>
-          <Row>
+        <div className="errorpage">
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
             <Col className="justify-content-md-center" style={{display:'flex'}}>
-                 <p>Error! No Access!</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            <h3><b>Error! No Access!</b></h3>
             </Col>
           </Row>
-        </Container>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+          <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+          </Row>
+        </div>
         )}
         </div>
     );

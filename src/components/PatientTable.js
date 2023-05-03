@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container } from "react-bootstrap";
+import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, Spinner } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
@@ -9,6 +9,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import LinearProgress from '@mui/material/LinearProgress';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 
 function PatientTable() {
   //RETRIVE DATA FROM VENDIA USING HOOK
@@ -48,6 +49,7 @@ function PatientTable() {
   useEffect(() => {
     //CALL LISTPATIENTS FUNCTION
     listPatients();
+    checkEligibility();
     //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
     setLoading("true");
     setTimeout(() => {
@@ -66,13 +68,42 @@ function PatientTable() {
       setFilterMonth(filterMonth);
     };
 
+    function deletePatient(props){
+      const patientID = props;
+
+      const deletePatients = async () => {
+        const deletePatient = await entities.patient.remove(patientID);
+      }
+
+      deletePatients();
+    }
+
+    function checkEligibility(){
+
+    }
+
   //FUNCTION TO EDIT A PATIENT
-    const editPatient = async () => {
+//FUNCTION TO HANDLE ASSIGNING DRUGS
+const handleEditPatient = async () => {
+
+      {patients?.map((patient, key) => { 
+        key={key}
+        const drugID = patient.drugID;
+        const studyID = patient.studyID;
+        const doseNum = patient.doseNum;
+        const isEligible = patient.isEligible;
+        const uuid = patient.uuid;
+
+        if(patientID === patient._id){
+          editPatient();
+        }
+
+      async function editPatient(){
 
       //VENDIA FUNCTION TO EDIT PATIENT
       //GET VALUES FROM THE FORM BELOW BY FETCHING IDS FROM FORM
       //_id MUST BE ID OF PATIENT YOU WANT TO EDIT
-      const editPatient = await entities.patient.update(
+      const editVendiaPatient = await entities.patient.update(
         {
           _id: patientID,
           name: document.getElementById("patientFirstName").value,
@@ -89,7 +120,14 @@ function PatientTable() {
           familyHistory: document.getElementById("familyHistory").value,
           currentlyEmployed: document.getElementById("employmentStatus").value,
           currentlyInsured: document.getElementById("insuranceStatus").value,
-          
+          drugID: drugID,
+          studyID: studyID,
+          doseNum: doseNum,
+          isEligible: isEligible,
+          uuid: uuid,
+          //allergies: null,
+          //currentMedications: null,
+          //icdHealthCodes: null,
         },
         {
           aclInput:{
@@ -167,47 +205,64 @@ function PatientTable() {
               },
               {
                 principal: {
-                  nodes: ["JaneHopkins"]
+                  nodes: ["Bavaria","FDA"]
                 },
                 operations: ["ALL"],
-                path: "name"
+                path: "drugID"
               },
               {
                 principal: {
-                  nodes: ["JaneHopkins"]
+                  nodes: ["Bavaria","FDA"]
                 },
                 operations: ["ALL"],
-                path: "lastName"
+                path: "studyID"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "doseNum"
+              },
+              {
+                principal: {
+                  nodes: ["Bavaria","FDA"]
+                },
+                operations: ["ALL"],
+                path: "isEligible"
               },
             ],
           },
         } 
       );
-      console.log(editPatient);
+      console.log(editVendiaPatient);
+      }
+      })}
     };
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
     return (
-        <div className="patienttable">
+        <div className="table">
         {loading === "true" ? (
           <Container>
         {
           //IF LOADING IS TRUE DISPLAY A LINEAR PROGRESS LOADING BAR ON THE PAGE
         }
             <Row>
-              <Col>
-                <LinearProgress />
-              </Col>
+                <Col className="justify-content-md-center" style={{display:'flex'}}>
+                    <Spinner animation="border" />
+                </Col>
             </Row>
           </Container>
         ) : (
-          <Container>
+          <Container fluid>
             {
               //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
             }
-                        <Row>
+            <div className="tablefilter">
+              <Row>
               <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
-                <Button variant="info" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
+                <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               </Col>
               <Col>
                 <Form.Control placeholder="Name" id="filterName"/>
@@ -215,18 +270,18 @@ function PatientTable() {
               <Col>
                 <Form.Select id="filterMonth" aria-label="Select Month">
                   <option value="null">Select Month</option>
-                  <option value="January">January</option>
-                  <option value="February">February</option>
-                  <option value="March">March</option>
-                  <option value="April">April</option>
-                  <option value="May">May</option>
-                  <option value="June">June</option>
-                  <option value="July">July</option>
-                  <option value="August">August</option>
-                  <option value="September">September</option>
-                  <option value="October">October</option>
-                  <option value="November">November</option>
-                  <option value="Decemeber">December</option>
+                  <option value="01">January</option>
+                  <option value="02">February</option>
+                  <option value="03">March</option>
+                  <option value="04">April</option>
+                  <option value="05">May</option>
+                  <option value="06">June</option>
+                  <option value="07">July</option>
+                  <option value="08">August</option>
+                  <option value="09">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
                 </Form.Select>
               </Col>
               <Col>
@@ -243,10 +298,12 @@ function PatientTable() {
               //BUTTON TO REFRESH TABLE
             }
             <Row>
-              <Button variant="info" onClick={() => {listPatients(); }}>Refresh Table</Button>
+              <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
+            </div>
              {filterStatus === true ? ( 
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
              {
               //IF FILTER IS ENABLED
             }
@@ -272,6 +329,7 @@ function PatientTable() {
                 <th>Employment Status</th>
                 <th>Insurance Status</th>
                 <th>ICD-10 Health Codes</th>
+                <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -311,18 +369,19 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                          <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                       </tr>
           )}}
             //IF NAME AND YEAR AND MONTH ARE SET
                   else{
                     //IF PATIENT'S NAME INCLUDES WHAT IS FILTERED && DOB INCLUDES YEAR FILTERED && MONTH INCLUDES MONTH FILTERED
-                    if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.includes(filterMonth)){
+                    if(patient.name.includes(filterName) && patient.dob.includes(filterYear) && patient.dob.substring(0,2) === filterMonth){
                       //RENDER EACH PATIENT TO PAGE THAT FITS FILTER
                       return(
                         
@@ -345,21 +404,24 @@ function PatientTable() {
                           <td>{patient.bloodType}</td>
                           <td>{patient.temperature}</td>
                           <td>{patient.oxygenSaturation}</td>
-                          <td></td>
-                          <td></td>
+                          <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                          <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                           <td>{patient.familyHistory}</td>
                           <td>{patient.currentlyEmployed}</td>
                           <td>{patient.currentlyInsured}</td>
-                          <td></td>
+                          <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                          <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                       </tr>
           )}}
       })}
               </tbody>
             </Table>
+            </div>
           </Container>
 ) : (
   
           <Container className="justify-content-md-center" style={{display:'flex'}}>
+            <div className="patienttable">
             {
               //IF FILTER IS DISABLED
             }
@@ -385,6 +447,7 @@ function PatientTable() {
                   <th>Employment Status</th>
                   <th>Insurance Status</th>
                   <th>ICD-10 Health Codes</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -413,17 +476,19 @@ function PatientTable() {
                       <td>{patient.bloodType}</td>
                       <td>{patient.temperature}</td>
                       <td>{patient.oxygenSaturation}</td>
-                      <td></td>
-                      <td></td>
+                      <td>{patient.allergies ? patient.allergies.map((item, index) => ( <li key={index}>{item.allergy}<br /></li> )) : null}</td>
+                      <td>{patient.currentMedications ? patient.currentMedications.map((item, index) => ( <li key={index}>{item.medication}<br /></li> )) : null}</td>
                       <td>{patient.familyHistory}</td>
                       <td>{patient.currentlyEmployed}</td>
                       <td>{patient.currentlyInsured}</td>
-                      <td></td>
+                      <td>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => ( <li key={index}>{item.code}<br /></li> )) : null}</td>
+                      <td><Button variant="danger" onClick={() => {deletePatient(patient._id);}}>Delete Patient</Button></td>
                     </tr>
                   )
       })}
       </tbody>
       </Table>
+      </div>
   </Container>
 )}
           </Container>
@@ -481,10 +546,14 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-              <Modal.Body>Allergies: <b style={{fontSize: 20}}>{patient.allergies}</b></Modal.Body>
+              <Modal.Body>Allergies: <b style={{fontSize: 20}}>{patient.allergies ? patient.allergies.map((item, index) => (
+                <li key={index}>{item.allergy}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>Current Meds: <b style={{fontSize: 20}}>{patient.currentMedications}</b></Modal.Body>
+              <Modal.Body>Current Meds: <b style={{fontSize: 20}}>{patient.currentMedications ? patient.currentMedications.map((item, index) => (
+                <li key={index}>{item.medication}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
               <Col>
               <Modal.Body>Family History: <b style={{fontSize: 20}}>{patient.familyHistory}</b></Modal.Body>
@@ -498,18 +567,24 @@ function PatientTable() {
               <Modal.Body>Insurance Status: <b style={{fontSize: 20}}>{patient.currentlyInsured}</b></Modal.Body>
               </Col>
               <Col>
-              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}></b></Modal.Body>
+              <Modal.Body>ICD-10 Codes: <b style={{fontSize: 20}}>{patient.icdHealthCodes ? patient.icdHealthCodes.map((item, index) => (
+                <li key={index}>{item.code}<br /></li>
+              )) : null}</b></Modal.Body>
               </Col>
             </Row>
             <Row>
               <Col>
-              <Modal.Body>Visits: <b style={{fontSize: 20}}>{}</b></Modal.Body>
+              <Modal.Body>Visits: <b style={{fontSize: 20}}>{patient.visits ? patient.visits.map((item, index) => (
+                <div>
+                <p key={index}>Date: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
+                </div>
+              )) : null}</b></Modal.Body>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Modal.Body>Doses: {patient.insuranceNumber}/5</Modal.Body>
-                <Modal.Body><ProgressBar animated now={patient.insuranceNumber} variant="success" /></Modal.Body>
+                <Modal.Body>Doses: {patient.doseNum}/5</Modal.Body>
+                <Modal.Body><ProgressBar animated now={patient.doseNum*20} variant="success"/></Modal.Body>
               </Col>
             </Row>
             <Modal.Footer>
@@ -636,13 +711,31 @@ function PatientTable() {
             </Row>
             <Row>
               <Col>
-                <Form.Check type="switch" id="familyHistory" label="Family History?"/>
+                <Form.Group className="mb-3" controlId="familyHistory">
+                <Form.Label>Family History?</Form.Label>
+                <Form.Select id="familyHistory">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Check type="switch" id="employment" label="Employed?"/>
+              <Form.Group className="mb-3" controlId="employmentStatus">
+                <Form.Label>Employment Status?</Form.Label>
+                <Form.Select id="employmentStatus">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
               <Col>
-                <Form.Check type="switch" id="insuranceStatus" label="Insurance?"/>
+              <Form.Group className="mb-3" controlId="insuranceStatus">
+                <Form.Label>Insurance Status?</Form.Label>
+                <Form.Select id="insuranceStatus">
+                  <option value="Yes">Yes</option>
+                  <option value="No" >No</option>
+                </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
             <Row>
@@ -678,7 +771,7 @@ function PatientTable() {
             //BUTTON TO CALL FUNCTION EDIT A PATIENT
             //BUTTON TO CLOSE MODAL
           }
-          <Button variant="success" onClick={() => {editPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
+          <Button variant="success" onClick={() => {handleEditPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
           <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
           </Modal.Footer>
         </Container>

@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Container, Badge, Row } from "react-bootstrap";
 //import {v4 as uuidv4} from 'uuid';
 import useFDA from "../hooks/useFDA";
+import useJaneHopkins from "../hooks/useJaneHopkins";
 
 //FUNCTION RETRIVES DATA (PROPS) FROM WHERE IT WAS CALLED (IN STUDYTABLE FILE) (PASSES STUDY ID)
 function AssignDrugs(props) {
     //RETRIVE DATA FROM VENDIA USING HOOK
-    const { entities } = useFDA();
+    const { entities } = useJaneHopkins();
     //CREATE ARRAY FOR PATIENTS
     const [patients, setPatients] = useState();
     //CREATE ARRAY FOR DRUGS
     const [drugs, setDrugs] = useState();
+
+            //CREATE USE STATE (FOR ALERT POPUP)
+            const [show, setShow] = useState(false);
+            const handleHide = () => setShow(false);
+            const handleShow = () => setShow(true);
 
     //SET STUDY ID TO PROPS PASSED FROM ORIGINAL FUNCTION CALL (THE STUDY ID PASSED FROM STUDYTABLE)
     const studyID = props.props;
@@ -43,6 +49,21 @@ function AssignDrugs(props) {
     //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
       {patients?.map((patient, key) => { 
         key={key}
+        const name = patient.name;
+        const lastName = patient.lastName;
+        const dob = patient.dob;
+        const insuranceNum = patient.insuranceNumber;
+        const height = patient.height;
+        const weight = patient.weight;
+        const bloodPressure = patient.bloodPressure;
+        const bloodType = patient.bloodType;
+        const tempterature = patient.temperature;
+        const oxSat = patient.oxygenSaturation;
+        const address = patient.address;
+        const isEligible = patient.isEligible;
+        const familyHistory = patient.familyHistory;
+        const currentlyEmployed = patient.currentlyEmployed;
+        const currentlyInsured = patient.currentInsured;
 
         //IF PATIENT HAS A DOB LISTED
         //SUBTRING THE LAST 4 DIGITS OF THE DOB TO FIND YEAR
@@ -53,8 +74,7 @@ function AssignDrugs(props) {
         //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
         if(patient.drugID === null){
           if(patient.dob != null){
-            var dobYear = patient.dob.substring(patient.dob.length - 4);
-            if(parseInt(dobYear) >= 2005){
+            if(patient.isEligible === false){
               console.log("Not Eligible!")
             }
             //IF PATIENT IS ELIGIBLE ASSIGN DRUG TO GIVEN PATIENT
@@ -62,120 +82,221 @@ function AssignDrugs(props) {
               //PASSES CURRENT PATIENT OBJECT TO FUNCTION BELOW
 
               //IF COMMENT BELOW IS REMOVED IT WILL ADD DRUGS TO VENDIA (UNCOMMENT TO TEST)
-              //addDrugs(patient._id);
+              {drugs?.map((drug, key) => { 
+                key={key} 
+                if(drug.patientID === patient._id){
+                  addDrugs();
+
+                  //FUNCTION TO ASSIGN DRUGS TO PATIENTS
+        //KEEPS PATIENT FROM ABOVE
+        async function addDrugs(){
+
+          //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+          //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+          //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+  
+          //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+          //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+          const assignDrugs = await entities.patient.update(
+            {
+                _id: drug.patientID,
+                name: name,
+                lastName: lastName,
+                dob: dob,
+                insuranceNumber: insuranceNum,
+                height: height,
+                weight: weight,
+                bloodPressure: bloodPressure,
+                bloodType: bloodType,
+                temperature: tempterature,
+                oxygenSaturation: oxSat,
+                address: address,
+                isEligible: isEligible,
+                familyHistory: familyHistory,
+                currentlyEmployed: currentlyEmployed,
+                currentlyInsured: currentlyInsured,
+                drugID: drug._id,
+                studyID: studyID,
+                doseNum: "0",
+            },
+            {
+              aclInput:{
+                acl:[
+                  {
+                    principal: {
+                      nodes: ["FDA","Bavaria"]
+                    },
+                    operations: ["ALL"],
+                    path: "drugID",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["ALL"],
+                    path: "studyID",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["ALL"],
+                    path: "doseNum",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "name",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "lastName",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "dob",
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "height"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "weight"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "bloodPressure"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "bloodType"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "temperature"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "oxygenSaturation"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "familyHistory"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "currentlyEmployed"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "currentlyInsured"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "isEligible"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "currentMedications"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "allergies"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["READ"],
+                    path: "icdHealthCodes"
+                  },
+                  {
+                    principal: {
+                      nodes: ["Bavaria","FDA"]
+                    },
+                    operations: ["ALL"],
+                    path: "visits"
+                  },
+                ],
+              },
+            } 
+          );
+          console.log(assignDrugs);
+        }
+                }
+              })}
             }
           }
         }
       })}
 
-      //FUNCTION TO ASSIGN DRUGS TO PATIENTS
-      //KEEPS PATIENT FROM ABOVE
-      async function addDrugs(props){
-
-        const patientID = props.props;
-
-
-
-        //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
-        //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
-        //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
-
-
-
-
-        //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
-        //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
-        const assignDrugs = await entities.drug.update(
-          {
-              //SECOND ID VALUE SHOULD BE ID OF THE PATIENT IT IS ASSIGNED TOO
-              _id: "",
-              patientID: patientID,
-              studyID: studyID,
-          },
-          {
-            aclInput:{
-              acl:[
-                {
-                  principal: {
-                    nodes: ["FDA"]
-                  },
-                  operations: ["ALL"],
-                  path: "placebo",
-                },
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA"]
-                  },
-                  operations: ["ALL"],
-                  path: "id",
-                },
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA"]
-                  },
-                  operations: ["ALL"],
-                  path: "batchNumber",
-                },
-              ],
-            },
-          } 
-        );
-        
-        //UPDATE THE DRUG THAT WAS CHOSEN ABOVE
-        //SET drugID PARAMETER TO VARIABLE OF THAT DRUG ID THAT WAS CHOSEN
-
-
-      //VENDIA FUNCTION TO UPDATE A PATIENT IN THE DATABASE
-      //_id MUST BE THE ID OF THE PATIENT YOU WANT TO EDIT
-      //DRUG ID SHOULD BE DRUG ID FROM ABOVE (DOESNT WORK!!)
-      //STUDY ID SET TO ID VALUE (THE STUDY ID PASSED FROM STUDYTABLE)
-        const updatePatient = await entities.patient.update(
-          {
-              _id: patientID,
-              drugID: "",
-              studyID: studyID,
-              doseNum: "1",
-          },
-          {
-            aclInput:{
-              acl:[
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA","JaneHopkins"]
-                  },
-                  operations: ["ALL"],
-                  path: "drugID",
-                },
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA","JaneHopkins"]
-                  },
-                  operations: ["ALL"],
-                  path: "studyID",
-                },
-                {
-                  principal: {
-                    nodes: ["Bavaria","FDA","JaneHopkins"]
-                  },
-                  operations: ["ALL"],
-                  path: "doseNum",
-                },
-              ],
-            },
-          } 
-        );
-        console.log(assignDrugs);
-        console.log(updatePatient);
-      }
-
-      //REMOVED
-
+      
     };
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ASSIGNDRUGS
     return (  
+      <div>
+      {show === false ? (
     //BUTTON THAT CALLS FUNCTION TO HANDLE ASSIGNING DRUGS ON CLICK
-        <Button variant="info" onClick={() => {handleAssignDrugs();}}>Give Drugs to Eligible Patients</Button>
+       <Container fluid>
+        <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
+        </Container>
+      ) : (
+        <Container fluid>
+        <Row>
+        <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
+        </Row>
+        <Row>
+        <Badge bg="success">Success!</Badge>
+        </Row>
+        </Container>
+      )}
+      </div>
     );
 }
 

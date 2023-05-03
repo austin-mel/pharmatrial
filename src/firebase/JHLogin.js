@@ -7,11 +7,18 @@ import { updateProfile } from "firebase/auth";
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import Fab from '@mui/material/Fab';
 import PatientTable from "../components/PatientTable";
-import PatientAppointment from "../components/PatientAppointment";
 import AddPatient from "../components/AddPatient";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import AdminTable from "../components/AdminTable";
+import useJaneHopkins from "../hooks/useJaneHopkins";
+import AddAppointment from "../components/AddAppointment";
 
 function FBaseLoggedIn() {
+    //RETRIVE DATA FROM VENDIA USING HOOK
+    const { entities } = useJaneHopkins();
+    //CREATE ARRAY FOR PATIENTS
+    const [patients, setPatients] = useState();
+
     const [popup, setPopup] = useState("patient");
 
     const [show, setShow] = useState(false);
@@ -21,6 +28,13 @@ function FBaseLoggedIn() {
       try { await signOut(auth); }
         catch (e) { console.error(e); }
       }
+
+        //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
+  const listPatients = async () => {
+    let patientList = await entities.patient.list()
+    setPatients(patientList.items);
+  };
 
     const user = auth.currentUser;
 
@@ -73,12 +87,451 @@ function FBaseLoggedIn() {
       }
 
       useEffect(() => {
+        listPatients();
     }, [user.displayName]);
+
+//FUNCTION TO HANDLE INCREASING DOSES BY ONE
+const handleMaximumDoses = async () => {
+
+  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    {patients?.map((patient, key) => { 
+      key={key}
+      const name = patient.name;
+      const lastName = patient.lastName;
+      const dob = patient.dob;
+      const insuranceNum = patient.insuranceNumber;
+      const height = patient.height;
+      const weight = patient.weight;
+      const bloodPressure = patient.bloodPressure;
+      const bloodType = patient.bloodType;
+      const tempterature = patient.temperature;
+      const oxSat = patient.oxygenSaturation;
+      const address = patient.address;
+      const isEligible = patient.isEligible;
+      const familyHistory = patient.familyHistory;
+      const currentlyEmployed = patient.currentlyEmployed;
+      const currentlyInsured = patient.currentInsured;
+      const drugID = patient.drugID;
+      const studyID = patient.studyID;
+      const uuid = patient.uuid;
+      const doseNum = "5";
+      
+      //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
+      if(patient.studyID != null){
+          maximumDoses();
+          }
+
+              async function maximumDoses(){
+
+                //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+                //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+                //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+        
+                //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+                //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+                const maxDoses = await entities.patient.update(
+                  {
+                      _id: patient._id,
+                      name: name,
+                      uuid: uuid,
+                      lastName: lastName,
+                      dob: dob,
+                      insuranceNumber: insuranceNum,
+                      height: height,
+                      weight: weight,
+                      bloodPressure: bloodPressure,
+                      bloodType: bloodType,
+                      temperature: tempterature,
+                      oxygenSaturation: oxSat,
+                      address: address,
+                      isEligible: isEligible,
+                      familyHistory: familyHistory,
+                      currentlyEmployed: currentlyEmployed,
+                      currentlyInsured: currentlyInsured,
+                      drugID: drugID,
+                      studyID: studyID,
+                      doseNum: doseNum,
+                  },
+                  {
+                    aclInput:{
+                      acl:[
+                        {
+                          principal: {
+                            nodes: ["FDA","Bavaria"]
+                          },
+                          operations: ["ALL"],
+                          path: "drugID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "studyID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "doseNum",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "name",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "lastName",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "dob",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "height"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "weight"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodPressure"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodType"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "temperature"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "oxygenSaturation"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "familyHistory"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyEmployed"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyInsured"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "isEligible"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentMedications"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "allergies"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "icdHealthCodes"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "visits"
+                        },
+                      ],
+                    },
+                  } 
+                );
+                console.log(maxDoses);
+              }
+            })}
+  }
+
+//FUNCTION TO HANDLE INCREASING DOSES BY ONE
+const handleIncreaseDoses = async () => {
+
+  //RUNS THROUGH ENTIRE ARRAY OF PATIENTS TO BE ABLE TO ACCESS DETAILS OF THE OBJECTS
+    {patients?.map((patient, key) => { 
+      key={key}
+      const name = patient.name;
+      const lastName = patient.lastName;
+      const dob = patient.dob;
+      const insuranceNum = patient.insuranceNumber;
+      const height = patient.height;
+      const weight = patient.weight;
+      const bloodPressure = patient.bloodPressure;
+      const bloodType = patient.bloodType;
+      const tempterature = patient.temperature;
+      const oxSat = patient.oxygenSaturation;
+      const address = patient.address;
+      const isEligible = patient.isEligible;
+      const familyHistory = patient.familyHistory;
+      const currentlyEmployed = patient.currentlyEmployed;
+      const currentlyInsured = patient.currentInsured;
+      const drugID = patient.drugID;
+      const studyID = patient.studyID;
+      const uuid = patient.uuid;
+      const doseNum = patient.doseNum;
+      var newDoseNum = parseInt(doseNum);
+      var patientCount = 0;
+      
+      //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
+      if(patient.studyID != null){
+        patientCount++;
+        if(patient.doseNum === "5"){
+
+        }
+        else{
+          newDoseNum++;
+          increaseDoses();
+        }
+              }
+
+              async function increaseDoses(){
+
+                //FIND A WAY TO GET A DRUG ID THAT IS AVAILABLE TO BE ASSIGNED (patientID is null)
+                //SET _id PARAMETER TO VARIABLE OF THAT DRUG ID
+                //WE HAVE THE STUDY ID SAVED AND THE PATIENT ID OF AN ELIGIBLE PATIENT WITHOUT A DRUG ASSIGNED TO IT WE JUST NEED AN AVAILABLE DRUG ID
+        
+                //VENDIA FUNCTION TO UPDATE A DRUG IN THE DATABASE
+                //_id MUST BE SET TO THE ID OF THE DRUG YOU WANT TO EDIT (IDEALLY THE FIRST AVAILABE DRUG FROM ABOVE BUT IT DIDNT WORK)
+                const assignDrugs = await entities.patient.update(
+                  {
+                      _id: patient._id,
+                      name: name,
+                      uuid: uuid,
+                      lastName: lastName,
+                      dob: dob,
+                      insuranceNumber: insuranceNum,
+                      height: height,
+                      weight: weight,
+                      bloodPressure: bloodPressure,
+                      bloodType: bloodType,
+                      temperature: tempterature,
+                      oxygenSaturation: oxSat,
+                      address: address,
+                      isEligible: isEligible,
+                      familyHistory: familyHistory,
+                      currentlyEmployed: currentlyEmployed,
+                      currentlyInsured: currentlyInsured,
+                      drugID: drugID,
+                      studyID: studyID,
+                      doseNum: newDoseNum.toString(),
+                  },
+                  {
+                    aclInput:{
+                      acl:[
+                        {
+                          principal: {
+                            nodes: ["FDA","Bavaria"]
+                          },
+                          operations: ["ALL"],
+                          path: "drugID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "studyID",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "doseNum",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "name",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "lastName",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "dob",
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "height"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "weight"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodPressure"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "bloodType"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "temperature"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "oxygenSaturation"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "familyHistory"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyEmployed"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentlyInsured"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "isEligible"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "currentMedications"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "allergies"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["READ"],
+                          path: "icdHealthCodes"
+                        },
+                        {
+                          principal: {
+                            nodes: ["Bavaria","FDA"]
+                          },
+                          operations: ["ALL"],
+                          path: "visits"
+                        },
+                      ],
+                    },
+                  } 
+                );
+                console.log(assignDrugs);
+              }
+            })}
+  }
       
     return(
         <div>
     {access === "doctor" ? ( 
-        <Container>
+        <div className="jhhome">
+          <div className="profilebar">
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -92,6 +545,8 @@ function FBaseLoggedIn() {
             <Button variant="danger" onClick={logout}>Log Out</Button>
           </Col>
         </Row>
+        </div>
+        <div className="jhcontent">
                     <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
                             <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
@@ -105,11 +560,12 @@ function FBaseLoggedIn() {
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}><PatientTable/></Col>
+                      <PatientTable/>
                     </Row>
+                </div>
                     <Modal show={show} onHide={handleClose}>
                         {popup === "patient" ? (
-                            <Container>
+                            <div>
                             <Modal.Header closeButton>
                             <Modal.Title>Add a Patient</Modal.Title>
                             </Modal.Header>
@@ -117,41 +573,69 @@ function FBaseLoggedIn() {
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
-                            </Container>
+                            </div>
                         ) : ( 
-                            <Container>
+                            <div>
                             <Modal.Header closeButton>
                             <Modal.Title>Add an Appointment</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body><PatientAppointment/></Modal.Body>
+                            <Modal.Body><AddAppointment/></Modal.Body>
                             <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>Close</Button>
                             </Modal.Footer>
-                            </Container>
+                            </div>
                         )}
                     </Modal>
-        </Container>
+        </div>
         ):
         access === "patient" ? ( 
-            <Container fluid>
+          <div className="jhhome">
                 <p>Test</p>
                 <Button variant="danger" onClick={logout}>Return to Sign In</Button>
-            </Container>
+            </div>
         ) : 
         access === "admin" ? ( 
-            <Container fluid>
-                <p>Test2</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
-            </Container>
-        ) : (
-        <Container fluid>
+          <div className="jhhome">
+            <div className="profilebar">
           <Row>
-            <Col className="justify-content-md-center" style={{display:'flex'}}>
-                 <p>Error! No Access!</p>
-                <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+            <Col className="justify-content-md-end" style={{display:'flex'}}>
+              <p>Logged In!</p>   <AccountCircleRoundedIcon/>
             </Col>
           </Row>
-        </Container>
+          <Row>
+            <Col className="justify-content-md-end" style={{display:'flex'}}>
+              <div><h5>Welcome, {user.displayName}!</h5></div>
+            </Col>
+            <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
+              <Button variant="danger" onClick={logout}>Log Out</Button>
+            </Col>
+          </Row>
+          </div>
+          <div className="jhcontent">
+                      <Row>
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {handleIncreaseDoses();}} >Advance Doses by One</Fab>
+                        </Col>
+                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <Fab color="primary" variant="extended" onClick={() => {handleMaximumDoses();}} >Advance Doses to Complete</Fab>
+                        </Col>
+        </Row>
+        <Row>
+          <AdminTable/>
+        </Row>
+        </div>
+          </div>
+        ) : (
+          <div className="errorpage">
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+            <Col className="justify-content-md-center" style={{display:'flex'}}>
+            <h3><b>Error! No Access!</b></h3>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center" style={{display:'flex'}}>
+          <Button variant="danger" onClick={logout}>Return to Sign In</Button>
+          </Row>
+        </div>
         )}
         </div>
     );
