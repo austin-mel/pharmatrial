@@ -12,7 +12,7 @@ function FDAHome() {
                 <div className="fdaheader">
                 <Row>
                 <Col sm={1} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-left" style={{display:'flex'}}><img src={logoHeaderFDA} height="155" width="650" alt="FDA Logo"></img></Col>
+                <Col className="justify-content-md-left" style={{display:'flex'}}><img className="fdaheader" src={logoHeaderFDA} height="155" width="650" alt="FDA Logo"></img></Col>
                 </Row>
                 </div>
                 <div className="content">

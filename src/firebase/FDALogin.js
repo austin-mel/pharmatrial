@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Card, Alert, Container, Col, Row, Modal } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container, Col, Row, Modal, Stack } from "react-bootstrap";
 import { useState } from "react";
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './FirebaseHook'
@@ -80,14 +80,10 @@ function FBaseLoggedIn() {
             <p>Logged In!</p>   <AccountCircleRoundedIcon sx={{ mr: 1 }}/>
           </Col>
         </Row>
-        <Row>
-          <Col className="justify-content-md-end" style={{display:'flex'}}>
-            <h5>Welcome, {user.displayName}!</h5>
-          </Col>
-          <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
-            <Button variant="danger" onClick={logout}>Log Out</Button>
-          </Col>
-        </Row>
+        <Stack direction="horizontal" gap={3} ms-auto>
+          <div className="ms-auto"><h5>Welcome, {user.displayName}!</h5></div>
+          <Button variant="danger" onClick={logout}>Log Out</Button>
+          </Stack>
           </div>
           <div className="fdacontent">
         <Row>
@@ -97,10 +93,10 @@ function FBaseLoggedIn() {
                             </Fab>
                         </Col>
                     </Row>
+        </div>
         <Row>
           <StudyTable/>
         </Row>
-        </div>
                     <Modal show={show} onHide={handleClose}>
                             <Modal.Header closeButton>
                             <Modal.Title>Create a New Study</Modal.Title>
@@ -171,7 +167,7 @@ function FBaseSignup(){
     return(
         <div className="login">
             {format === "create" ? (
-              <Container fluid>
+              <div fluid>
               <Card className="justify-content-md-center" style={{display:'flex'}}>
               <Card.Body>
                   <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
@@ -199,9 +195,9 @@ function FBaseSignup(){
                   </Form>
               </Card.Body>
           </Card>
-          </Container>
+          </div>
             ) : (
-              <Container fluid>
+              <div fluid>
             <Card>
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Login</Card.Title>
@@ -226,7 +222,7 @@ function FBaseSignup(){
                     </Form>
                 </Card.Body>
             </Card>
-            </Container>
+            </div>
             )
             }
         </div>
@@ -252,8 +248,8 @@ export default function FDALogin() {
   }
 
   return (
-    <Container>
+    <div>
       {screenGet()}
-    </Container>
+    </div>
   );
 }

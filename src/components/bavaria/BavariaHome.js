@@ -12,7 +12,7 @@ function BavariaHome() {
                 <div className="bavheader">
                 <Row>
                 <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-end" style={{display:'flex'}}><img src={logoHeaderBavaria} height="195" width="195" alt="Bavaria Logo"></img></Col>
+                <Col className="justify-content-md-end" style={{display:'flex'}}><img className="bavheader" src={logoHeaderBavaria} height="195" width="195" alt="Bavaria Logo"></img></Col>
                 </Row>
                 </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
-import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, Spinner } from "react-bootstrap";
+import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, Spinner, Stack } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
@@ -242,9 +242,9 @@ const handleEditPatient = async () => {
 
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE PATIENTTABLE
     return (
-        <div className="table">
+        <div className="table" fluid>
         {loading === "true" ? (
-          <Container>
+          <div fluid>
         {
           //IF LOADING IS TRUE DISPLAY A LINEAR PROGRESS LOADING BAR ON THE PAGE
         }
@@ -253,22 +253,17 @@ const handleEditPatient = async () => {
                     <Spinner animation="border" />
                 </Col>
             </Row>
-          </Container>
+          </div>
         ) : (
-          <Container fluid>
+          <div fluid>
             {
               //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
             }
-            <div className="tablefilter">
-              <Row>
-              <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
-                <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
-              </Col>
-              <Col>
-                <Form.Control placeholder="Name" id="filterName"/>
-              </Col>
-              <Col>
-                <Form.Select id="filterMonth" aria-label="Select Month">
+              <Stack direction="horizontal" gap={3} className="col-md-15 mx-auto">
+              <Button variant="outline-warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
+              <div className="vr" />
+              <Form.Control placeholder="Name" id="filterName"/>
+              <Form.Select id="filterMonth" aria-label="Select Month">
                   <option value="null">Select Month</option>
                   <option value="01">January</option>
                   <option value="02">February</option>
@@ -283,31 +278,24 @@ const handleEditPatient = async () => {
                   <option value="11">November</option>
                   <option value="12">December</option>
                 </Form.Select>
-              </Col>
-              <Col>
                 <Form.Control placeholder="Year" id="filterYear"/>
-              </Col>
-              {
-                //BUTTON TO CLEAR FILTER
-              }
-              <Col sm="2" className="justify-content-md-left" style={{display:'flex'}}>
-                <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
-              </Col>
-            </Row>
+                <div className="vr" />
+                <Button variant="outline-secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
+              </Stack>
             {
               //BUTTON TO REFRESH TABLE
             }
             <Row>
               <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
             </Row>
-            </div>
+
              {filterStatus === true ? ( 
-          <Container className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="justify-content-md-center" style={{display:'flex'}}>
             <div className="patienttable">
              {
               //IF FILTER IS ENABLED
             }
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover>
               <thead>
                 <tr>
                 <th></th>
@@ -417,15 +405,15 @@ const handleEditPatient = async () => {
               </tbody>
             </Table>
             </div>
-          </Container>
+          </div>
 ) : (
   
-          <Container className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="justify-content-md-center" style={{display:'flex'}}>
             <div className="patienttable">
             {
               //IF FILTER IS DISABLED
             }
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover>
               <thead>
                 <tr>
                   <th></th>
@@ -489,13 +477,13 @@ const handleEditPatient = async () => {
       </tbody>
       </Table>
       </div>
-  </Container>
+  </div>
 )}
-          </Container>
+          </div>
         )}
 
 {format === "view" ? (
-  <Container fluid> 
+  <div fluid> 
   {
     //IF SETSTATE (format) IS VIEW SHOW PATIENT DETAILS
   }
@@ -599,9 +587,9 @@ const handleEditPatient = async () => {
         )}
       })}
     </Modal>
-  </Container>
+  </div>
 ) : (
-  <Container>
+  <div>
       {
     //IF format SETSTATE IS EDIT THEN SHOW FORM TO ALLOW EDITS
     }
@@ -616,7 +604,7 @@ const handleEditPatient = async () => {
       if(content === patient._id){
         //RENDER FORM TO ALLOW EDITS
         return(
-          <Container key={key}>
+          <div key={key}>
           <Modal.Header closeButton>
           <Modal.Title id={patient._id}>
                 <Row>
@@ -774,11 +762,11 @@ const handleEditPatient = async () => {
           <Button variant="success" onClick={() => {handleEditPatient(); handleClose(); setFormat("view");}}><SaveRoundedIcon/>Save</Button>
           <Button variant="danger" onClick={() => {handleClose(); setFormat("view");}} ><CloseFullscreenRoundedIcon/>Close</Button>
           </Modal.Footer>
-        </Container>
+        </div>
         )}
       })}
     </Modal>
-  </Container>
+  </div>
 )}
   </div>
 )}

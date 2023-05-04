@@ -131,7 +131,7 @@ function SendDrugs(props) {
               acl:[
                 {
                   principal: {
-                    nodes: ["Bavaria"]
+                    nodes: ["Bavaria","JaneHopkins"]
                   },
                   operations: ["READ"],
                   path: "placebo",
@@ -145,14 +145,14 @@ function SendDrugs(props) {
                 },
                 {
                   principal: {
-                    nodes: ["FDA","Bavaria","JaneHopkins"]
+                    nodes: ["Bavaria","JaneHopkins"]
                   },
                   operations: ["ALL"],
                   path: "patientID",
                 },
                 {
                   principal: {
-                    nodes: ["Bavaria","FDA","JaneHopkins"]
+                    nodes: ["Bavaria","JaneHopkins"]
                   },
                   operations: ["ALL"],
                   path: "studyID",
@@ -161,7 +161,6 @@ function SendDrugs(props) {
             },
           } 
         );
-        console.log(createDrugs);
       }
 
         }
@@ -173,18 +172,18 @@ function SendDrugs(props) {
     return (  
       <div>
       {show === false ? (
-        <Container fluid>
+        <div fluid>
         <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
-      </Container>
+      </div>
       ) : (
-        <Container fluid>
+        <div fluid>
           <Row>
         <Button variant="success" onClick={() => {handleSendDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Send Drugs to FDA</Button>
         </Row>
         <Row>
         <Badge bg="success">Success!</Badge>
         </Row>
-        </Container>
+        </div>
       )}
       </div>
     );

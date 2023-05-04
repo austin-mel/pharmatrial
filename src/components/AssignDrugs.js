@@ -266,7 +266,6 @@ function AssignDrugs(props) {
               },
             } 
           );
-          console.log(assignDrugs);
         }
                 }
               })}
@@ -283,18 +282,18 @@ function AssignDrugs(props) {
       <div>
       {show === false ? (
     //BUTTON THAT CALLS FUNCTION TO HANDLE ASSIGNING DRUGS ON CLICK
-       <Container fluid>
+       <div fluid>
         <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
-        </Container>
+        </div>
       ) : (
-        <Container fluid>
+        <div fluid>
         <Row>
         <Button variant="info" onClick={() => {handleAssignDrugs(); handleShow(); setTimeout(() => {handleHide();}, 2500);}}>Give Drugs to Eligible Patients</Button>
         </Row>
         <Row>
         <Badge bg="success">Success!</Badge>
         </Row>
-        </Container>
+        </div>
       )}
       </div>
     );

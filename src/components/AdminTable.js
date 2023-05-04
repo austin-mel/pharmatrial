@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, ProgressBar, Spinner } from "react-bootstrap";
+import { Table, Button, Row, Col, Card, Modal, ModalBody, Form, Container, ProgressBar, Spinner, Stack } from "react-bootstrap";
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -60,14 +60,10 @@ function AdminTable() {
 
     return (
         <div className="table">
-          <Container fluid>
-          <div className="tablefilter">
-            <Row>
-              <Col sm="2" className="justify-content-md-end" style={{display:'flex'}}>
-                <Button variant="warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
-              </Col>
-              <Col>
-                <Form.Select id="filterMonth" aria-label="Select Month">
+          <Stack direction="horizontal" gap={3} className="col-md-15 mx-auto">
+              <Button variant="outline-warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
+              <div className="vr" />
+              <Form.Select id="filterMonth" aria-label="Select Month">
                   <option value="null">Select Month</option>
                   <option value="01">January</option>
                   <option value="02">February</option>
@@ -82,33 +78,24 @@ function AdminTable() {
                   <option value="11">November</option>
                   <option value="12">December</option>
                 </Form.Select>
-              </Col>
-              <Col>
                 <Form.Control placeholder="Year" id="filterYear"/>
-              </Col>
-              <Col sm="2" className="justify-content-md-left" style={{display:'flex'}}>
-                <Button variant="secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
-              </Col>
-            </Row>
-            <Row>
-              <Button variant="outline-info" onClick={() => {listPatients(); }}>Refresh Table</Button>
-            </Row>
-            </div>
-          </Container>
+                <div className="vr" />
+                <Button variant="outline-secondary" onClick={() => {setFilterStatus(false);}}><ClearRoundedIcon/>Clear Filter</Button>
+              </Stack>
         {loading === "true" ? (
-          <Container>
+          <div fluid>
             <Row>
               <Col className="justify-content-md-center" style={{display:'flex'}}>
                     <Spinner animation="border" />
                 </Col>
             </Row>
-          </Container>
+          </div>
         ) : (
-          <Container>
+          <div fluid>
              {filterStatus === true ? ( 
-          <Container className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="justify-content-md-center" style={{display:'flex'}}>
             <div className="patienttable">
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover>
               <thead>
                 <tr>
                 <th>Eligible?</th>
@@ -243,11 +230,11 @@ function AdminTable() {
               </tbody>
             </Table>
             </div>
-          </Container>
+          </div>
 ) : (
-          <Container className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="justify-content-md-center" style={{display:'flex'}}>
             <div className="patienttable">
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover>
               <thead>
                 <tr>
                 <th>Eligible?</th>
@@ -421,9 +408,9 @@ function AdminTable() {
         )}
       })}
     </Modal>
-  </Container>
+  </div>
 )}
-          </Container>
+          </div>
         )}
   </div>
 )}

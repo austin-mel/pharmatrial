@@ -26,6 +26,7 @@
   border-bottom-style: solid;
   border-bottom-color: #007dbc;
   border-bottom-width: 9px;
+  padding-bottom: 15px;
 }
 .jhheader {
   height: 200px;
@@ -39,4 +40,31 @@
 }
 .content {
   padding-top: 50px;
+}
+.profilebar{
+  padding-bottom: 25px;
+}
+.jhcontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.fdacontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.bavcontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+@media screen and (max-width: 600px) {
+  img.jhheader {
+    display: none;
+  }
+  img.bavheader{
+    display: none;
+  }
+  img.fdaheader{
+    display: none;
+  }
 }

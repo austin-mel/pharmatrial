@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Card, Alert, Container, Col, Row, Modal } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container, Col, Row, Modal, Stack } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './FirebaseHook'
@@ -117,7 +117,7 @@ const handleMaximumDoses = async () => {
       const doseNum = "5";
       
       //ADD ICD-10 HEALTH CODE ELIGIBILITY!!
-      if(patient.studyID != null){
+      if(patient.studyID !== null){
           maximumDoses();
           }
 
@@ -528,41 +528,37 @@ const handleIncreaseDoses = async () => {
   }
       
     return(
-        <div>
+      <div fluid>
     {access === "doctor" ? ( 
-        <div className="jhhome">
-          <div className="profilebar">
+        <div className="jhhome" fluid>
+
+        <div className="profilebar" fluid>
         <Row>
           <Col className="justify-content-md-end" style={{display:'flex'}}>
             <p>Logged In!</p>   <AccountCircleRoundedIcon/>
           </Col>
         </Row>
-        <Row>
-          <Col className="justify-content-md-end" style={{display:'flex'}}>
-            <div><h5>Welcome, {user.displayName}!</h5></div>
-          </Col>
-          <Col className="justify-content-md-end" style={{display:'flex'}} xs="auto">
-            <Button variant="danger" onClick={logout}>Log Out</Button>
-          </Col>
-        </Row>
+        <Stack direction="horizontal" gap={3} ms-auto>
+          <div className="ms-auto"><h5>Welcome, {user.displayName}!</h5></div>
+          <Button variant="danger" onClick={logout}>Log Out</Button>
+        </Stack>
         </div>
-        <div className="jhcontent">
-                    <Row>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+        <div className="jhcontent" fluid>
+                    <Stack direction="horizontal" gap={4}>
+                    <div className="ms-auto"></div>
                             <Fab color="success" variant="extended" onClick={() => {setPopup("patient"); setShow(true);}} >
                                 <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Patient
                             </Fab>
-                        </Col>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <div className="ms-auto"></div>
                             <Fab color="primary" variant="extended" onClick={() => {setPopup("appt"); setShow(true);}} >
                                 <PersonAddAlt1RoundedIcon sx={{ mr: 1 }} />Add Appointment
                             </Fab>
-                        </Col>
+                            <div className="ms-auto"></div>
+                    </Stack>
+          </div>
+          <Row>
+              <PatientTable/>
                     </Row>
-                    <Row>
-                      <PatientTable/>
-                    </Row>
-                </div>
                     <Modal show={show} onHide={handleClose}>
                         {popup === "patient" ? (
                             <div>
@@ -589,14 +585,14 @@ const handleIncreaseDoses = async () => {
         </div>
         ):
         access === "patient" ? ( 
-          <div className="jhhome">
+          <div className="jhhome" fluid>
                 <p>Test</p>
                 <Button variant="danger" onClick={logout}>Return to Sign In</Button>
             </div>
         ) : 
         access === "admin" ? ( 
-          <div className="jhhome">
-            <div className="profilebar">
+          <div className="jhhome" fluid>
+            <div className="profilebar" fluid>
           <Row>
             <Col className="justify-content-md-end" style={{display:'flex'}}>
               <p>Logged In!</p>   <AccountCircleRoundedIcon/>
@@ -611,19 +607,18 @@ const handleIncreaseDoses = async () => {
             </Col>
           </Row>
           </div>
-          <div className="jhcontent">
-                      <Row>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+          <div className="jhcontent" fluid>
+                  <Stack direction="horizontal" gap={4}>
+                            <div className="ms-auto"></div>
                             <Fab color="primary" variant="extended" onClick={() => {handleIncreaseDoses();}} >Advance Doses by One</Fab>
-                        </Col>
-                        <Col className="justify-content-md-center" style={{display:'flex'}}>
+                            <div className="ms-auto"></div>
                             <Fab color="primary" variant="extended" onClick={() => {handleMaximumDoses();}} >Advance Doses to Complete</Fab>
-                        </Col>
-        </Row>
+                            <div className="ms-auto"></div>
+                    </Stack>
+        </div>
         <Row>
           <AdminTable/>
         </Row>
-        </div>
           </div>
         ) : (
           <div className="errorpage">
@@ -637,7 +632,7 @@ const handleIncreaseDoses = async () => {
           </Row>
         </div>
         )}
-        </div>
+      </div>
     );
   }
 
@@ -685,7 +680,7 @@ function FBaseSignup(){
     return(
         <div className="login">
             {format === "create" ? (
-              <Container fluid>
+              <div fluid>
               <Card className="justify-content-md-center" style={{display:'flex'}}>
               <Card.Body>
                   <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Create Account</Card.Title>
@@ -713,9 +708,9 @@ function FBaseSignup(){
                   </Form>
               </Card.Body>
           </Card>
-          </Container>
+          </div>
             ) : (
-              <Container fluid>
+              <div fluid>
             <Card>
                 <Card.Body>
                     <Card.Title className="justify-content-md-center" style={{display:'flex'}}>Login</Card.Title>
@@ -740,7 +735,7 @@ function FBaseSignup(){
                     </Form>
                 </Card.Body>
             </Card>
-            </Container>
+            </div>
             )
             }
         </div>
@@ -766,8 +761,8 @@ export default function JHLogin() {
   }
 
   return (
-    <Container>
+    <div>
       {screenGet()}
-    </Container>
+    </div>
   );
 }
