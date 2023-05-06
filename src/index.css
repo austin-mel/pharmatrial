@@ -56,6 +56,16 @@
   padding-top: 50px;
   padding-bottom: 50px;
 }
+.table{
+  height: 1000px;
+  overflow: scroll;
+}
+Table thead{
+  background-color: white;
+  position: sticky;
+  top: -1px;
+  margin: 0 0 0 0;
+}
 
 @media screen and (max-width: 600px) {
   img.jhheader {

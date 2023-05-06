@@ -259,7 +259,7 @@ const handleEditPatient = async () => {
             {
               //IF LOADING IS FALSE DISPLAY THE FILTER OPTIONS
             }
-              <Stack direction="horizontal" gap={3} className="col-md-15 mx-auto">
+              <Stack direction="horizontal" gap={3} className="col-md-8 mx-auto">
               <Button variant="outline-warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               <div className="vr" />
               <Form.Control placeholder="Name" id="filterName"/>
@@ -298,7 +298,7 @@ const handleEditPatient = async () => {
             <Table striped bordered hover>
               <thead>
                 <tr>
-                <th></th>
+                <div><th></th></div>
                 <th>UUID</th>
                 <th>First Name</th>
                 <th>Last Name</th>

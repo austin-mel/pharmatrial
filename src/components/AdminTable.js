@@ -60,7 +60,7 @@ function AdminTable() {
 
     return (
         <div className="table">
-          <Stack direction="horizontal" gap={3} className="col-md-15 mx-auto">
+          <Stack direction="horizontal" gap={3} className="col-md-8 mx-auto">
               <Button variant="outline-warning" onClick={() => {setFilterStatus(true); checkFilter();}}><FilterAltRoundedIcon/>Set Filter</Button>
               <div className="vr" />
               <Form.Select id="filterMonth" aria-label="Select Month">
