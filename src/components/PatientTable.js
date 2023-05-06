@@ -77,20 +77,21 @@ function PatientTable() {
       setFilterMonth(filterMonth);
     };
 
-    function deletePatient(props){
-      const patientID = props;
+    async function deletePatient(props){
+      const patientID = await entities.patient.get(props);
       var drugID = null;
-      {drugs?.map((drug, key) => { 
-        if(drug.patientID === patientID){
-          drugID = drug._id
-        }
-      })}
-
+      if(patientID.drugID != null){
+        {drugs?.map((drug, key) => { 
+          key={key}
+          if(drug.patientID === patientID){
+            drugID = drug._id
+          }
+        })}
+        const deleteDrug = await entities.drug.remove(drugID);
+      }
 
       const deletePatients = async () => {
-
-        const deletePatient = await entities.patient.remove(patientID);
-        const deleteDrug = await entities.drug.remove(drugID);
+        const deletePatient = await entities.patient.remove(patientID._id);
       }
 
       deletePatients();

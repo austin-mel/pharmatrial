@@ -240,13 +240,13 @@ function StudyTable() {
             </Row>
         </div>
         ) : (
-            <div fluid>
+            <div>
             {
               //IF LOADING IS FALSE DISPLAY PAGE
               //IF ACCOUNT TYPE IS BAVARIA ADMIN LOAD THIS
             }
                 {displayName === "Bavaria Admin"? (
-                    <div fluid>
+                    <div>
                       <div className="studytable">
                     <Row>
                         <Col className="justify-content-md-center" style={{display:'flex'}}>
@@ -541,7 +541,7 @@ function StudyTable() {
               </Modal>
                   </div>
                 ) : (
-                    <div fluid>
+                    <div>
                       <div className="studytable">
            {
               //IF LOADING IS FALSE DISPLAY PAGE
