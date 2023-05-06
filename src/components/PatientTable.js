@@ -16,6 +16,7 @@ function PatientTable() {
     const { entities } = useJaneHopkins();
     //CREATE ARRAY FOR PATIENTS
     const [patients, setPatients] = useState();
+    const [drugs, setDrugs] = useState();
 
     //CREATE USE STATE (FOR MODAL POPUP)
     const [show, setShow] = useState(false);
@@ -45,10 +46,18 @@ function PatientTable() {
     setPatients(patientList.items);
   };
 
+      //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
+    //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
+    const listDrugs = async () => {
+      let drugList = await entities.drug.list()
+      setDrugs(drugList.items);
+    };
+
   //RUNS WHEN PAGE LOADS/RELOADS
   useEffect(() => {
     //CALL LISTPATIENTS FUNCTION
     listPatients();
+    listDrugs();
     checkEligibility();
     //RENDER LOADING BAR FOR 6.5 SECONDS TO LET VENDIA RETREIVE DATA
     setLoading("true");
@@ -70,9 +79,18 @@ function PatientTable() {
 
     function deletePatient(props){
       const patientID = props;
+      var drugID = null;
+      {drugs?.map((drug, key) => { 
+        if(drug.patientID === patientID){
+          drugID = drug._id
+        }
+      })}
+
 
       const deletePatients = async () => {
+
         const deletePatient = await entities.patient.remove(patientID);
+        const deleteDrug = await entities.drug.remove(drugID);
       }
 
       deletePatients();

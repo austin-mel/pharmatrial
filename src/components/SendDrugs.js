@@ -131,7 +131,7 @@ function SendDrugs(props) {
               acl:[
                 {
                   principal: {
-                    nodes: ["Bavaria","JaneHopkins"]
+                    nodes: ["Bavaria"]
                   },
                   operations: ["READ"],
                   path: "placebo",
@@ -156,6 +156,12 @@ function SendDrugs(props) {
                   },
                   operations: ["ALL"],
                   path: "studyID",
+                },
+                {
+                  principal: {
+                    nodes: ["JaneHopkins"]
+                  },
+                  operations: ["UPDATE_ACL"],
                 },
               ],
             },
