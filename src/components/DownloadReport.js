@@ -1,13 +1,13 @@
 import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
-import useJaneHopkins from "../hooks/useJaneHopkins";
+import useBavaria from "../hooks/useBavaria";
 import { Button, Form, Row, Col, Badge, Modal, Table } from "react-bootstrap";
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 
 function DownloadReport(props) {
   
     //RETRIVE DATA FROM VENDIA USING HOOK
-    const { entities } = useJaneHopkins();
+    const { entities } = useBavaria();
 
     //CREATE ARRAY FOR STUDIES
     const [studies, setStudy] = useState();
@@ -51,24 +51,6 @@ function DownloadReport(props) {
       listDrugs();
     }, []);
 
-    var placebo = null;
-
-    async function checkPlacebo(props){
-        const patientID = props;
-
-        {drugs?.map((drug, key) => {
-            key={key}
-            if(drug.patientID === patientID){
-                if(drug.placebo === true){
-                    placebo = true;
-                }
-                else{
-                    placebo = false;
-                }
-            }   
-        })}
-    }
-
     //THIS IS WHAT IS RENDERED WHEN CALLING THE FILE ADDPATIENT
     //FORM THAT ASKS FOR EACH INPUT REQUIRED
     return (
@@ -98,11 +80,25 @@ function DownloadReport(props) {
                         <tbody>
         {patients?.map((patient, key) => {
             if(patient.studyID === studyID){
-                checkPlacebo(patient._id);
-                if(placebo === true){
+                //checkPlacebo(patient._id);
+                var placebo2;
+
+                {drugs?.map((drug, key) => {
+                    key={key}
+                    if(drug.patientID === patient._id){
+                        if(drug.placebo === true){
+                            placebo2 = true;
+                        }
+                        else{
+                            placebo2 = false;
+                        }
+                    }
+                })}
+
+                if(placebo2 === true){
                     return(
                         <tr key={key}>
-                            <td>True</td>
+                            <td><b style={{color: "green"}}>True</b></td>
                             <td>{patient.name} {patient.lastName}</td>
                             <td>{patient.uuid}</td>
                             {patient.visits ? patient.visits.map((item, index) => (
@@ -113,17 +109,17 @@ function DownloadReport(props) {
                         </tr>
                     )
                 }
-                else{
+                else if(placebo2 === false){
                     return(
                         <tr key={key}>
-                            <td>False</td>
+                            <td><b style={{color: "red"}}>False</b></td>
                             <td>{patient.name} {patient.lastName}</td>
                             <td>{patient.uuid}</td>
-                            <td>{patient.visits ? patient.visits.map((item, index) => (
+                            {patient.visits ? patient.visits.map((item, index) => (
                         <td>
                         <p key={index}>Date: {item.dateTime}<br /> Notes: {item.notes}<br /> hivViralLoad: {item.hivViralLoad}</p>
                         </td>
-                      )) : null}</td>
+                      )) : null}
                         </tr>
                     )
                 }
