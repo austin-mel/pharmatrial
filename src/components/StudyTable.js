@@ -6,6 +6,7 @@ import { getAuth } from "firebase/auth";
 import Fab from '@mui/material/Fab';
 import SendDrugs from "./SendDrugs";
 import AssignDrugs from "./AssignDrugs";
+import DownloadReport from "./DownloadReport";
 
 //FUNCTION THAT IS RENDERED
 function StudyTable() {
@@ -384,7 +385,7 @@ function StudyTable() {
                                             {
                                             //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED YET!!!)
                                             }
-                                            <td><Button variant="primary" onClick={() => {}}>Download Results</Button></td>
+                                            <td><DownloadReport props={study._id}/></td>
                                         </tr> 
                                     )
                                 }
@@ -686,7 +687,7 @@ function StudyTable() {
                                     {
                                   //BUTTON TO DOWNLOAD RESULTS (NOT IMPLEMENTED!!!)
                                   }
-                                    <td><Button variant="primary" onClick={() => {}}>Download Results</Button></td>
+                                    <td><DownloadReport props={study._id}/></td>
                                     <td><Button variant="danger" onClick={() => {deleteStudy(study._id);}}>Delete Study</Button></td>
                                 </tr> 
                             )
