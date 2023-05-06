@@ -148,20 +148,6 @@ function AssignDrugs(props) {
                       nodes: ["Bavaria","FDA"]
                     },
                     operations: ["READ"],
-                    path: "name",
-                  },
-                  {
-                    principal: {
-                      nodes: ["Bavaria","FDA"]
-                    },
-                    operations: ["READ"],
-                    path: "lastName",
-                  },
-                  {
-                    principal: {
-                      nodes: ["Bavaria","FDA"]
-                    },
-                    operations: ["READ"],
                     path: "dob",
                   },
                   {

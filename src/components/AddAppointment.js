@@ -2,16 +2,30 @@ import { async } from "@firebase/util";
 import { useEffect, useState } from "react";
 import useJaneHopkins from "../hooks/useJaneHopkins";
 import { Button, Form, Container, Badge, Row, Col } from "react-bootstrap";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function AddAppointment() {
     const { entities } = useJaneHopkins();
 
     const [patients, setPatients] = useState();
 
+    const options = [];
+
+    {patients?.map((patient, key) => { 
+      key={key}
+      const patientName = patient.name + " " + patient.lastName;
+      const patientID = patient._id
+      options.push(patientName);
+    })}
+
         //CREATE USE STATE (FOR ALERT POPUP)
         const [show, setShow] = useState(false);
         const handleHide = () => setShow(false);
         const handleShow = () => setShow(true);
+
+        const [value, setValue] = useState(options[0]);
+      
   
       //VENDIA FUNCTION TO GET PATIENTS IN DATABASE
       //STORES PATIENTS FROM DATABASE INTO THE ARRAY ABOVE
@@ -26,8 +40,8 @@ function AddAppointment() {
         listPatients();
       }, []);
 
-
       const handleAddAppointment = async () => {
+        console.log(document.getElementById("patient").value);
         {patients?.map((patient, key) => { 
           key={key}
           const name = patient.name;
@@ -52,7 +66,7 @@ function AddAppointment() {
 
           var newDoseNum = doseNum;
     
-          if(document.getElementById("patient").value === patient._id){
+          if(document.getElementById("patient").value === (patient.name + " " + patient.lastName)){
             newDoseNum++;
             addAppointment();
           }
@@ -260,11 +274,17 @@ function AddAppointment() {
         <div className="addappointment">
           {show === false ? (
         <Form>
-              <Form.Group className="mb-3" controlId="patient">
-              <Form.Label>Patient Name</Form.Label>
-              <Form.Select aria-label="Default select example">
-                <option value="018657df-9a40-f7e5-db30-57bbc6db5866">Billy Roberts</option>
-              </Form.Select>
+              <Form.Group className="justify-content-md-center" style={{display:'flex'}} controlId="patient">
+              <Autocomplete
+      id="patient"
+      options={options}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Patient" />}
+      value={value}
+      onChange={(event, newValue) => {
+        setValue(newValue);
+      }}
+    />
               </Form.Group>
                     <Form.Group className="mb-3" controlId="date">
                     <Form.Label>Date</Form.Label>
@@ -284,11 +304,17 @@ function AddAppointment() {
                 </Form>
           ) : (
             <Form>
-            <Form.Group className="mb-3" controlId="patient">
-            <Form.Label>Patient Name</Form.Label>
-            <Form.Select aria-label="Default select example">
-              <option value="0187bee6-6165-cf61-e3ce-82abac047842">Billy Roberts</option>
-            </Form.Select>
+            <Form.Group className="justify-content-md-center" style={{display:'flex'}} controlId="patient">
+            <Autocomplete
+      id="patient"
+      options={options}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Patient" />}
+      value={value}
+      onChange={(event, newValue) => {
+        setValue(newValue);
+      }}
+    />
             </Form.Group>
                   <Form.Group className="mb-3" controlId="date">
                   <Form.Label>Date</Form.Label>
