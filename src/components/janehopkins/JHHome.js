@@ -12,14 +12,14 @@ function JHHome() {
         <div className="jhhome" fluid>
             <div className="jhheader">
                 <Row>
-                <Col sm={2} className="justify-content-md-left" style={{display:'flex'}}><MenuBar/></Col>
-                <Col className="justify-content-md-center" style={{display:'flex'}}><img className="jhheader" src={logoHeaderJH} width="350" height="200" alt="JH Logo"></img></Col>
-                <Col sm={2}></Col>
+                    <Col sm={2} className="justify-content-md-left" style={{ display: 'flex' }}><MenuBar /></Col>
+                    <Col className="justify-content-md-center" style={{ display: 'flex' }}><img src={logoHeaderJH} width="350" height="200" alt="JH Logo"></img></Col>
+                    <Col sm={2}></Col>
                 </Row>
             </div>
-            <div className="content" fluid>
-                    <JHLogin/>
-                </div>
+            <div className="content">
+                <JHLogin />
+            </div>
         </div>
     );
 }

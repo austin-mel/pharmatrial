@@ -3,8 +3,9 @@
 * {
   font-family: "Quicksand";
   color: #333;
-  
+
 }
+
 .dropdown {
   position: absolute;
   top: 100%;
@@ -15,11 +16,13 @@
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
   background-color: #f1f1f1;
 }
+
 .menucolumn {
   float: left;
   width: 25%;
   padding: 10px;
 }
+
 .fdaheader {
   height: 200px;
   background-color: #f1f1f1;
@@ -28,39 +31,55 @@
   border-bottom-width: 9px;
   padding-bottom: 15px;
 }
+
 .jhheader {
   height: 200px;
   background-color: #39847e;
 }
+
 .bavheader {
   height: 200px;
   background-color: #ffffff;
   border-bottom-style: solid;
   border-bottom-color: #562859;
 }
+
 .content {
   padding-top: 50px;
 }
-.profilebar{
+
+.profilebar {
   padding-bottom: 25px;
 }
+
 .jhcontent {
   padding-top: 50px;
   padding-bottom: 50px;
 }
+
 .fdacontent {
   padding-top: 50px;
   padding-bottom: 50px;
 }
+
 .bavcontent {
   padding-top: 50px;
   padding-bottom: 50px;
 }
-.table{
-  height: 1000px;
-  overflow: scroll;
+
+.tablefilter {
+  padding-bottom: 25px;
 }
-Table thead{
+
+.studytable {
+  padding-top: 25px;
+}
+
+.table {
+  padding-top: 115px;
+}
+
+Table thead {
   background-color: white;
   position: sticky;
   top: -1px;
@@ -71,10 +90,12 @@ Table thead{
   img.jhheader {
     display: none;
   }
-  img.bavheader{
+
+  img.bavheader {
     display: none;
   }
-  img.fdaheader{
+
+  img.fdaheader {
     display: none;
   }
 }
