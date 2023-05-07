@@ -181,7 +181,7 @@ function SendDrugs(props) {
           <Button variant="success" onClick={() => { handleSendDrugs(); handleShow(); setTimeout(() => { handleHide(); }, 2500); }}>Send Drugs to FDA</Button>
         </Container>
       ) : (
-        <div fluid>
+        <Container fluid>
           <Row>
             <Button variant="success" onClick={() => { handleSendDrugs(); handleShow(); setTimeout(() => { handleHide(); }, 2500); }}>Send Drugs to FDA</Button>
           </Row>
