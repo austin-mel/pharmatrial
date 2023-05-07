@@ -3,8 +3,9 @@
 * {
   font-family: "Quicksand";
   color: #333;
-  
+
 }
+
 .dropdown {
   position: absolute;
   top: 100%;
@@ -14,11 +15,13 @@
   border: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
 }
+
 .menucolumn {
   float: left;
   width: 25%;
   padding: 10px;
 }
+
 .fdaheader {
   height: 200px;
   background-color: #f1f1f1;
@@ -26,16 +29,71 @@
   border-bottom-color: #007dbc;
   border-bottom-width: 9px;
 }
+
 .jhheader {
   height: 200px;
   background-color: #39847e;
 }
+
 .bavheader {
   height: 200px;
   background-color: #ffffff;
   border-bottom-style: solid;
   border-bottom-color: #562859;
 }
+
 .content {
   padding-top: 50px;
+}
+
+.profilebar {
+  padding-bottom: 25px;
+}
+
+.jhcontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.fdacontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.bavcontent {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.tablefilter {
+  padding-bottom: 25px;
+}
+
+.studytable {
+  padding-top: 25px;
+}
+
+.table {
+  padding-top: 115px;
+}
+
+Table thead {
+  background-color: white;
+  position: sticky;
+  top: -1px;
+  margin: 0 0 0 0;
+}
+
+@media screen and (max-width: 600px) {
+  img.jhheader {
+    display: none;
+  }
+
+  img.bavheader {
+    display: none;
+  }
+
+  img.fdaheader {
+    display: none;
+  }
 }
