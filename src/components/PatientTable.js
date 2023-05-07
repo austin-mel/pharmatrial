@@ -16,6 +16,7 @@ function PatientTable() {
   const { entities } = useJaneHopkins();
   //CREATE ARRAY FOR PATIENTS
   const [patients, setPatients] = useState();
+  const [drugs, setDrugs] = useState();
 
   //CREATE USE STATE (FOR MODAL POPUP)
   const [show, setShow] = useState(false);

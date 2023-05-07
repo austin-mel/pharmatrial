@@ -75,8 +75,12 @@
   padding-top: 25px;
 }
 
-.table {
+.patienttable{
   padding-top: 115px;
+}
+
+.table {
+  padding-top: 25px;
 }
 
 Table thead {
