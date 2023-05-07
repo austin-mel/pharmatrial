@@ -13,7 +13,7 @@ function JHHome() {
             <div className="jhheader">
                 <Row>
                     <Col sm={2} className="justify-content-md-left" style={{ display: 'flex' }}><MenuBar /></Col>
-                    <Col className="justify-content-md-center" style={{ display: 'flex' }}><img src={logoHeaderJH} width="350" height="200" alt="JH Logo"></img></Col>
+                    <Col className="justify-content-md-center" style={{ display: 'flex' }}><img src={logoHeaderJH} width="350" height="200" alt="JH Logo" className="jhlogo"></img></Col>
                     <Col sm={2}></Col>
                 </Row>
             </div>

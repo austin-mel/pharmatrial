@@ -91,15 +91,15 @@ Table thead {
 }
 
 @media screen and (max-width: 600px) {
-  img.jhheader {
+  img.jhlogo {
     display: none;
   }
 
-  img.bavheader {
+  img.bavlogo {
     display: none;
   }
 
-  img.fdaheader {
+  img.fdalogo {
     display: none;
   }
 }
